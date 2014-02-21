@@ -15,4 +15,14 @@ Further improvements to come:
 Installation
 ------------
 
-Clone the repository, run `composer install`, then visit index.php (or just the web folder) in your browser
+Ensure you have [composer installed](http://getcomposer.org/).
+
+Then, use `composer create-project` to get started:
+
+```bash
+composer create-project tyler-sommer/nice my-project
+```
+
+Once Composer finishes setting up the project, visit the `web` folder in your browser.
+
+See `index.php` for an example usage.
