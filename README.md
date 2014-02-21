@@ -23,6 +23,6 @@ Then, use `composer create-project` to get started:
 composer create-project tyler-sommer/nice my-project
 ```
 
-Once Composer finishes setting up the project, visit the `web` folder in your browser.
+Once Composer finishes setting up the project, visit `index.php` in your browser.
 
-See `index.php` for an example usage.
+See `index.php` for an example of defining routes and controllers.
