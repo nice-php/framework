@@ -1,6 +1,7 @@
 {
   "name": "tyler-sommer/nice",
   "description": "A nice PHP microframework",
+  "license": "MIT",
   "require": {
     "php": ">=5.3.3",
     "twig/twig": "~1.15",
