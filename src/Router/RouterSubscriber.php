@@ -51,7 +51,7 @@ class RouterSubscriber implements EventSubscriberInterface
                 $handler = $routeInfo[1];
                 $vars = $routeInfo[2];
 
-                $request->attributes->set('_route_params', $vars);
+                $request->attributes->add($vars);
                 $request->attributes->set('_controller', $handler);
 
                 break;

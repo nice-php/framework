@@ -25,6 +25,22 @@ class RouterSubscriberTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test a Found route with parameters
+     */
+    public function testFoundWithParams()
+    {
+        $subscriber = $this->getSubscriber();
+        $request = Request::create('/hello/test', 'GET');
+
+        $event = $this->getEvent($request);
+
+        $subscriber->onKernelRequest($event);
+
+        $this->assertEquals('handler2', $request->get('_controller'));
+        $this->assertEquals('test', $request->get('value'));
+    }
+
+    /**
      * Test a match, but Method Not Allowed route
      */
     public function testMethodNotAllowed()
@@ -61,6 +77,7 @@ class RouterSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         $routeDispatcher = \FastRoute\simpleDispatcher(function(\FastRoute\RouteCollector $r) {
                 $r->addRoute('GET', '/', 'handler1');
+                $r->addRoute('GET', '/hello/{value}', 'handler2');
             });
         
         $subscriber = new RouterSubscriber($routeDispatcher);
