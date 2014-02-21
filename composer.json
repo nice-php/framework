@@ -11,13 +11,16 @@
     "symfony/debug": "~2.4",
     "phpunit/phpunit": "~3.7"
   },
+  "suggest": {
+    "stack/builder": "Easily stack middlewares - stackphp.com"
+  },
   "autoload": {
     "psr-4": {
       "TylerSommer\\Nice\\Tests\\": "tests/",
       "TylerSommer\\Nice\\": "src/"
     }
   },
-  "extras": {
+  "extra": {
     "branch-alias": {
       "dev-master": "1.0-dev"
     }
