@@ -3,7 +3,7 @@ nice
 
 A nice PHP microframework.
 
-This framework integrates nikic's FastRoute router with the Symfony 2 HttpKernel.
+This microframework integrates nikic's [FastRoute](https://github.com/nikic/FastRoute) router with the [Symfony 2 HttpKernel](https://github.com/symfony/http-kernel).
 
 Further improvements to come:
 
