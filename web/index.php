@@ -21,7 +21,4 @@ $routeFactory = function (FastRoute\RouteCollector $r) {
 
 // Handle the Request and send a Response
 $app = new Application($routeFactory);
-$request = Request::createFromGlobals();
-$response = $app->handle($request);
-$response->send();
-$app->terminate($request, $response);
+$app->run();
