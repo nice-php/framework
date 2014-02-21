@@ -23,6 +23,11 @@
       "TylerSommer\\Nice\\": "src/"
     }
   },
+  "extras": {
+    "branch-alias": {
+      "dev-master": "1.0-dev"
+    }
+  },
   "minimum-stability": "beta",
   "prefer-stable": true
 }
