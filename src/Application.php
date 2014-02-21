@@ -14,18 +14,18 @@ class Application extends HttpKernel
 {
     public function __construct(
         callable $routeFactory,
-        EventDispatcherInterface $dispatcher = null, 
-        ControllerResolverInterface $resolver = null, 
+        EventDispatcherInterface $dispatcher = null,
+        ControllerResolverInterface $resolver = null,
         RequestStack $requestStack = null
     ) {
         $dispatcher = $dispatcher ?: new EventDispatcher();
         $resolver   = $resolver ?: new ControllerResolver();
-        
+
         parent::__construct($dispatcher, $resolver, $requestStack);
-        
+
         $routeDispatcher = \FastRoute\simpleDispatcher($routeFactory);
         $subscriber = new RouterSubscriber($routeDispatcher);
-        
+
         $dispatcher->addSubscriber($subscriber);
     }
 }

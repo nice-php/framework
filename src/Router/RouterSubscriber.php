@@ -17,7 +17,7 @@ class RouterSubscriber implements EventSubscriberInterface
 
     /**
      * Constructor
-     * 
+     *
      * @param Dispatcher $dispatcher
      */
     public function __construct(Dispatcher $dispatcher)
@@ -57,7 +57,7 @@ class RouterSubscriber implements EventSubscriberInterface
                 break;
         }
     }
-    
+
     /**
      * @return array
      */
