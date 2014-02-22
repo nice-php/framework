@@ -99,7 +99,7 @@ use Symfony\Component\HttpKernel\HttpCache\HttpCache;
 use Symfony\Component\HttpKernel\HttpCache\Store;
 use TylerSommer\Nice\Application;
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 // Configure your RouteFactory to create any routes and controllers
 $routeFactory = function (FastRoute\RouteCollector $r) {
@@ -118,5 +118,6 @@ $stack->push(function ($app) {
 
 $app = $stack->resolve($app);
 
+// Run the app
 Stack\run($app);
 ```
