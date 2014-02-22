@@ -77,3 +77,46 @@ $app->run();
 Visit `index.php` in your browser and you should be greeted with "Hello, world".
 
 Visit `index.php/hello/Tyler` and you will be greeted with "Hello, Tyler".
+
+
+Use with [stack middlewares](http://stackphp.com)
+-------------------------------------------------
+
+Add your favorite middlewares to your project:
+
+```bash
+php composer.phar require stack/builder:dev-master stack/run:dev-master
+```
+
+Then, in your front controller:
+
+```php
+<?php
+
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpCache\HttpCache;
+use Symfony\Component\HttpKernel\HttpCache\Store;
+use TylerSommer\Nice\Application;
+
+require __DIR__ . '/vendor/autoload.php';
+
+// Configure your RouteFactory to create any routes and controllers
+$routeFactory = function (FastRoute\RouteCollector $r) {
+    $r->addRoute('GET', '/', function (Request $request) {
+            return new Response('Hello, world');
+        });
+};
+
+// Create your app, and then the stack
+$app = new Application($routeFactory);
+$stack = new Stack\Builder();
+$stack->push(function ($app) {
+        $cache = new HttpCache($app, new Store(__DIR__.'/cache'));
+        return $cache;
+    });
+
+$app = $stack->resolve($app);
+
+Stack\run($app);
+```
