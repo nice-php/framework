@@ -14,27 +14,27 @@ use TylerSommer\Nice\Application;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$app = new Application(function (FastRoute\RouteCollector $r) {
-       $r->addRoute('GET', '/', function (Request $request) {
-               return new Response('Hello, world');
-           });
-   });
+$app = new Application();
+$app->set('routes', function (FastRoute\RouteCollector $r) {
+    $r->addRoute('GET', '/', function (Request $request) {
+            return new Response('Hello, world');
+        });
+});
 $app->run();
 ```
 
 Further improvements to come:
 
-* Some kind of dependency injection solution
-* Production/development environments
-* Caching of some kind
+[x] Some kind of dependency injection solution
+[ ] Production/development environments
+[ ] Caching of some kind
 
 
 Installation
 ------------
 
-The recommended way to install Nice is through [Composer](http://getcomposer.org/). Just create a
-``composer.json`` file in your project directory and run the ``php composer.phar require`` command to
-install it:
+The recommended way to install Nice is through [Composer](http://getcomposer.org/). Just run the 
+``php composer.phar require`` command in your project directory to install it:
 
 ```bash
 php composer.phar require tyler-sommer/nice:dev-master nikic/fast-route:dev-master
@@ -58,8 +58,10 @@ require __DIR__ . '/../vendor/autoload.php';
 // Enable Symfony debug error handlers
 Symfony\Component\Debug\Debug::enable();
 
-// Configure your RouteFactory to create any routes and controllers
-$routeFactory = function (FastRoute\RouteCollector $r) {
+$app = new Application();
+
+// Configure your routes
+$app->set('routes', function (FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/', function (Request $request) {
             return new Response('Hello, world');
         });
@@ -67,10 +69,9 @@ $routeFactory = function (FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/hello/{name}', function (Request $request, $name) {
             return new Response('Hello, ' . $name . '!');
         });
-};
+});
 
-// Handle the Request and send a Response
-$app = new Application($routeFactory);
+// Run the application
 $app->run();
 ```
 
@@ -102,14 +103,17 @@ use TylerSommer\Nice\Application;
 require __DIR__ . '/../vendor/autoload.php';
 
 // Configure your RouteFactory to create any routes and controllers
-$routeFactory = function (FastRoute\RouteCollector $r) {
-    $r->addRoute('GET', '/', function (Request $request) {
-            return new Response('Hello, world');
-        });
-};
+$routeFactory = 
 
-// Create your app, and then the stack
+// Create your app
 $app = new Application($routeFactory);
+
+// ..add your routes
+$app->set('routes', function (FastRoute\RouteCollector $r) {
+    // ...
+});
+
+// ..and then create the stack
 $stack = new Stack\Builder();
 $stack->push(function ($app) {
         $cache = new HttpCache($app, new Store(__DIR__.'/cache'));
