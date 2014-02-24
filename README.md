@@ -27,7 +27,7 @@ $app->run();
 
 ```
 [x] Some kind of dependency injection solution
-[ ] Twig integration
+[x] Twig integration
 [ ] Production/development environments
 [ ] Caching of some kind
 ```
@@ -80,6 +80,47 @@ $app->run();
 Visit `index.php` in your browser and you should be greeted with "Hello, world".
 
 Visit `index.php/hello/Tyler` and you will be greeted with "Hello, Tyler".
+
+
+Use with [Twig](http://twig.sensiolabs.org)
+-------------------------------------------
+
+Add Twig to your project:
+
+```bash
+php composer.phar require twig/twig:dev-master
+```
+
+Then, in your front controller:
+
+```php
+<?php
+
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use TylerSommer\Nice\Application;
+
+require __DIR__ . '/../vendor/autoload.php';
+
+$app = new Application();
+
+// Set your templates directory
+$app->setParameter('twig.template_dir', __DIR__ . '/../views');
+
+$app->set('routes', function (FastRoute\RouteCollector $r) {
+    $r->addRoute('GET', '/hello/{name}', function (Application $app, Request $request, $name) {
+            // Use the Twig service to render templates
+            $rendered = $app->get('twig')->render('index.html.twig', array(
+                    'name' => $name
+                ));
+            
+            return new Response($rendered);
+        });
+});
+
+// Run the application
+$app->run();
+```
 
 
 Use with [stack middlewares](http://stackphp.com)
