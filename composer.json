@@ -10,10 +10,12 @@
   },
   "require-dev": {
     "symfony/debug": "~2.4",
-    "phpunit/phpunit": "~3.7"
+    "phpunit/phpunit": "~3.7",
+    "twig/twig": "~1.15"
   },
   "suggest": {
-    "stack/builder": "Easily stack middlewares - stackphp.com"
+    "stack/builder": "Stack HttpKernel middlewares - http://stackphp.com",
+    "twig/twig": "Twig, the flexible, fast, and secure template language for PHP - http://twig.sensiolabs.org"
   },
   "autoload": {
     "psr-4": {
