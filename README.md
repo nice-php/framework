@@ -25,9 +25,9 @@ $app->run();
 
 Further improvements to come:
 
-[x] Some kind of dependency injection solution
-[ ] Production/development environments
-[ ] Caching of some kind
+- [x] Some kind of dependency injection solution
+- [ ] Production/development environments
+- [ ] Caching of some kind
 
 
 Installation
