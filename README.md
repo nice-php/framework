@@ -23,12 +23,13 @@ $app->set('routes', function (FastRoute\RouteCollector $r) {
 $app->run();
 ```
 
-Further improvements to come:
+#### Improvements to come:
 
-- [x] Some kind of dependency injection solution
-- [ ] Production/development environments
-- [ ] Caching of some kind
-
+```
+[x] Some kind of dependency injection solution
+[ ] Production/development environments
+[ ] Caching of some kind
+```
 
 Installation
 ------------
