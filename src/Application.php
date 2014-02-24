@@ -14,6 +14,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\HttpKernel\HttpKernel;
@@ -32,8 +33,6 @@ class Application extends HttpKernel implements ContainerInterface
      * @param EventDispatcherInterface    $dispatcher
      * @param ControllerResolverInterface $resolver
      * @param RequestStack                $requestStack
-     *
-     * @internal param callable $routeFactory
      */
     public function __construct(
         ContainerInterface $container = null,
@@ -69,6 +68,13 @@ class Application extends HttpKernel implements ContainerInterface
             ->addArgument(new Reference('router.dispatcher'));
 
         $dispatcher->addSubscriberService('router.dispatcher_subscriber', 'TylerSommer\Nice\Router\RouterSubscriber');
+
+        $container->setParameter('twig.template_dir', '');
+        $container->register('twig.loader', 'Twig_Loader_Filesystem')
+            ->addArgument('%twig.template_dir%');
+
+        $container->register('twig', 'Twig_Environment')
+            ->addArgument(new Reference('twig.loader'));
     }
 
     /**
@@ -82,6 +88,24 @@ class Application extends HttpKernel implements ContainerInterface
         $response = $this->handle($request);
         $response->send();
         $this->terminate($request, $response);
+    }
+
+    /**
+     * Handles a Request to convert it to a Response.
+     *
+     * @param Request $request A Request instance
+     * @param int     $type    The type of the request
+     *                         (one of HttpKernelInterface::MASTER_REQUEST or HttpKernelInterface::SUB_REQUEST)
+     * @param bool    $catch   Whether to catch exceptions or not
+     *
+     * @return Response A Response instance
+     */
+    public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
+    {
+        // TODO: Handle $catch
+        $request->attributes->set('app', $this);
+
+        return parent::handle($request, $type, $catch);
     }
 
     /**
@@ -112,9 +136,9 @@ class Application extends HttpKernel implements ContainerInterface
      *
      * @return object The associated service
      *
-     * @throws InvalidArgumentException if the service is not defined
+     * @throws InvalidArgumentException          if the service is not defined
      * @throws ServiceCircularReferenceException When a circular reference is detected
-     * @throws ServiceNotFoundException When the service is not defined
+     * @throws ServiceNotFoundException          When the service is not defined
      *
      * @see Reference
      */
@@ -140,7 +164,7 @@ class Application extends HttpKernel implements ContainerInterface
      *
      * @param string $name The parameter name
      *
-     * @return mixed  The parameter value
+     * @return mixed The parameter value
      *
      * @throws InvalidArgumentException if the parameter is not defined
      */
