@@ -16,11 +16,11 @@ class RouterSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         $subscriber = $this->getSubscriber();
         $request = Request::create('/', 'GET');
-        
+
         $event = $this->getEvent($request);
-        
+
         $subscriber->onKernelRequest($event);
-        
+
         $this->assertEquals('handler1', $request->get('_controller'));
     }
 
@@ -51,7 +51,7 @@ class RouterSubscriberTest extends \PHPUnit_Framework_TestCase
         $event = $this->getEvent($request);
 
         $this->setExpectedException('Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException');
-        
+
         $subscriber->onKernelRequest($event);
     }
 
@@ -75,13 +75,13 @@ class RouterSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     private function getSubscriber()
     {
-        $routeDispatcher = \FastRoute\simpleDispatcher(function(\FastRoute\RouteCollector $r) {
+        $routeDispatcher = \FastRoute\simpleDispatcher(function (\FastRoute\RouteCollector $r) {
                 $r->addRoute('GET', '/', 'handler1');
                 $r->addRoute('GET', '/hello/{value}', 'handler2');
             });
-        
+
         $subscriber = new RouterSubscriber($routeDispatcher);
-        
+
         return $subscriber;
     }
 
@@ -93,8 +93,8 @@ class RouterSubscriberTest extends \PHPUnit_Framework_TestCase
     private function getEvent(Request $request)
     {
         return new GetResponseEvent(
-            $this->getMockForAbstractClass('Symfony\Component\HttpKernel\HttpKernelInterface'), 
-            $request, 
+            $this->getMockForAbstractClass('Symfony\Component\HttpKernel\HttpKernelInterface'),
+            $request,
             HttpKernelInterface::MASTER_REQUEST
         );
     }
