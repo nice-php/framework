@@ -4,12 +4,12 @@
   "license": "MIT",
   "require": {
     "php": ">=5.4.0",
-    "symfony/http-kernel": "~2.4",
-    "symfony/dependency-injection": "~2.4",
+    "symfony/http-kernel": "~2.3",
+    "symfony/dependency-injection": "~2.3",
     "nikic/fast-route": "dev-master"
   },
   "require-dev": {
-    "symfony/debug": "~2.4",
+    "symfony/debug": "~2.3",
     "phpunit/phpunit": "~3.7",
     "twig/twig": "~1.15"
   },
