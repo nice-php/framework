@@ -48,13 +48,21 @@ class Application extends ContainerAwareHttpKernel implements ContainerInterface
     {
         $this->environment = (string) $environment;
         $this->debug       = (bool) $debug;
-        
-        $container  = new ContainerBuilder();
+
+        $container  = $this->initializeContainer();
         $dispatcher = new ContainerAwareEventDispatcher($container);
+        $dispatcher->addSubscriberService('router.dispatcher_subscriber', 'Nice\Router\RouterSubscriber');
         $resolver   = new ControllerResolver();
 
         parent::__construct($dispatcher, $container, $resolver);
-        
+    }
+
+    /**
+     * @return ContainerInterface
+     */
+    protected function initializeContainer()
+    {
+        $container = $this->buildContainer();
         $container->setParameter('app.env', $this->environment);
         $container->setParameter('app.debug', $this->debug);
 
@@ -65,6 +73,9 @@ class Application extends ContainerAwareHttpKernel implements ContainerInterface
             ->addArgument(new Reference('router.data_generator'));
 
         $container->register('routes', 'Closure')
+            ->setSynthetic(true);
+
+        $container->register('app', 'Symfony\Component\HttpKernel\HttpKernelInterface')
             ->setSynthetic(true);
 
         $container->register('router.dispatcher_factory', 'Nice\Router\DispatcherFactory\GroupCountBasedFactory')
@@ -78,14 +89,32 @@ class Application extends ContainerAwareHttpKernel implements ContainerInterface
         $container->register('router.dispatcher_subscriber', 'Nice\Router\RouterSubscriber')
             ->addArgument(new Reference('router.dispatcher'));
 
-        $dispatcher->addSubscriberService('router.dispatcher_subscriber', 'Nice\Router\RouterSubscriber');
-
         $container->setParameter('twig.template_dir', '');
         $container->register('twig.loader', 'Twig_Loader_Filesystem')
             ->addArgument('%twig.template_dir%');
 
         $container->register('twig', 'Twig_Environment')
             ->addArgument(new Reference('twig.loader'));
+        
+        $this->container = $container;
+        $this->container->set('app', $this);
+        
+        return $this->container;
+    }
+
+    /**
+     * Builds the service container.
+     *
+     * @return ContainerBuilder The compiled service container
+     *
+     * @throws \RuntimeException
+     */
+    protected function buildContainer()
+    {
+        $container = new ContainerBuilder();
+        $container->addObjectResource($this);
+
+        return $container;
     }
 
     /**
@@ -142,7 +171,7 @@ class Application extends ContainerAwareHttpKernel implements ContainerInterface
      */
     public function getCacheDir()
     {
-        return $this->rootDir . '/cache/' . $this->environment;
+        return $this->getRootDir() . '/cache/' . $this->environment;
     }
 
     /**
@@ -150,7 +179,7 @@ class Application extends ContainerAwareHttpKernel implements ContainerInterface
      */
     public function getLogDir()
     {
-        return $this->rootDir . '/logs';
+        return $this->getRootDir() . '/logs';
     }
 
     /**
