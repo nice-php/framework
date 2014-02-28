@@ -67,11 +67,11 @@ $app = new Application();
 
 // Configure your routes
 $app->set('routes', function (FastRoute\RouteCollector $r) {
-    $r->addRoute('GET', '/', function (Request $request) {
+    $r->addRoute('GET', '/', function (Application $app, Request $request) {
             return new Response('Hello, world');
         });
 
-    $r->addRoute('GET', '/hello/{name}', function (Request $request, $name) {
+    $r->addRoute('GET', '/hello/{name}', function (Application $app, Request $request, $name) {
             return new Response('Hello, ' . $name . '!');
         });
 });
@@ -80,9 +80,9 @@ $app->set('routes', function (FastRoute\RouteCollector $r) {
 $app->run();
 ```
 
-Visit `index.php` in your browser and you should be greeted with "Hello, world".
+Visit `index.php` in your browser and you'll see the message "Hello, world".
 
-Visit `index.php/hello/Tyler` and you will be greeted with "Hello, Tyler".
+Visit `index.php/hello/Tyler` and you will see "Hello, Tyler".
 
 
 Use with [Twig](http://twig.sensiolabs.org)
