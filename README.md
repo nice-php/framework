@@ -145,9 +145,6 @@ use Nice\Application;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-// Configure your RouteFactory to create any routes and controllers
-$routeFactory = 
-
 // Create your app
 $app = new Application($routeFactory);
 
@@ -159,8 +156,7 @@ $app->set('routes', function (FastRoute\RouteCollector $r) {
 // ..and then create the stack
 $stack = new Stack\Builder();
 $stack->push(function ($app) {
-        $cache = new HttpCache($app, new Store(__DIR__.'/cache'));
-        return $cache;
+        return new HttpCache($app, new Store(__DIR__.'/cache'));
     });
 
 $app = $stack->resolve($app);
