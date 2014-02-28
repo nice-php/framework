@@ -36,27 +36,19 @@ class Application extends ContainerAwareHttpKernel implements ContainerInterface
     /**
      * Constructor
      *
-     * @param ContainerInterface          $container
-     * @param EventDispatcherInterface    $dispatcher
-     * @param ControllerResolverInterface $resolver
-     * @param RequestStack                $requestStack
+     * @param string $environment
+     * @param bool   $debug
      */
-    public function __construct(
-        $environment = 'dev',
-        $debug = false,
-        EventDispatcherInterface $dispatcher = null,
-        ContainerInterface $container = null,
-        ControllerResolverInterface $resolver = null,
-        RequestStack $requestStack = null
-    ) {
+    public function __construct($environment = 'dev', $debug = false) 
+    {
         $this->environment = (string) $environment;
         $this->debug       = (bool) $debug;
-        $container  = $container ?: new ContainerBuilder();
+        
+        $container  = new ContainerBuilder();
+        $dispatcher = new ContainerAwareEventDispatcher($container);
+        $resolver   = new ControllerResolver();
 
-        $dispatcher = $dispatcher ?: new ContainerAwareEventDispatcher($container);
-        $resolver   = $resolver ?: new ControllerResolver();
-
-        parent::__construct($dispatcher, $container, $resolver, $requestStack);
+        parent::__construct($dispatcher, $container, $resolver);
         
         $container->setParameter('app.env', $this->environment);
         $container->setParameter('app.debug', $this->debug);
