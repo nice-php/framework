@@ -2,8 +2,10 @@
 
 namespace Nice;
 
+use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
@@ -11,12 +13,9 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ScopeInterface;
 use Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
-use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\HttpKernel\DependencyInjection\ContainerAwareHttpKernel;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -44,7 +43,7 @@ class Application extends ContainerAwareHttpKernel implements ContainerInterface
      * @param string $environment
      * @param bool   $debug
      */
-    public function __construct($environment = 'dev', $debug = false) 
+    public function __construct($environment = 'dev', $debug = false)
     {
         $this->environment = (string) $environment;
         $this->debug       = (bool) $debug;
@@ -62,44 +61,63 @@ class Application extends ContainerAwareHttpKernel implements ContainerInterface
      */
     protected function initializeContainer()
     {
-        $container = $this->buildContainer();
-        $container->setParameter('app.env', $this->environment);
-        $container->setParameter('app.debug', $this->debug);
+        $class = $this->getContainerClass();
+        $cache = new ConfigCache($this->getCacheDir() . '/' . $class . '.php', $this->debug);
+        if (!$cache->isFresh()) {
+            $container = $this->buildContainer();
+            $container->setParameter('app.env', $this->environment);
+            $container->setParameter('app.debug', $this->debug);
 
-        $container->register('router.parser', 'FastRoute\RouteParser\Std');
-        $container->register('router.data_generator', 'FastRoute\DataGenerator\GroupCountBased');
-        $container->register('router.collector', 'FastRoute\RouteCollector')
-            ->addArgument(new Reference('router.parser'))
-            ->addArgument(new Reference('router.data_generator'));
+            $container->register('router.parser', 'FastRoute\RouteParser\Std');
+            $container->register('router.data_generator', 'FastRoute\DataGenerator\GroupCountBased');
+            $container->register('router.collector', 'FastRoute\RouteCollector')
+                ->addArgument(new Reference('router.parser'))
+                ->addArgument(new Reference('router.data_generator'));
 
-        $container->register('routes', 'Closure')
-            ->setSynthetic(true);
+            $container->register('routes', 'Closure')
+                ->setSynthetic(true);
 
-        $container->register('app', 'Symfony\Component\HttpKernel\HttpKernelInterface')
-            ->setSynthetic(true);
+            $container->register('app', 'Symfony\Component\HttpKernel\HttpKernelInterface')
+                ->setSynthetic(true);
 
-        $container->register('router.dispatcher_factory', 'Nice\Router\DispatcherFactory\GroupCountBasedFactory')
-            ->addArgument(new Reference('router.collector'))
-            ->addArgument(new Reference('routes'));
+            $container->register('router.dispatcher_factory', 'Nice\Router\DispatcherFactory\GroupCountBasedFactory')
+                ->addArgument(new Reference('router.collector'))
+                ->addArgument(new Reference('routes'));
 
-        $container->register('router.dispatcher', 'FastRoute\Dispatcher')
-            ->setFactoryService('router.dispatcher_factory')
-            ->setFactoryMethod('create');
+            $container->register('router.dispatcher', 'FastRoute\Dispatcher')
+                ->setFactoryService('router.dispatcher_factory')
+                ->setFactoryMethod('create');
 
-        $container->register('router.dispatcher_subscriber', 'Nice\Router\RouterSubscriber')
-            ->addArgument(new Reference('router.dispatcher'));
+            $container->register('router.dispatcher_subscriber', 'Nice\Router\RouterSubscriber')
+                ->addArgument(new Reference('router.dispatcher'));
 
-        $container->setParameter('twig.template_dir', '');
-        $container->register('twig.loader', 'Twig_Loader_Filesystem')
-            ->addArgument('%twig.template_dir%');
+            $container->setParameter('twig.template_dir', $this->getRootDir() . '/views');
+            $container->register('twig.loader', 'Twig_Loader_Filesystem')
+                ->addArgument('%twig.template_dir%');
 
-        $container->register('twig', 'Twig_Environment')
-            ->addArgument(new Reference('twig.loader'));
-        
-        $this->container = $container;
+            $container->register('twig', 'Twig_Environment')
+                ->addArgument(new Reference('twig.loader'));
+
+            $container->compile();
+            $this->dumpContainer($cache, $container, $class, 'Container');
+        }
+
+        require_once $cache;
+
+        $this->container = new $class();
         $this->container->set('app', $this);
-        
+
         return $this->container;
+    }
+
+    /**
+     * Gets the container class.
+     *
+     * @return string The container class
+     */
+    protected function getContainerClass()
+    {
+        return ucfirst($this->environment) . ($this->debug ? 'Debug' : '') . 'ProjectContainer';
     }
 
     /**
@@ -111,10 +129,46 @@ class Application extends ContainerAwareHttpKernel implements ContainerInterface
      */
     protected function buildContainer()
     {
-        $container = new ContainerBuilder();
+        foreach (array('cache' => $this->getCacheDir(), 'logs' => $this->getLogDir()) as $name => $dir) {
+            if (!is_dir($dir)) {
+                if (false === @mkdir($dir, 0777, true)) {
+                    throw new \RuntimeException(sprintf("Unable to create the %s directory (%s)", $name, $dir));
+                }
+            } elseif (!is_writable($dir)) {
+                throw new \RuntimeException(sprintf("Unable to write in the %s directory (%s)", $name, $dir));
+            }
+        }
+
+        $container = $this->getContainerBuilder();
         $container->addObjectResource($this);
 
         return $container;
+    }
+
+    /**
+     * Gets a new ContainerBuilder instance used to build the service container.
+     *
+     * @return ContainerBuilder
+     */
+    protected function getContainerBuilder()
+    {
+        return new ContainerBuilder();
+    }
+
+    /**
+     * Dumps the service container to PHP code in the cache.
+     *
+     * @param ConfigCache      $cache     The config cache
+     * @param ContainerBuilder $container The service container
+     * @param string           $class     The name of the class to generate
+     * @param string           $baseClass The name of the container's base class
+     */
+    protected function dumpContainer(ConfigCache $cache, ContainerBuilder $container, $class, $baseClass)
+    {
+        $dumper  = new PhpDumper($container);
+        $content = $dumper->dump(array('class' => $class, 'base_class' => $baseClass));
+
+        $cache->write($content, $container->getResources());
     }
 
     /**
@@ -151,9 +205,9 @@ class Application extends ContainerAwareHttpKernel implements ContainerInterface
 
     /**
      * Get the root directory
-     * 
+     *
      * @todo The use of superglobal and realpath make this basically untestable
-     * 
+     *
      * @return string
      */
     public function getRootDir()
@@ -162,7 +216,7 @@ class Application extends ContainerAwareHttpKernel implements ContainerInterface
             // Assumes application root is one level above web root
             $this->rootDir = realpath(dirname($_SERVER['SCRIPT_FILENAME']) . '/..');
         }
-    
+
         return $this->rootDir;
     }
 
