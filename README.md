@@ -3,7 +3,8 @@ A nice PHP microframework
 
 [![Build Status](https://travis-ci.org/tyler-sommer/nice.png?branch=master)](https://travis-ci.org/tyler-sommer/nice)
 
-Nice integrates nikic's [FastRoute](https://github.com/nikic/FastRoute) router with 
+Nice is a simple microframework for PHP 5.4 and later. Nice integrates nikic's 
+[FastRoute](https://github.com/nikic/FastRoute) router with 
 the [Symfony2 HttpKernel](https://github.com/symfony/HttpKernel) and 
 [Dependency Injection](https://github.com/symfony/DependencyInjection) components.
 
@@ -28,7 +29,7 @@ $app->run();
 #### Improvements to come:
 
 ```
-[x] Some kind of dependency injection solution
+[x] Symfony2 dependency injection
 [x] Twig integration
 [ ] Production/development environments
 [ ] Caching of some kind
