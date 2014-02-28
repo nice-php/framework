@@ -6,19 +6,21 @@ use TylerSommer\Nice\Application;
 
 require __DIR__ . '/../vendor/autoload.php';
 
+// Enable Symfony debug error handlers
 Symfony\Component\Debug\Debug::enable();
 
-// Configure your RouteFactory
-$routeFactory = function (FastRoute\RouteCollector $r) {
-    $r->addRoute('GET', '/', function (Request $request) {
-            return new Response('Hello, world');
-        });
+$app = new Application();
 
-    $r->addRoute('GET', '/hello/{name}', function (Request $request, $name) {
-            return new Response('Hello, ' . $name . '!');
-        });
-};
+// Configure your routes
+$app->set('routes', function (FastRoute\RouteCollector $r) {
+        $r->addRoute('GET', '/', function (Request $request) {
+                return new Response('Hello, world');
+            });
 
-// Handle the Request and send a Response
-$app = new Application($routeFactory);
+        $r->addRoute('GET', '/hello/{name}', function (Request $request, $name) {
+                return new Response('Hello, ' . $name . '!');
+            });
+    });
+
+// Run the application
 $app->run();
