@@ -1,6 +1,8 @@
 A nice PHP microframework
 =========================
 
+[![Build Status](https://travis-ci.org/tyler-sommer/nice.png?branch=master)](https://travis-ci.org/tyler-sommer/nice)
+
 Nice integrates nikic's [FastRoute](https://github.com/nikic/FastRoute) router with 
 the [Symfony2 HttpKernel](https://github.com/symfony/HttpKernel) and 
 [Dependency Injection](https://github.com/symfony/DependencyInjection) components.
