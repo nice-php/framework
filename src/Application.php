@@ -57,6 +57,9 @@ class Application extends ContainerAwareHttpKernel implements ContainerInterface
         $resolver   = $resolver ?: new ControllerResolver();
 
         parent::__construct($dispatcher, $container, $resolver, $requestStack);
+        
+        $container->setParameter('app.env', $this->environment);
+        $container->setParameter('app.debug', $this->debug);
 
         $container->register('router.parser', 'FastRoute\RouteParser\Std');
         $container->register('router.data_generator', 'FastRoute\DataGenerator\GroupCountBased');
