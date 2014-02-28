@@ -26,12 +26,17 @@ class Application extends ContainerAwareHttpKernel implements ContainerInterface
     /**
      * @var bool
      */
-    private $debug;
+    protected $debug;
 
     /**
      * @var string
      */
-    private $environment;
+    protected $environment;
+
+    /**
+     * @var string
+     */
+    protected $rootDir;
 
     /**
      * Constructor
@@ -113,6 +118,47 @@ class Application extends ContainerAwareHttpKernel implements ContainerInterface
         $request->attributes->set('app', $this);
 
         return parent::handle($request, $type, $catch);
+    }
+
+    /**
+     * Get the root directory
+     * 
+     * @todo The use of superglobal and realpath make this basically untestable
+     * 
+     * @return string
+     */
+    public function getRootDir()
+    {
+        if (!$this->rootDir) {
+            // Assumes application root is one level above web root
+            $this->rootDir = realpath(dirname($_SERVER['SCRIPT_FILENAME']) . '/..');
+        }
+    
+        return $this->rootDir;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCacheDir()
+    {
+        return $this->rootDir . '/cache/' . $this->environment;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogDir()
+    {
+        return $this->rootDir . '/logs';
+    }
+
+    /**
+     * @return string
+     */
+    public function getCharset()
+    {
+        return 'UTF-8';
     }
 
     /**
@@ -260,7 +306,7 @@ class Application extends ContainerAwareHttpKernel implements ContainerInterface
     /**
      * @return boolean
      */
-    public function getDebug()
+    public function isDebug()
     {
         return $this->debug;
     }
