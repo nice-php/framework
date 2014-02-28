@@ -253,8 +253,6 @@ class Application extends ContainerAwareHttpKernel implements ContainerInterface
     /**
      * Determines whether the given scope is currently active.
      *
-     * It does however not check if the scope actually exists.
-     *
      * @param string $name
      *
      * @return bool
@@ -262,5 +260,21 @@ class Application extends ContainerAwareHttpKernel implements ContainerInterface
     public function isScopeActive($name)
     {
         return $this->container->isScopeActive($name);
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getDebug()
+    {
+        return $this->debug;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEnvironment()
+    {
+        return $this->environment;
     }
 }
