@@ -17,14 +17,21 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+use Symfony\Component\HttpKernel\DependencyInjection\ContainerAwareHttpKernel;
 use Symfony\Component\HttpKernel\HttpKernel;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-class Application extends HttpKernel implements ContainerInterface
+class Application extends ContainerAwareHttpKernel implements ContainerInterface
 {
     /**
-     * @var ContainerInterface
+     * @var bool
      */
-    protected $container;
+    private $debug;
+
+    /**
+     * @var string
+     */
+    private $environment;
 
     /**
      * Constructor
@@ -35,17 +42,21 @@ class Application extends HttpKernel implements ContainerInterface
      * @param RequestStack                $requestStack
      */
     public function __construct(
-        ContainerInterface $container = null,
+        $environment = 'dev',
+        $debug = false,
         EventDispatcherInterface $dispatcher = null,
+        ContainerInterface $container = null,
         ControllerResolverInterface $resolver = null,
         RequestStack $requestStack = null
     ) {
-        $this->container = $container = $container ?: new ContainerBuilder();
+        $this->environment = (string) $environment;
+        $this->debug       = (bool) $debug;
+        $container  = $container ?: new ContainerBuilder();
 
         $dispatcher = $dispatcher ?: new ContainerAwareEventDispatcher($container);
         $resolver   = $resolver ?: new ControllerResolver();
 
-        parent::__construct($dispatcher, $resolver, $requestStack);
+        parent::__construct($dispatcher, $container, $resolver, $requestStack);
 
         $container->register('router.parser', 'FastRoute\RouteParser\Std');
         $container->register('router.data_generator', 'FastRoute\DataGenerator\GroupCountBased');
@@ -80,11 +91,13 @@ class Application extends HttpKernel implements ContainerInterface
     /**
      * Helper method to get things going.
      *
-     * Inspired by Silex
+     * Inspired by Silex.
+     *
+     * @param Request $request
      */
-    public function run()
+    public function run(Request $request = null)
     {
-        $request = Request::createFromGlobals();
+        $request = $request ?: Request::createFromGlobals();
         $response = $this->handle($request);
         $response->send();
         $this->terminate($request, $response);
@@ -102,7 +115,6 @@ class Application extends HttpKernel implements ContainerInterface
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
-        // TODO: Handle $catch
         $request->attributes->set('app', $this);
 
         return parent::handle($request, $type, $catch);
