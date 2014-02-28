@@ -2,7 +2,7 @@
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use TylerSommer\Nice\Application;
+use Nice\Application;
 
 require __DIR__ . '/../vendor/autoload.php';
 

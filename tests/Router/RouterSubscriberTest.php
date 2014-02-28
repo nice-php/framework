@@ -1,11 +1,11 @@
 <?php
 
-namespace TylerSommer\Nice\Tests\Router;
+namespace Nice\Tests\Router;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use TylerSommer\Nice\Router\RouterSubscriber;
+use Nice\Router\RouterSubscriber;
 
 class RouterSubscriberTest extends \PHPUnit_Framework_TestCase
 {

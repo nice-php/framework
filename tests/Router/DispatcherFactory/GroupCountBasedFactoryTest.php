@@ -1,9 +1,9 @@
 <?php
 
-namespace TylerSommer\Nice\Tests\Router\DispatcherFactory;
+namespace Nice\Tests\Router\DispatcherFactory;
 
 use FastRoute\RouteCollector;
-use TylerSommer\Nice\Router\DispatcherFactory\GroupCountBasedFactory;
+use Nice\Router\DispatcherFactory\GroupCountBasedFactory;
 
 class GroupCountBasedFactoryTest extends \PHPUnit_Framework_TestCase
 {

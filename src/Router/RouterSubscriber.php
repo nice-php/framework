@@ -1,6 +1,6 @@
 <?php
 
-namespace TylerSommer\Nice\Router;
+namespace Nice\Router;
 
 use FastRoute\Dispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

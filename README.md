@@ -10,7 +10,7 @@ the [Symfony2 HttpKernel](https://github.com/symfony/HttpKernel) and
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use TylerSommer\Nice\Application;
+use Nice\Application;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -53,7 +53,7 @@ In your `web` directory, create `index.php` and add:
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use TylerSommer\Nice\Application;
+use Nice\Application;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -98,7 +98,7 @@ Then, in your front controller:
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use TylerSommer\Nice\Application;
+use Nice\Application;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -141,7 +141,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpCache\HttpCache;
 use Symfony\Component\HttpKernel\HttpCache\Store;
-use TylerSommer\Nice\Application;
+use Nice\Application;
 
 require __DIR__ . '/../vendor/autoload.php';
 

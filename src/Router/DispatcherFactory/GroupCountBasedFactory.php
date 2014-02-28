@@ -1,11 +1,11 @@
 <?php
 
-namespace TylerSommer\Nice\Router\DispatcherFactory;
+namespace Nice\Router\DispatcherFactory;
 
 use FastRoute\Dispatcher\GroupCountBased;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
-use TylerSommer\Nice\Router\DispatcherFactory;
+use Nice\Router\DispatcherFactory;
 
 class GroupCountBasedFactory implements DispatcherFactory
 {

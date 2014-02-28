@@ -1,6 +1,6 @@
 <?php
 
-namespace TylerSommer\Nice;
+namespace Nice;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -67,7 +67,7 @@ class Application extends ContainerAwareHttpKernel implements ContainerInterface
         $container->register('routes', 'Closure')
             ->setSynthetic(true);
 
-        $container->register('router.dispatcher_factory', 'TylerSommer\Nice\Router\DispatcherFactory\GroupCountBasedFactory')
+        $container->register('router.dispatcher_factory', 'Nice\Router\DispatcherFactory\GroupCountBasedFactory')
             ->addArgument(new Reference('router.collector'))
             ->addArgument(new Reference('routes'));
 
@@ -75,10 +75,10 @@ class Application extends ContainerAwareHttpKernel implements ContainerInterface
             ->setFactoryService('router.dispatcher_factory')
             ->setFactoryMethod('create');
 
-        $container->register('router.dispatcher_subscriber', 'TylerSommer\Nice\Router\RouterSubscriber')
+        $container->register('router.dispatcher_subscriber', 'Nice\Router\RouterSubscriber')
             ->addArgument(new Reference('router.dispatcher'));
 
-        $dispatcher->addSubscriberService('router.dispatcher_subscriber', 'TylerSommer\Nice\Router\RouterSubscriber');
+        $dispatcher->addSubscriberService('router.dispatcher_subscriber', 'Nice\Router\RouterSubscriber');
 
         $container->setParameter('twig.template_dir', '');
         $container->register('twig.loader', 'Twig_Loader_Filesystem')

@@ -19,8 +19,8 @@
   },
   "autoload": {
     "psr-4": {
-      "TylerSommer\\Nice\\Tests\\": "tests/",
-      "TylerSommer\\Nice\\": "src/"
+      "Nice\\Tests\\": "tests/",
+      "Nice\\": "src/"
     }
   },
   "extra": {
