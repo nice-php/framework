@@ -9,13 +9,17 @@
 
 namespace Nice;
 
+use Nice\Extension\RouterExtension;
+use Nice\Extension\TwigExtension;
 use Symfony\Component\Config\ConfigCache;
+use Symfony\Component\HttpKernel\DependencyInjection\MergeExtensionConfigurationPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ScopeInterface;
 use Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher;
@@ -45,6 +49,11 @@ class Application extends ContainerAwareHttpKernel implements ContainerInterface
     protected $rootDir;
 
     /**
+     * @var array|Extension[]
+     */
+    protected $extensions = array();
+
+    /**
      * Constructor
      *
      * @param string $environment
@@ -56,9 +65,9 @@ class Application extends ContainerAwareHttpKernel implements ContainerInterface
         $this->debug       = (bool) $debug;
 
         $container  = $this->initializeContainer();
-        $dispatcher = new ContainerAwareEventDispatcher($container);
-        $dispatcher->addSubscriberService('router.dispatcher_subscriber', 'Nice\Router\RouterSubscriber');
-        $resolver   = new ControllerResolver();
+        
+        $dispatcher = $container->get('event_dispatcher');
+        $resolver   = $container->get('router.controller_resolver');
 
         parent::__construct($dispatcher, $container, $resolver);
     }
@@ -75,35 +84,22 @@ class Application extends ContainerAwareHttpKernel implements ContainerInterface
             $container->setParameter('app.env', $this->environment);
             $container->setParameter('app.debug', $this->debug);
 
-            $container->register('router.parser', 'FastRoute\RouteParser\Std');
-            $container->register('router.data_generator', 'FastRoute\DataGenerator\GroupCountBased');
-            $container->register('router.collector', 'FastRoute\RouteCollector')
-                ->addArgument(new Reference('router.parser'))
-                ->addArgument(new Reference('router.data_generator'));
-
-            $container->register('routes', 'Closure')
-                ->setSynthetic(true);
+            $container->register('event_dispatcher', 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher')
+                ->setArguments(array(new Reference('service_container')))
+                ->addMethodCall('addSubscriberService', array('router.dispatcher_subscriber', 'Nice\Router\RouterSubscriber'));
 
             $container->register('app', 'Symfony\Component\HttpKernel\HttpKernelInterface')
                 ->setSynthetic(true);
-
-            $container->register('router.dispatcher_factory', 'Nice\Router\DispatcherFactory\GroupCountBasedFactory')
-                ->addArgument(new Reference('router.collector'))
-                ->addArgument(new Reference('routes'));
-
-            $container->register('router.dispatcher', 'FastRoute\Dispatcher')
-                ->setFactoryService('router.dispatcher_factory')
-                ->setFactoryMethod('create');
-
-            $container->register('router.dispatcher_subscriber', 'Nice\Router\RouterSubscriber')
-                ->addArgument(new Reference('router.dispatcher'));
-
-            $container->setParameter('twig.template_dir', $this->getRootDir() . '/views');
-            $container->register('twig.loader', 'Twig_Loader_Filesystem')
-                ->addArgument('%twig.template_dir%');
-
-            $container->register('twig', 'Twig_Environment')
-                ->addArgument(new Reference('twig.loader'));
+            
+            $router = new RouterExtension();
+            $twig = new TwigExtension($this->getRootDir() . '/views');
+            $extensions = array(
+                $router->getAlias(),
+                $twig->getAlias()
+            );
+            $container->registerExtension($router);
+            $container->registerExtension($twig);
+            $container->addCompilerPass(new MergeExtensionConfigurationPass($extensions));
 
             $container->compile();
             $this->dumpContainer($cache, $container, $class, 'Container');
