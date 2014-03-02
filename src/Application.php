@@ -95,6 +95,16 @@ class Application implements HttpKernelInterface, ContainerInterface
     }
 
     /**
+     * Register an extension with the Application
+     * 
+     * @param Extension $extension
+     */
+    public function registerExtension(Extension $extension)
+    {
+        $this->extensions[] = $extension;
+    }
+
+    /**
      * @return ContainerInterface
      */
     protected function initializeContainer()
@@ -114,13 +124,16 @@ class Application implements HttpKernelInterface, ContainerInterface
                 ->setSynthetic(true);
 
             $router = new RouterExtension();
-            $twig = new TwigExtension($this->getRootDir() . '/views');
             $extensions = array(
-                $router->getAlias(),
-                $twig->getAlias()
+                $router->getAlias()
             );
+            
             $container->registerExtension($router);
-            $container->registerExtension($twig);
+            foreach ($this->extensions as $extension) {
+                $container->registerExtension($extension);
+                $extensions[] = $extension->getAlias();
+            } 
+            
             $container->addCompilerPass(new MergeExtensionConfigurationPass($extensions));
 
             $container->compile();
@@ -289,6 +302,10 @@ class Application implements HttpKernelInterface, ContainerInterface
      */
     public function set($id, $service, $scope = self::SCOPE_CONTAINER)
     {
+        if (!$this->booted) {
+            $this->boot();
+        }
+        
         $this->container->set($id, $service, $scope);
     }
 
@@ -308,6 +325,10 @@ class Application implements HttpKernelInterface, ContainerInterface
      */
     public function get($id, $invalidBehavior = self::EXCEPTION_ON_INVALID_REFERENCE)
     {
+        if (!$this->booted) {
+            $this->boot();
+        }
+        
         return $this->container->get($id, $invalidBehavior);
     }
 
@@ -320,6 +341,10 @@ class Application implements HttpKernelInterface, ContainerInterface
      */
     public function has($id)
     {
+        if (!$this->booted) {
+            $this->boot();
+        }
+        
         return $this->container->has($id);
     }
 
@@ -334,6 +359,10 @@ class Application implements HttpKernelInterface, ContainerInterface
      */
     public function getParameter($name)
     {
+        if (!$this->booted) {
+            $this->boot();
+        }
+        
         return $this->container->getParameter($name);
     }
 
@@ -346,6 +375,10 @@ class Application implements HttpKernelInterface, ContainerInterface
      */
     public function hasParameter($name)
     {
+        if (!$this->booted) {
+            $this->boot();
+        }
+        
         return $this->container->hasParameter($name);
     }
 
@@ -357,6 +390,10 @@ class Application implements HttpKernelInterface, ContainerInterface
      */
     public function setParameter($name, $value)
     {
+        if (!$this->booted) {
+            $this->boot();
+        }
+        
         $this->container->setParameter($name, $value);
     }
 
@@ -367,6 +404,10 @@ class Application implements HttpKernelInterface, ContainerInterface
      */
     public function enterScope($name)
     {
+        if (!$this->booted) {
+            $this->boot();
+        }
+        
         $this->container->enterScope($name);
     }
 
@@ -377,6 +418,10 @@ class Application implements HttpKernelInterface, ContainerInterface
      */
     public function leaveScope($name)
     {
+        if (!$this->booted) {
+            $this->boot();
+        }
+        
         $this->container->leaveScope($name);
     }
 
@@ -387,6 +432,10 @@ class Application implements HttpKernelInterface, ContainerInterface
      */
     public function addScope(ScopeInterface $scope)
     {
+        if (!$this->booted) {
+            $this->boot();
+        }
+        
         $this->container->addScope($scope);
     }
 
@@ -399,6 +448,10 @@ class Application implements HttpKernelInterface, ContainerInterface
      */
     public function hasScope($name)
     {
+        if (!$this->booted) {
+            $this->boot();
+        }
+        
         return $this->container->hasScope($name);
     }
 
@@ -411,6 +464,10 @@ class Application implements HttpKernelInterface, ContainerInterface
      */
     public function isScopeActive($name)
     {
+        if (!$this->booted) {
+            $this->boot();
+        }
+        
         return $this->container->isScopeActive($name);
     }
 
