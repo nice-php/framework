@@ -12,9 +12,9 @@ namespace Nice\Router\DispatcherFactory;
 use FastRoute\Dispatcher\GroupCountBased;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
-use Nice\Router\DispatcherFactory;
+use Nice\Router\DispatcherFactoryInterface;
 
-class GroupCountBasedFactory implements DispatcherFactory
+class GroupCountBasedFactory implements DispatcherFactoryInterface
 {
     /**
      * @var \FastRoute\RouteCollector
