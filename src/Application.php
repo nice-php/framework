@@ -10,7 +10,6 @@
 namespace Nice;
 
 use Nice\Extension\RouterExtension;
-use Nice\Extension\TwigExtension;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\HttpKernel\DependencyInjection\MergeExtensionConfigurationPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -53,19 +52,19 @@ class Application implements HttpKernelInterface, ContainerInterface
     protected $container;
 
     /**
-     * @var HttpKernelInterface
-     */
-    private $kernel;
-
-    /**
      * @var array|Extension[]
      */
     protected $extensions = array();
 
     /**
+     * @var HttpKernelInterface
+     */
+    private $kernel;
+
+    /**
      * @var bool
      */
-    protected $booted = false;
+    private $booted = false;
 
     /**
      * Constructor
@@ -105,6 +104,16 @@ class Application implements HttpKernelInterface, ContainerInterface
     }
 
     /**
+     * Register default extensions
+     * 
+     * This method allows a subclass to customize default extensions
+     */
+    protected function registerDefaultExtensions()
+    {
+        $this->registerExtension(new RouterExtension());
+    }
+
+    /**
      * @return ContainerInterface
      */
     protected function initializeContainer()
@@ -123,12 +132,7 @@ class Application implements HttpKernelInterface, ContainerInterface
             $container->register('app', 'Symfony\Component\HttpKernel\HttpKernelInterface')
                 ->setSynthetic(true);
 
-            $router = new RouterExtension();
-            $extensions = array(
-                $router->getAlias()
-            );
-            
-            $container->registerExtension($router);
+            $extensions = array();
             foreach ($this->extensions as $extension) {
                 $container->registerExtension($extension);
                 $extensions[] = $extension->getAlias();
