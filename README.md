@@ -107,8 +107,8 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $app = new Application();
 
-// Set your templates directory
-$app->setParameter('twig.template_dir', __DIR__ . '/../views');
+// Register the Twig extension
+$app->registerExtension(new TwigExtension(__DIR__ . '/../views'));
 
 $app->set('routes', function (FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/hello/{name}', function (Application $app, Request $request, $name) {
@@ -149,7 +149,7 @@ use Nice\Application;
 require __DIR__ . '/../vendor/autoload.php';
 
 // Create your app
-$app = new Application($routeFactory);
+$app = new Application();
 
 // ..add your routes
 $app->set('routes', function (FastRoute\RouteCollector $r) {
