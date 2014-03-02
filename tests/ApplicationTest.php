@@ -19,7 +19,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function testInstantiation()
     {
         $app = new Application('test', true);
-        
+
         $this->assertTrue($app->isDebug());
         $this->assertEquals('test', $app->getEnvironment());
     }

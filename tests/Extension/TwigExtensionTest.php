@@ -20,10 +20,10 @@ class TwigExtensionTest extends \PHPUnit_Framework_TestCase
     public function testConfigure()
     {
         $extension = new TwigExtension('/path');
-        
+
         $container = new ContainerBuilder();
         $extension->load(array(), $container);
-        
+
         $this->assertEquals('/path', $container->getParameter('twig.template_dir'));
         $this->assertTrue($container->hasDefinition('twig'));
     }

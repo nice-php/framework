@@ -20,10 +20,10 @@ class RouterExtensionTest extends \PHPUnit_Framework_TestCase
     public function testConfigure()
     {
         $extension = new RouterExtension();
-        
+
         $container = new ContainerBuilder();
         $extension->load(array(), $container);
-        
+
         $this->assertTrue($container->hasDefinition('router.controller_resolver'));
         $this->assertTrue($container->hasDefinition('http_kernel'));
     }
