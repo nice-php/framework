@@ -102,6 +102,7 @@ Then, in your front controller:
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Nice\Application;
+use Nice\Extension\TwigExtension;
 
 require __DIR__ . '/../vendor/autoload.php';
 
