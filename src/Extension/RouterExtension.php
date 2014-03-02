@@ -37,12 +37,14 @@ class RouterExtension extends Extension
             ->addArgument(new Reference('router.parser'))
             ->addArgument(new Reference('router.data_generator'));
 
-        $container->register('routes', 'Closure')
-            ->setSynthetic(true);
-
-        $container->register('router.dispatcher_factory', 'Nice\Router\DispatcherFactory\GroupCountBasedFactory')
-            ->addArgument(new Reference('router.collector'))
-            ->addArgument(new Reference('routes'));
+        if (!$container->hasDefinition('router.dispatcher_factory')) {
+            $container->register('routes', 'Closure')
+                ->setSynthetic(true);
+    
+            $container->register('router.dispatcher_factory', 'Nice\Router\DispatcherFactory\GroupCountBasedFactory')
+                ->addArgument(new Reference('router.collector'))
+                ->addArgument(new Reference('routes'));
+        }
 
         $container->register('router.dispatcher', 'FastRoute\Dispatcher')
             ->setFactoryService('router.dispatcher_factory')
