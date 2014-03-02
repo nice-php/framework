@@ -26,8 +26,6 @@ use Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Controller\ControllerResolver;
-use Symfony\Component\HttpKernel\DependencyInjection\ContainerAwareHttpKernel;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
@@ -89,10 +87,10 @@ class Application implements HttpKernelInterface, ContainerInterface
         if ($this->booted) {
             return;
         }
-        
+
         $this->container = $this->initializeContainer();
         $this->kernel    = $this->container->get('http_kernel');
-        
+
         $this->booted = true;
     }
 
@@ -114,7 +112,7 @@ class Application implements HttpKernelInterface, ContainerInterface
 
             $container->register('app', 'Symfony\Component\HttpKernel\HttpKernelInterface')
                 ->setSynthetic(true);
-            
+
             $router = new RouterExtension();
             $twig = new TwigExtension($this->getRootDir() . '/views');
             $extensions = array(
@@ -210,7 +208,7 @@ class Application implements HttpKernelInterface, ContainerInterface
         $request = $request ?: Request::createFromGlobals();
         $response = $this->handle($request);
         $response->send();
-        
+
         if ($this->kernel instanceof TerminableInterface) {
             $this->kernel->terminate($request, $response);
         }

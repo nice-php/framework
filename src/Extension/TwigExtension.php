@@ -25,7 +25,7 @@ class TwigExtension extends Extension
 
     /**
      * Constructor
-     * 
+     *
      * @param string $templateDir
      */
     public function __construct($templateDir)
