@@ -11,6 +11,15 @@ namespace Nice;
 
 use Nice\Extension\RouterExtension;
 use Symfony\Component\Config\ConfigCache;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Loader\DelegatingLoader;
+use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Config\Loader\LoaderResolver;
+use Symfony\Component\DependencyInjection\Loader\ClosureLoader;
+use Symfony\Component\DependencyInjection\Loader\IniFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\MergeExtensionConfigurationPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -95,7 +104,7 @@ class Application implements HttpKernelInterface, ContainerInterface
 
     /**
      * Register an extension with the Application
-     * 
+     *
      * @param Extension $extension
      */
     public function registerExtension(Extension $extension)
@@ -105,7 +114,7 @@ class Application implements HttpKernelInterface, ContainerInterface
 
     /**
      * Register default extensions
-     * 
+     *
      * This method allows a subclass to customize default extensions
      */
     protected function registerDefaultExtensions()
@@ -136,8 +145,8 @@ class Application implements HttpKernelInterface, ContainerInterface
             foreach ($this->extensions as $extension) {
                 $container->registerExtension($extension);
                 $extensions[] = $extension->getAlias();
-            } 
-            
+            }
+
             $container->addCompilerPass(new MergeExtensionConfigurationPass($extensions));
 
             $container->compile();
@@ -184,6 +193,10 @@ class Application implements HttpKernelInterface, ContainerInterface
         $container = $this->getContainerBuilder();
         $container->addObjectResource($this);
 
+        if (null !== $cont = $this->registerContainerConfiguration($this->getContainerLoader($container))) {
+            $container->merge($cont);
+        }
+
         return $container;
     }
 
@@ -195,6 +208,45 @@ class Application implements HttpKernelInterface, ContainerInterface
     protected function getContainerBuilder()
     {
         return new ContainerBuilder();
+    }
+
+    /**
+     * Loads the container configuration
+     *
+     * Override this method in a subclass to facilitate loading the
+     * container configuration from a file or other source.
+     *
+     * Optionally, return a configured Container and it will be merged
+     * with the main Container.
+     *
+     * @param LoaderInterface $loader A LoaderInterface instance
+     *
+     * @return null|ContainerInterface
+     */
+    protected function registerContainerConfiguration(LoaderInterface $loader)
+    {
+        return null;
+    }
+
+    /**
+     * Returns a loader for the container.
+     *
+     * @param ContainerInterface $container The service container
+     *
+     * @return DelegatingLoader The loader
+     */
+    protected function getContainerLoader(ContainerInterface $container)
+    {
+        $locator = new FileLocator($this);
+        $resolver = new LoaderResolver(array(
+            new XmlFileLoader($container, $locator),
+            new YamlFileLoader($container, $locator),
+            new IniFileLoader($container, $locator),
+            new PhpFileLoader($container, $locator),
+            new ClosureLoader($container),
+        ));
+
+        return new DelegatingLoader($resolver);
     }
 
     /**
@@ -309,7 +361,7 @@ class Application implements HttpKernelInterface, ContainerInterface
         if (!$this->booted) {
             $this->boot();
         }
-        
+
         $this->container->set($id, $service, $scope);
     }
 
@@ -332,7 +384,7 @@ class Application implements HttpKernelInterface, ContainerInterface
         if (!$this->booted) {
             $this->boot();
         }
-        
+
         return $this->container->get($id, $invalidBehavior);
     }
 
@@ -348,7 +400,7 @@ class Application implements HttpKernelInterface, ContainerInterface
         if (!$this->booted) {
             $this->boot();
         }
-        
+
         return $this->container->has($id);
     }
 
@@ -366,7 +418,7 @@ class Application implements HttpKernelInterface, ContainerInterface
         if (!$this->booted) {
             $this->boot();
         }
-        
+
         return $this->container->getParameter($name);
     }
 
@@ -382,7 +434,7 @@ class Application implements HttpKernelInterface, ContainerInterface
         if (!$this->booted) {
             $this->boot();
         }
-        
+
         return $this->container->hasParameter($name);
     }
 
@@ -397,7 +449,7 @@ class Application implements HttpKernelInterface, ContainerInterface
         if (!$this->booted) {
             $this->boot();
         }
-        
+
         $this->container->setParameter($name, $value);
     }
 
@@ -411,7 +463,7 @@ class Application implements HttpKernelInterface, ContainerInterface
         if (!$this->booted) {
             $this->boot();
         }
-        
+
         $this->container->enterScope($name);
     }
 
@@ -425,7 +477,7 @@ class Application implements HttpKernelInterface, ContainerInterface
         if (!$this->booted) {
             $this->boot();
         }
-        
+
         $this->container->leaveScope($name);
     }
 
@@ -439,7 +491,7 @@ class Application implements HttpKernelInterface, ContainerInterface
         if (!$this->booted) {
             $this->boot();
         }
-        
+
         $this->container->addScope($scope);
     }
 
@@ -455,7 +507,7 @@ class Application implements HttpKernelInterface, ContainerInterface
         if (!$this->booted) {
             $this->boot();
         }
-        
+
         return $this->container->hasScope($name);
     }
 
@@ -471,7 +523,7 @@ class Application implements HttpKernelInterface, ContainerInterface
         if (!$this->booted) {
             $this->boot();
         }
-        
+
         return $this->container->isScopeActive($name);
     }
 
