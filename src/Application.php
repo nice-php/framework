@@ -30,8 +30,9 @@ use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\DependencyInjection\ContainerAwareHttpKernel;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\TerminableInterface;
 
-class Application extends ContainerAwareHttpKernel implements ContainerInterface
+class Application implements HttpKernelInterface, ContainerInterface
 {
     /**
      * @var bool
@@ -49,9 +50,24 @@ class Application extends ContainerAwareHttpKernel implements ContainerInterface
     protected $rootDir;
 
     /**
+     * @var ContainerInterface
+     */
+    protected $container;
+
+    /**
+     * @var HttpKernelInterface
+     */
+    private $kernel;
+
+    /**
      * @var array|Extension[]
      */
     protected $extensions = array();
+
+    /**
+     * @var bool
+     */
+    protected $booted = false;
 
     /**
      * Constructor
@@ -63,13 +79,21 @@ class Application extends ContainerAwareHttpKernel implements ContainerInterface
     {
         $this->environment = (string) $environment;
         $this->debug       = (bool) $debug;
+    }
 
-        $container  = $this->initializeContainer();
+    /**
+     * Boot the Application
+     */
+    public function boot()
+    {
+        if ($this->booted) {
+            return;
+        }
         
-        $dispatcher = $container->get('event_dispatcher');
-        $resolver   = $container->get('router.controller_resolver');
-
-        parent::__construct($dispatcher, $container, $resolver);
+        $this->container = $this->initializeContainer();
+        $this->kernel    = $this->container->get('http_kernel');
+        
+        $this->booted = true;
     }
 
     /**
@@ -186,7 +210,10 @@ class Application extends ContainerAwareHttpKernel implements ContainerInterface
         $request = $request ?: Request::createFromGlobals();
         $response = $this->handle($request);
         $response->send();
-        $this->terminate($request, $response);
+        
+        if ($this->kernel instanceof TerminableInterface) {
+            $this->kernel->terminate($request, $response);
+        }
     }
 
     /**
@@ -203,7 +230,7 @@ class Application extends ContainerAwareHttpKernel implements ContainerInterface
     {
         $request->attributes->set('app', $this);
 
-        return parent::handle($request, $type, $catch);
+        return $this->kernel->handle($request, $type, $catch);
     }
 
     /**

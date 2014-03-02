@@ -51,5 +51,10 @@ class RouterExtension extends Extension
             ->addArgument(new Reference('router.dispatcher'));
         
         $container->register('router.controller_resolver', 'Symfony\Component\HttpKernel\Controller\ControllerResolver');
+        
+        $container->register('http_kernel', 'Symfony\Component\HttpKernel\DependencyInjection\ContainerAwareHttpKernel')
+            ->addArgument(new Reference('event_dispatcher'))
+            ->addArgument(new Reference('service_container'))
+            ->addArgument(new Reference('router.controller_resolver'));
     }
 }
