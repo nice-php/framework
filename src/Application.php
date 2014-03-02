@@ -85,6 +85,8 @@ class Application implements HttpKernelInterface, ContainerInterface
     {
         $this->environment = (string) $environment;
         $this->debug       = (bool) $debug;
+        
+        $this->registerDefaultExtensions();
     }
 
     /**
@@ -295,6 +297,10 @@ class Application implements HttpKernelInterface, ContainerInterface
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
+        if (!$this->booted) {
+            $this->boot();
+        }
+        
         $request->attributes->set('app', $this);
 
         return $this->kernel->handle($request, $type, $catch);
