@@ -168,3 +168,16 @@ $app = $stack->resolve($app);
 // Run the app
 Stack\run($app);
 ```
+
+
+Advanced usage
+--------------
+
+You can subclass `Nice\Application` to accomplish more complex setups. Override 
+the `registerContainerConfiguration` and `registerDefaultExtension` methods to
+allow for extended customization.
+
+This behavior is borrowed from Symfony's `KernelInterface` interface, allowing
+for annotations, yaml, xml, php, and closures to provide the configuration.
+
+An example is coming soon. 
