@@ -12,6 +12,7 @@ namespace Nice\Extension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Scope;
 
 /**
  * Sets up FastRoute services
@@ -56,5 +57,7 @@ class RouterExtension extends Extension
             ->addArgument(new Reference('event_dispatcher'))
             ->addArgument(new Reference('service_container'))
             ->addArgument(new Reference('router.controller_resolver'));
+        
+        $container->addScope(new Scope('request'));
     }
 }
