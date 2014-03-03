@@ -12,15 +12,8 @@ namespace Nice;
 use Nice\Extension\RouterExtension;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Config\Loader\DelegatingLoader;
-use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\Config\Loader\LoaderResolver;
-use Symfony\Component\DependencyInjection\Loader\ClosureLoader;
-use Symfony\Component\DependencyInjection\Loader\IniFileLoader;
-use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\HttpKernel\DependencyInjection\MergeExtensionConfigurationPass;
+use Symfony\Component\Config\Loader;
+use Symfony\Component\DependencyInjection\Loader as DiLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
@@ -34,10 +27,14 @@ use Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\DependencyInjection\MergeExtensionConfigurationPass;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
 
+/**
+ * An Application
+ */
 class Application implements HttpKernelInterface, ContainerInterface
 {
     /**
@@ -85,7 +82,7 @@ class Application implements HttpKernelInterface, ContainerInterface
     {
         $this->environment = (string) $environment;
         $this->debug       = (bool) $debug;
-        
+
         $this->registerDefaultExtensions();
     }
 
@@ -221,11 +218,11 @@ class Application implements HttpKernelInterface, ContainerInterface
      * Optionally, return a configured Container and it will be merged
      * with the main Container.
      *
-     * @param LoaderInterface $loader A LoaderInterface instance
+     * @param Loader\LoaderInterface $loader A LoaderInterface instance
      *
      * @return null|ContainerInterface
      */
-    protected function registerContainerConfiguration(LoaderInterface $loader)
+    protected function registerContainerConfiguration(Loader\LoaderInterface $loader)
     {
         return null;
     }
@@ -235,20 +232,20 @@ class Application implements HttpKernelInterface, ContainerInterface
      *
      * @param ContainerInterface $container The service container
      *
-     * @return DelegatingLoader The loader
+     * @return Loader\DelegatingLoader The loader
      */
     protected function getContainerLoader(ContainerInterface $container)
     {
         $locator = new FileLocator($this);
-        $resolver = new LoaderResolver(array(
-            new XmlFileLoader($container, $locator),
-            new YamlFileLoader($container, $locator),
-            new IniFileLoader($container, $locator),
-            new PhpFileLoader($container, $locator),
-            new ClosureLoader($container),
+        $resolver = new Loader\LoaderResolver(array(
+            new DiLoader\XmlFileLoader($container, $locator),
+            new DiLoader\YamlFileLoader($container, $locator),
+            new DiLoader\IniFileLoader($container, $locator),
+            new DiLoader\PhpFileLoader($container, $locator),
+            new DiLoader\ClosureLoader($container),
         ));
 
-        return new DelegatingLoader($resolver);
+        return new Loader\DelegatingLoader($resolver);
     }
 
     /**
@@ -300,7 +297,7 @@ class Application implements HttpKernelInterface, ContainerInterface
         if (!$this->booted) {
             $this->boot();
         }
-        
+
         $request->attributes->set('app', $this);
 
         return $this->kernel->handle($request, $type, $catch);
