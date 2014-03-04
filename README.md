@@ -26,15 +26,6 @@ $app->set('routes', function (FastRoute\RouteCollector $r) {
 $app->run();
 ```
 
-#### Improvements to come:
-
-```
-[x] Symfony2 dependency injection
-[x] Twig integration
-[ ] Production/development environments
-[ ] Caching of some kind
-```
-
 Installation
 ------------
 
@@ -177,7 +168,7 @@ You can subclass `Nice\Application` to accomplish more complex setups. Override
 the `registerContainerConfiguration` and `registerDefaultExtension` methods to
 allow for extended customization.
 
-This behavior is borrowed from Symfony's `KernelInterface` interface, allowing
+This behavior is borrowed from Symfony's `KernelInterface`, allowing
 for annotations, yaml, xml, php, and closures to provide the configuration.
 
 An example is coming soon. 
