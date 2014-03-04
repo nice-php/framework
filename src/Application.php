@@ -112,6 +112,16 @@ class Application implements HttpKernelInterface, ContainerInterface
     }
 
     /**
+     * Get all Extensions registered with the Application
+     *
+     * @return array|\Symfony\Component\DependencyInjection\Extension\Extension[]
+     */
+    public function getRegisteredExtensions()
+    {
+        return $this->extensions;
+    }
+    
+    /**
      * Register default extensions
      *
      * This method allows a subclass to customize default extensions
@@ -305,16 +315,16 @@ class Application implements HttpKernelInterface, ContainerInterface
 
     /**
      * Get the root directory
-     *
-     * @todo The use of superglobal and realpath make this basically untestable
-     *
+     * 
+     * @todo Remove reliance on superglobal
+     * 
      * @return string
      */
     public function getRootDir()
     {
         if (!$this->rootDir) {
             // Assumes application root is one level above web root
-            $this->rootDir = realpath(dirname($_SERVER['SCRIPT_FILENAME']) . '/..');
+            $this->rootDir = dirname($_SERVER['SCRIPT_FILENAME']) . '/..';
         }
 
         return $this->rootDir;
