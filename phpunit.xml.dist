@@ -9,8 +9,7 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="false"
-         bootstrap="./vendor/autoload.php"
->
+         bootstrap="./vendor/autoload.php">
     <testsuites>
         <testsuite name="Nice Test Suite">
             <directory>./tests/</directory>
@@ -20,6 +19,13 @@
     <filter>
         <whitelist>
             <directory>./src/</directory>
+            <exclude>
+                <file>*Interface.php</file>
+            </exclude>
         </whitelist>
     </filter>
+
+    <logging>
+        <!--<log type="coverage-text" target="php://stdout" showUncoveredFiles="true" highlight="true"/>-->
+    </logging>
 </phpunit>
