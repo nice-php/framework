@@ -146,7 +146,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
      */
     public function testRun()
     {
-        $mockKernel = $this->getMockForAbstractClass('Nice\Tests\TerminalHttpKernelInterface');
+        $mockKernel = $this->getMockForAbstractClass('Nice\Tests\TerminableHttpKernelInterface');
         $mockKernel->expects($this->once())
             ->method('handle')
             ->will($this->returnValue(new Response()));
@@ -277,7 +277,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     }
 }
 
-interface TerminalHttpKernelInterface extends HttpKernelInterface, TerminableInterface
+interface TerminableHttpKernelInterface extends HttpKernelInterface, TerminableInterface
 {
 
 }
