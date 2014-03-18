@@ -20,7 +20,7 @@
         <whitelist>
             <directory>./src/</directory>
             <exclude>
-                <file>*Interface.php</file>
+                <file>./src/Router/DispatcherFactoryInterface.php</file>
             </exclude>
         </whitelist>
     </filter>
