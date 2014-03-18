@@ -40,8 +40,6 @@ class TwigExtension extends Extension
      * @param ContainerBuilder $container A ContainerBuilder instance
      *
      * @throws \InvalidArgumentException When provided tag is not defined in this extension
-     *
-     * @api
      */
     public function load(array $config, ContainerBuilder $container)
     {
