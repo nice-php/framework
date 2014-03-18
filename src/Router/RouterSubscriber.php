@@ -14,6 +14,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 class RouterSubscriber implements EventSubscriberInterface
 {
@@ -70,6 +71,8 @@ class RouterSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array('kernel.request' => 'onKernelRequest');
+        return array(
+            KernelEvents::REQUEST => array('onKernelRequest', 128)
+        );
     }
 }
