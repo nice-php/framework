@@ -53,7 +53,8 @@ class RouterExtension extends Extension
         $container->register('router.dispatcher_subscriber', 'Nice\Router\RouterSubscriber')
             ->addArgument(new Reference('router.dispatcher'));
 
-        $container->register('router.controller_resolver', 'Symfony\Component\HttpKernel\Controller\ControllerResolver');
+        $container->register('router.controller_resolver', 'Nice\Router\ContainerAwareControllerResolver')
+            ->addMethodCall('setContainer', array(new Reference('service_container')));
 
         $container->register('http_kernel', 'Symfony\Component\HttpKernel\DependencyInjection\ContainerAwareHttpKernel')
             ->addArgument(new Reference('event_dispatcher'))
