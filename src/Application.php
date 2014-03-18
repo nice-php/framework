@@ -28,6 +28,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DependencyInjection\MergeExtensionConfigurationPass;
+use Symfony\Component\HttpKernel\DependencyInjection\RegisterListenersPass;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
@@ -144,8 +145,7 @@ class Application implements HttpKernelInterface, ContainerInterface
             $container->setParameter('app.debug', $this->debug);
 
             $container->register('event_dispatcher', 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher')
-                ->setArguments(array(new Reference('service_container')))
-                ->addMethodCall('addSubscriberService', array('router.dispatcher_subscriber', 'Nice\Router\RouterSubscriber'));
+                ->setArguments(array(new Reference('service_container')));
 
             $container->register('app', 'Symfony\Component\HttpKernel\HttpKernelInterface')
                 ->setSynthetic(true);
@@ -157,6 +157,7 @@ class Application implements HttpKernelInterface, ContainerInterface
             }
 
             $container->addCompilerPass(new MergeExtensionConfigurationPass($extensions));
+            $container->addCompilerPass(new RegisterListenersPass());
 
             $container->compile();
             $this->dumpContainer($cache, $container, $class, 'Container');

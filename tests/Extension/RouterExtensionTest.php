@@ -26,5 +26,7 @@ class RouterExtensionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($container->hasDefinition('router.controller_resolver'));
         $this->assertTrue($container->hasDefinition('http_kernel'));
+        $this->assertTrue($container->hasDefinition('router.dispatcher_subscriber'));
+        $this->assertTrue($container->getDefinition('router.dispatcher_subscriber')->hasTag('kernel.event_subscriber'));
     }
 }

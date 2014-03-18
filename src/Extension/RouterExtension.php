@@ -26,8 +26,6 @@ class RouterExtension extends Extension
      * @param ContainerBuilder $container A ContainerBuilder instance
      *
      * @throws \InvalidArgumentException When provided tag is not defined in this extension
-     *
-     * @api
      */
     public function load(array $config, ContainerBuilder $container)
     {
@@ -51,7 +49,8 @@ class RouterExtension extends Extension
             ->setFactoryMethod('create');
 
         $container->register('router.dispatcher_subscriber', 'Nice\Router\RouterSubscriber')
-            ->addArgument(new Reference('router.dispatcher'));
+            ->addArgument(new Reference('router.dispatcher'))
+            ->addTag('kernel.event_subscriber');
 
         $container->register('router.controller_resolver', 'Nice\Router\ContainerAwareControllerResolver')
             ->addMethodCall('setContainer', array(new Reference('service_container')));
