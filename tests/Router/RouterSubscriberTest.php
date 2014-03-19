@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Nice\Router\RouterSubscriber;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 class RouterSubscriberTest extends \PHPUnit_Framework_TestCase
 {
@@ -75,6 +76,16 @@ class RouterSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
 
         $subscriber->onKernelRequest($event);
+    }
+
+    /**
+     * Tests the static getSubscribedEvents method
+     */
+    public function testGetSubscribedEvents()
+    {
+        $this->assertEquals(array(
+                KernelEvents::REQUEST => array('onKernelRequest', 128),
+            ), RouterSubscriber::getSubscribedEvents());
     }
 
     /**
