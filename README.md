@@ -73,7 +73,28 @@ $app->run();
 
 Visit `index.php` in your browser and you'll see the message "Hello, world".
 
-Visit `index.php/hello/Tyler` and you will see "Hello, Tyler".
+Visit `index.php/hello/Tyler` and you will see "Hello, Tyler!".
+
+
+#### Enabling session management
+
+By default, session management is disabled. If you'd like to enable it, add the following:
+
+```php
+<?php
+
+use Nice\Application;
+use Nice\Extension\SessionExtension;
+
+// ...
+
+$app = new Application();
+$app->registerExtension(new SessionExtension());
+
+// ...
+
+$app->run();
+```
 
 
 Use with [Twig](http://twig.sensiolabs.org)
