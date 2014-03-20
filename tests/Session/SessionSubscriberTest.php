@@ -73,6 +73,26 @@ class SessionSubscriberTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test that the subscriber will not replace an existing Session on a Request
+     */
+    public function testDoesNotReplaceExistingSession()
+    {
+        $container = new Container();
+        $container->set('session', new Session(new MockFileSessionStorage()));
+        $subscriber = new SessionSubscriber($container);
+        
+        $session = new Session(new MockFileSessionStorage());
+        $request = Request::create('/', 'GET');
+        $request->setSession($session);
+
+        $event = $this->getEvent($request);
+
+        $subscriber->onKernelRequest($event);
+
+        $this->assertSame($session, $request->getSession());
+    }
+
+    /**
      * Tests the static getSubscribedEvents method
      */
     public function testGetSubscribedEvents()
