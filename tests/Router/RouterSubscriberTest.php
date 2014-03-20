@@ -84,7 +84,7 @@ class RouterSubscriberTest extends \PHPUnit_Framework_TestCase
     public function testGetSubscribedEvents()
     {
         $this->assertEquals(array(
-                KernelEvents::REQUEST => array('onKernelRequest', 128),
+                KernelEvents::REQUEST => array('onKernelRequest', 0),
             ), RouterSubscriber::getSubscribedEvents());
     }
 
