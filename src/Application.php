@@ -226,7 +226,7 @@ class Application implements HttpKernelInterface, ContainerInterface
      * Override this method in a subclass to facilitate loading the
      * container configuration from a file or other source.
      *
-     * Optionally, return a configured Container and it will be merged
+     * Return a configured Container and it will be merged
      * with the main Container.
      *
      * @param Loader\LoaderInterface $loader A LoaderInterface instance
