@@ -1,0 +1,86 @@
+<?php
+
+/*
+ * Copyright (c) Tyler Sommer
+ *
+ * For the full copyright and license information, please view the LICENSE file
+ * that was distributed with this source code.
+ */
+
+namespace Nice\Extension;
+
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\Extension\Extension;
+
+/**
+ * Sets up a firewall
+ */
+class SecurityExtension extends Extension
+{
+    /**
+     * @var array
+     */
+    private $options;
+
+    /**
+     * Constructor
+     *
+     * @param array $options
+     */
+    public function __construct(array $options)
+    {
+        $this->options = $options;
+    }
+
+    /**
+     * Returns extension configuration
+     *
+     * @param array            $config    $config    An array of configuration values
+     * @param ContainerBuilder $container A ContainerBuilder instance
+     *
+     * @return SecurityConfiguration
+     */
+    public function getConfiguration(array $config, ContainerBuilder $container)
+    {
+        return new SecurityConfiguration();
+    }
+    
+    /**
+     * Loads a specific configuration.
+     *
+     * @param array            $config    An array of configuration values
+     * @param ContainerBuilder $container A ContainerBuilder instance
+     *
+     * @throws \InvalidArgumentException When provided tag is not defined in this extension
+     */
+    public function load(array $configs, ContainerBuilder $container)
+    {
+        $configs = array_merge($configs, array('security' => $this->options));
+        $configuration = $this->getConfiguration($configs, $container);
+        $config = $this->processConfiguration($configuration, $configs);
+
+        $container->register('security.firewall_matcher', 'Symfony\Component\HttpFoundation\RequestMatcher')
+            ->setPublic(false)
+            ->addArgument($config['firewall']);
+        $container->register('security.auth_matcher', 'Symfony\Component\HttpFoundation\RequestMatcher')
+            ->setPublic(false)
+            ->addArgument($config['login_path'])
+            ->addArgument(null)
+            ->addArgument('POST');
+        $container->register('security.logout_matcher', 'Symfony\Component\HttpFoundation\RequestMatcher')
+            ->setPublic(false)
+            ->addArgument($config['logout_path']);
+        $container->register('security.security_subscriber', 'Nice\Security\FirewallSubscriber')
+            ->addArgument(new Reference('security.firewall_matcher'))
+            ->addArgument(new Reference('security.auth_matcher'))
+            ->addArgument(new Reference('security.logout_matcher'))
+            ->addArgument($config['username'])
+            ->addArgument($config['password'])
+            ->addArgument($config['login_path'])
+            ->addArgument($config['success_path'])
+            ->addArgument($config['token_session_key'])
+            ->addTag('kernel.event_subscriber');
+    }
+}
