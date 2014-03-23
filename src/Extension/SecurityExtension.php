@@ -52,8 +52,6 @@ class SecurityExtension extends Extension
      *
      * @param array            $config    An array of configuration values
      * @param ContainerBuilder $container A ContainerBuilder instance
-     *
-     * @throws \InvalidArgumentException When provided tag is not defined in this extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -72,12 +70,15 @@ class SecurityExtension extends Extension
         $container->register('security.logout_matcher', 'Symfony\Component\HttpFoundation\RequestMatcher')
             ->setPublic(false)
             ->addArgument($config['logout_path']);
+        $container->register('security.authenticator', 'Nice\Security\SimpleAuthenticator')
+            ->setPublic(false)
+            ->addArgument($config['username'])
+            ->addArgument($config['password']);
         $container->register('security.security_subscriber', 'Nice\Security\FirewallSubscriber')
             ->addArgument(new Reference('security.firewall_matcher'))
             ->addArgument(new Reference('security.auth_matcher'))
             ->addArgument(new Reference('security.logout_matcher'))
-            ->addArgument($config['username'])
-            ->addArgument($config['password'])
+            ->addArgument(new Reference('security.authenticator'))
             ->addArgument($config['login_path'])
             ->addArgument($config['success_path'])
             ->addArgument($config['token_session_key'])

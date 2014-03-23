@@ -36,16 +36,6 @@ class FirewallSubscriber implements EventSubscriberInterface
     /**
      * @var string
      */
-    private $username;
-
-    /**
-     * @var string
-     */
-    private $password;
-
-    /**
-     * @var string
-     */
     private $loginPath;
 
     /**
@@ -64,12 +54,17 @@ class FirewallSubscriber implements EventSubscriberInterface
     private $logoutMatcher;
 
     /**
+     * @var AuthenticatorInterface
+     */
+    private $authenticator;
+
+    /**
      * Constructor
-     * 
+     *
      * @param RequestMatcherInterface $firewallMatcher
      * @param RequestMatcherInterface $authMatcher
-     * @param string                  $username
-     * @param string                  $password
+     * @param RequestMatcherInterface $logoutMatcher
+     * @param AuthenticatorInterface  $authenticator
      * @param string                  $loginPath
      * @param string                  $successPath
      * @param string                  $tokenKey
@@ -78,8 +73,7 @@ class FirewallSubscriber implements EventSubscriberInterface
         RequestMatcherInterface $firewallMatcher,
         RequestMatcherInterface $authMatcher,
         RequestMatcherInterface $logoutMatcher,
-        $username, 
-        $password, 
+        AuthenticatorInterface $authenticator,
         $loginPath, 
         $successPath,
         $tokenKey
@@ -87,11 +81,10 @@ class FirewallSubscriber implements EventSubscriberInterface
         $this->firewallMatcher = $firewallMatcher;
         $this->authMatcher = $authMatcher;
         $this->logoutMatcher = $logoutMatcher;
-        $this->username = $username;
-        $this->password = $password;
         $this->loginPath = $loginPath;
         $this->successPath = $successPath;
         $this->tokenKey = $tokenKey;
+        $this->authenticator = $authenticator;
     }
 
     /**
@@ -110,12 +103,6 @@ class FirewallSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if (! ($session = $request->getSession())) {
-            $event->setResponse(new Response('', 403));
-
-            return;
-        }
-
         if ($this->logoutMatcher->matches($request)) {
             $this->handleLogout($event);
 
@@ -126,7 +113,13 @@ class FirewallSubscriber implements EventSubscriberInterface
             return;
         }
         
-        if (!$session->has($this->tokenKey)) {
+        if (!$request->hasSession()) {
+            $event->setResponse(new Response('', 403));
+            
+            return;
+        }
+        
+        if (!$request->getSession()->has($this->tokenKey)) {
             $this->redirectForAuthentication($event);
         }
     }
@@ -144,11 +137,15 @@ class FirewallSubscriber implements EventSubscriberInterface
     private function handleAuthentication(GetResponseEvent $event) 
     { 
         $request = $event->getRequest();
+        $session = $request->getSession();
         
-        if ($request->get('username') === $this->username
-            && $request->get('password') === $this->password
-        ) {
-            $session = $request->getSession();
+        if (!$session) {
+            $event->setResponse(new Response('', 403));
+            
+            return;
+        }
+        
+        if ($this->authenticator->authenticate($request)) {
             $session->set($this->tokenKey, true);
             
             $event->setResponse(new RedirectResponse($event->getRequest()->getBaseUrl() . $this->successPath));
