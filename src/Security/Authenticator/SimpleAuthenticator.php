@@ -7,8 +7,9 @@
  * that was distributed with this source code.
  */
 
-namespace Nice\Security;
+namespace Nice\Security\Authenticator;
 
+use Nice\Security\AuthenticatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class SimpleAuthenticator implements AuthenticatorInterface

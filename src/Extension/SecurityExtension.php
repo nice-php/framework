@@ -70,7 +70,7 @@ class SecurityExtension extends Extension
         $container->register('security.logout_matcher', 'Symfony\Component\HttpFoundation\RequestMatcher')
             ->setPublic(false)
             ->addArgument($config['logout_path']);
-        $container->register('security.authenticator', 'Nice\Security\SimpleAuthenticator')
+        $container->register('security.authenticator', 'Nice\Security\Authenticator\SimpleAuthenticator')
             ->setPublic(false)
             ->addArgument($config['username'])
             ->addArgument($config['password']);
