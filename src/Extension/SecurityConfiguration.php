@@ -24,7 +24,7 @@ class SecurityConfiguration implements ConfigurationInterface
             ->scalarNode('username')->isRequired()->end()
             ->scalarNode('password')->isRequired()->end()
             ->scalarNode('login_path')->defaultValue('/login')->end()
-            ->scalarNode('success_path')->defaultNull('/')->end()
+            ->scalarNode('success_path')->defaultValue('/')->end()
             ->scalarNode('logout_path')->defaultValue('/logout')->end()
             ->scalarNode('token_session_key')->defaultValue('__nice_is_authenticated')->end()
             ->end();
