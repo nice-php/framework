@@ -59,15 +59,35 @@ class SecurityExtensionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test configuration merging functionality
+     */
+    public function testLoadMergesConfigs()
+    {
+        $extension = new SecurityExtension();
+
+        $container = new ContainerBuilder();
+        $extension->load(array(
+                'security' => array(
+                    'firewall' => '.*',
+                    'username' => 'user',
+                    'password' => '1234'
+                )
+            ), $container);
+
+        $this->assertTrue($container->hasDefinition('security.firewall_matcher'));
+        $this->assertEquals('.*', $container->getDefinition('security.firewall_matcher')->getArgument(0));
+
+        $this->assertTrue($container->hasDefinition('security.authenticator'));
+        $this->assertEquals('user', $container->getDefinition('security.authenticator')->getArgument(0));
+        $this->assertEquals('1234', $container->getDefinition('security.authenticator')->getArgument(1));
+    }
+
+    /**
      * Test the getConfiguration method
      */
     public function testGetConfiguration()
     {
-        $extension = new SecurityExtension(array(
-            'firewall' => '.*',
-            'username' => 'user',
-            'password' => 'pass'
-        ));
+        $extension = new SecurityExtension();
 
         $container = new ContainerBuilder();
         $this->assertInstanceOf('Nice\Extension\SecurityConfiguration', $extension->getConfiguration(array(), $container));

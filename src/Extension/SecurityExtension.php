@@ -22,14 +22,14 @@ class SecurityExtension extends Extension
     /**
      * @var array
      */
-    private $options;
+    private $options = array();
 
     /**
      * Constructor
      *
      * @param array $options
      */
-    public function __construct(array $options)
+    public function __construct(array $options = array())
     {
         $this->options = $options;
     }
@@ -55,7 +55,7 @@ class SecurityExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $configs = array_merge($configs, array('security' => $this->options));
+        $configs[] = $this->options;
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
 
