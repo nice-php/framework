@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class SecurityExtensionTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Test the RouterExtension
+     * Test the SecurityExtension
      */
     public function testConfigure()
     {
@@ -57,7 +57,10 @@ class SecurityExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('__authed', $subscriberDefinition->getArgument(6));
         $this->assertTrue($container->getDefinition('security.security_subscriber')->hasTag('kernel.event_subscriber'));
     }
-    
+
+    /**
+     * Test the getConfiguration method
+     */
     public function testGetConfiguration()
     {
         $extension = new SecurityExtension(array(
