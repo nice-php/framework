@@ -76,14 +76,27 @@ Visit `index.php` in your browser and you'll see the message "Hello, world".
 Visit `index.php/hello/Tyler` and you will see "Hello, Tyler!".
 
 
-#### Enabled application-wide caching
+#### A word about caching
 
-The default installation will not write anything to any cache file. This means that for each request,
-by default, the container is re-built. This is a relatively expensive process, but you can easily enable
-caching by simply making a cache directory.
+Passing `false` as the third parameter of `Nice\Application` constructor will disable
+caching. The cache directory will be null if caching is disabled, which can be checked
+in your own code.
 
-Create a directory in your project root called `cache`. Ensure your webserver user has permissions to
-write to this directory.
+```php
+<?php
+
+use Nice\Application;
+
+// ...
+
+$app = new Application('prod', true, false);
+
+// Caching is disabled; the Cache Directory is null.
+assert($app->getCacheDir() === null);
+
+// or by calling isCacheEnabled
+assert($app->isCacheEnabled() === false);
+```
 
 
 #### Enabling session management
