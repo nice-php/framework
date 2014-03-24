@@ -40,6 +40,10 @@ php composer.phar require tyler-sommer/nice:dev-master nikic/fast-route:dev-mast
 Usage
 -----
 
+In your project root, create three directories: `cache`, `logs`, `web`. 
+
+> `cache` and `logs` must be writable by your webserver
+
 In your `web` directory, create `index.php` and add:
 
 ```php
