@@ -80,7 +80,7 @@ class SessionSubscriberTest extends \PHPUnit_Framework_TestCase
         $container = new Container();
         $container->set('session', new Session(new MockFileSessionStorage()));
         $subscriber = new SessionSubscriber($container);
-        
+
         $session = new Session(new MockFileSessionStorage());
         $request = Request::create('/', 'GET');
         $request->setSession($session);

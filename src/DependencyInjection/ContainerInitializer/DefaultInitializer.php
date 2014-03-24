@@ -11,10 +11,8 @@ namespace Nice\DependencyInjection\ContainerInitializer;
 
 use Nice\Application;
 use Nice\DependencyInjection\ContainerInitializerInterface;
-use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\MergeExtensionConfigurationPass;
 use Symfony\Component\HttpKernel\DependencyInjection\RegisterListenersPass;
@@ -43,7 +41,7 @@ class DefaultInitializer implements ContainerInitializerInterface
 
         $container->register('app', 'Symfony\Component\HttpKernel\HttpKernelInterface')
             ->setSynthetic(true);
-        
+
         $container->register('request', 'Symfony\Componenet\HttpKernel\Request')
             ->setSynthetic(true);
 
@@ -57,10 +55,10 @@ class DefaultInitializer implements ContainerInitializerInterface
         $container->addCompilerPass(new RegisterListenersPass());
 
         $container->compile();
-        
+
         return $container;
     }
-    
+
     /**
      * Gets a new ContainerBuilder instance used to build the service container.
      *

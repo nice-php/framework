@@ -10,9 +10,7 @@
 namespace Nice\Tests;
 
 use Nice\Application;
-use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,7 +25,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function testInstantiation()
     {
         $app = $this->getMockApplication();
-        
+
         $this->assertTrue($app->isDebug());
         $this->assertEquals('test', $app->getEnvironment());
 
@@ -101,18 +99,18 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function testEnterAndLeaveScope()
     {
         $app = $this->getMockApplication();
-        
+
         $app->boot();
-        
+
         $app->addScope(new Scope('test'));
-        
+
         $this->assertTrue($app->hasScope('test'));
         $this->assertFalse($app->isScopeActive('test'));
-        
+
         $app->enterScope('test');
-        
+
         $this->assertTrue($app->isScopeActive('test'));
-        
+
         $app->leaveScope('test');
         $this->assertFalse($app->isScopeActive('test'));
     }
@@ -185,15 +183,15 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $app->expects($this->any())
             ->method('getRootDir')
             ->will($this->returnValue(sys_get_temp_dir()));
-        
+
         $extensions = $app->getRegisteredExtensions();
         $this->assertCount(1, $extensions);
         $this->assertInstanceOf('Nice\Extension\RouterExtension', $extensions[0]);
         $app->boot();
-        
+
         $container = $app->getContainer();
         $this->assertNotNull($container);
-        
+
         $app->boot();
         $this->assertSame($container, $app->getContainer());
     }
@@ -211,9 +209,9 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $app->expects($this->any())
             ->method('getCacheDir')
             ->will($this->returnValue('/someunwriteable/path'));
-        
+
         $this->setExpectedException('RuntimeException', 'Unable to create the cache directory');
-        
+
         $app->boot();
     }
 
@@ -225,7 +223,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $tmpdir = sys_get_temp_dir() . '/' . md5(uniqid());
         mkdir($tmpdir, 0700, true);
         chmod($tmpdir, 0000);
-        
+
         /** @var \Nice\Application|\PHPUnit_Framework_MockObject_MockObject $app */
         $app = $this->getMockBuilder('Nice\Application')
             ->setMethods(array('getRootDir', 'getCacheDir'))
@@ -239,7 +237,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
 
         $app->boot();
     }
-    
+
     /**
      * @param HttpKernelInterface $kernel
      *

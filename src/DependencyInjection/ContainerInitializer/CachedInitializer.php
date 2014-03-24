@@ -15,9 +15,6 @@ use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
-use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\HttpKernel\DependencyInjection\MergeExtensionConfigurationPass;
-use Symfony\Component\HttpKernel\DependencyInjection\RegisterListenersPass;
 
 class CachedInitializer implements ContainerInitializerInterface
 {
@@ -33,7 +30,7 @@ class CachedInitializer implements ContainerInitializerInterface
 
     /**
      * Constructor
-     * 
+     *
      * @param ContainerInitializerInterface $wrappedInitializer
      * @param string                        $cacheDir
      */
@@ -46,11 +43,11 @@ class CachedInitializer implements ContainerInitializerInterface
         } elseif (!is_writable($cacheDir)) {
             throw new \RuntimeException(sprintf("Unable to write in the cache directory (%s)", $cacheDir));
         }
-        
+
         $this->cacheDir = $cacheDir;
         $this->wrappedInitializer = $wrappedInitializer;
     }
-    
+
     /**
      * Returns a fully built, ready to use Container
      *
@@ -64,7 +61,7 @@ class CachedInitializer implements ContainerInitializerInterface
         $cache = new ConfigCache($this->cacheDir . '/' . $class . '.php', $application->isDebug());
         if (!$cache->isFresh()) {
             $container = $this->wrappedInitializer->initializeContainer($application);
-            
+
             $this->dumpContainer($cache, $container, $class, 'Container');
         }
 

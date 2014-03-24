@@ -45,7 +45,7 @@ class TwigExtension extends Extension
     {
         $container->register('twig.asset_extension', 'Nice\Twig\AssetExtension')
             ->addArgument(new Reference('service_container'));
-        
+
         $container->setParameter('twig.template_dir', $this->templateDir);
         $container->register('twig.loader', 'Twig_Loader_Filesystem')
             ->addArgument(array('%twig.template_dir%'));

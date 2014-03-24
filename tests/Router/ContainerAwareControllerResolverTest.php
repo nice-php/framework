@@ -25,12 +25,12 @@ class ContainerAwareControllerResolverTest extends \PHPUnit_Framework_TestCase
         $request = new Request();
         $request->attributes->set('_controller', 'Nice\Tests\Router\ContainerAwareController::someAction');
         $resolver = new ContainerAwareControllerResolver();
-        
+
         $container = new Container();
         $resolver->setContainer($container);
-        
+
         $controller = $resolver->getController($request);
-        
+
         $this->assertCount(2, $controller);
         $this->assertSame($container, $controller[0]->getContainer());
     }
@@ -62,7 +62,7 @@ class ContainerAwareController implements ContainerAwareInterface
     {
         return $this->container;
     }
-    
+
     /**
      * An action
      */

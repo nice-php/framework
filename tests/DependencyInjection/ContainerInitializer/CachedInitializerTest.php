@@ -11,15 +11,8 @@ namespace Nice\Tests\DependencyInjection\ContainerInitializer;
 
 use Nice\Application;
 use Nice\DependencyInjection\ContainerInitializer\CachedInitializer;
-use Nice\DependencyInjection\ContainerInitializer\DefaultInitializer;
-use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Scope;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\TerminableInterface;
 
 class CachedInitializerTest extends \PHPUnit_Framework_TestCase
 {
@@ -29,7 +22,7 @@ class CachedInitializerTest extends \PHPUnit_Framework_TestCase
     public function testInitializeContainer()
     {
         $initializer = $this->getInitializer(sys_get_temp_dir(), $this->once());
-        
+
         /** @var \Nice\Application|\PHPUnit_Framework_MockObject_MockObject $app */
         $app = $this->getMockBuilder('Nice\Application')
             ->setMethods(array('registerDefaultExtensions'))
@@ -38,13 +31,13 @@ class CachedInitializerTest extends \PHPUnit_Framework_TestCase
 
         $container = $initializer->initializeContainer($app);
         $this->assertNotNull($container);
-        
+
         return $app;
     }
 
     /**
      * Test a fresh cache
-     * 
+     *
      * @depends testInitializeContainer
      */
     public function testCacheIsFresh(Application $app)
@@ -61,7 +54,7 @@ class CachedInitializerTest extends \PHPUnit_Framework_TestCase
     public function testFailureToCreateCacheDir()
     {
         $this->setExpectedException('RuntimeException', 'Unable to create the cache directory');
-        
+
         $this->getInitializer('/someunwriteable/path');
     }
 
@@ -88,10 +81,10 @@ class CachedInitializerTest extends \PHPUnit_Framework_TestCase
     {
         $default = $this->getMockForAbstractClass('Nice\DependencyInjection\ContainerInitializerInterface');
         $default->expects($expects ?: $this->any())->method('initializeContainer')
-            ->will($this->returnCallback(function() {
+            ->will($this->returnCallback(function () {
                         return new ContainerBuilder();
                     }));
-        
+
         return new CachedInitializer($default, $cacheDir);
     }
 }

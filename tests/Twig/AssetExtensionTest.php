@@ -21,9 +21,9 @@ class AssetExtensionTest extends \PHPUnit_Framework_TestCase
     public function testPrependsBasePath()
     {
         $extension = $this->getExtension('/');
-        
+
         $path = $extension->getAssetUrl('some-asset.css');
-        
+
         $this->assertEquals('/some-asset.css', $path);
     }
 
@@ -99,7 +99,7 @@ class AssetExtensionTest extends \PHPUnit_Framework_TestCase
         $request = Request::create($uri);
         $container = new Container();
         $container->set('request', $request);
-        
+
         return new AssetExtension($container);
     }
 }

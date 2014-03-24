@@ -13,25 +13,16 @@ use Nice\DependencyInjection\ContainerInitializer\CachedInitializer;
 use Nice\DependencyInjection\ContainerInitializer\DefaultInitializer;
 use Nice\DependencyInjection\ContainerInitializerInterface;
 use Nice\Extension\RouterExtension;
-use Symfony\Component\Config\ConfigCache;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader;
-use Symfony\Component\DependencyInjection\Loader as DiLoader;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ScopeInterface;
-use Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\DependencyInjection\MergeExtensionConfigurationPass;
-use Symfony\Component\HttpKernel\DependencyInjection\RegisterListenersPass;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
@@ -45,7 +36,7 @@ class Application implements HttpKernelInterface, ContainerInterface
      * @var bool
      */
     private $cache;
-    
+
     /**
      * @var bool
      */
@@ -131,7 +122,7 @@ class Application implements HttpKernelInterface, ContainerInterface
     {
         return $this->extensions;
     }
-    
+
     /**
      * Register default extensions
      *
@@ -150,20 +141,20 @@ class Application implements HttpKernelInterface, ContainerInterface
         $initializer = $this->getContainerInitializer();
         $this->container = $initializer->initializeContainer($this);
         $this->container->set('app', $this);
-        
+
         return $this->container;
     }
 
     /**
      * @return ContainerInitializerInterface
      */
-    protected function getContainerInitializer() 
+    protected function getContainerInitializer()
     {
         $initializer = new DefaultInitializer();
         if ($this->cache) {
-            $initializer = new CachedInitializer($initializer, $this->getCacheDir()); 
+            $initializer = new CachedInitializer($initializer, $this->getCacheDir());
         }
-        
+
         return $initializer;
     }
 
@@ -208,9 +199,9 @@ class Application implements HttpKernelInterface, ContainerInterface
 
     /**
      * Get the root directory
-     * 
+     *
      * @todo Remove reliance on superglobal
-     * 
+     *
      * @return string
      */
     public function getRootDir()
@@ -228,7 +219,7 @@ class Application implements HttpKernelInterface, ContainerInterface
      */
     public function getCacheDir()
     {
-        return $this->cache 
+        return $this->cache
             ? $this->getRootDir() . '/cache/' . $this->environment
             : null;
     }
