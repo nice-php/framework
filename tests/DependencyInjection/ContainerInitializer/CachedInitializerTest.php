@@ -38,6 +38,31 @@ class CachedInitializerTest extends \PHPUnit_Framework_TestCase
 
         $container = $initializer->initializeContainer($app);
         $this->assertNotNull($container);
+        
+        return $initializer;
+    }
+
+    /**
+     * Test a fresh cache
+     */
+    public function testCacheIsFresh()
+    {
+        $initializer = $this->getInitializer(sys_get_temp_dir());
+
+        /** @var \Nice\Application|\PHPUnit_Framework_MockObject_MockObject $app */
+        $app = $this->getMockBuilder('Nice\Application')
+            ->setMethods(array('registerDefaultExtensions'))
+            ->setConstructorArgs(array('cache_fresh', true))
+            ->getMock();
+
+        $firstContainer = $initializer->initializeContainer($app);
+        $this->assertNotNull($firstContainer);
+
+        $initializer = $this->getInitializer(sys_get_temp_dir(), $this->never());
+
+        $secondContainer = $initializer->initializeContainer($app);
+        
+        $this->assertNotSame($secondContainer, $firstContainer);
     }
 
     /**
@@ -69,11 +94,13 @@ class CachedInitializerTest extends \PHPUnit_Framework_TestCase
      *
      * @return CachedInitializer
      */
-    private function getInitializer($cacheDir)
+    private function getInitializer($cacheDir, $expects = null)
     {
         $default = $this->getMockForAbstractClass('Nice\DependencyInjection\ContainerInitializerInterface');
-        $default->expects($this->any())->method('initializeContainer')
-            ->will($this->returnValue(new ContainerBuilder()));
+        $default->expects($expects ?: $this->any())->method('initializeContainer')
+            ->will($this->returnCallback(function() {
+                        return new ContainerBuilder();
+                    }));
         
         return new CachedInitializer($default, $cacheDir);
     }
