@@ -9,6 +9,9 @@
 
 namespace Nice;
 
+use Nice\DependencyInjection\ContainerInitializer\CachedInitializer;
+use Nice\DependencyInjection\ContainerInitializer\DefaultInitializer;
+use Nice\DependencyInjection\ContainerInitializerInterface;
 use Nice\Extension\RouterExtension;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
@@ -38,6 +41,11 @@ use Symfony\Component\HttpKernel\TerminableInterface;
  */
 class Application implements HttpKernelInterface, ContainerInterface
 {
+    /**
+     * @var bool
+     */
+    private $cache;
+    
     /**
      * @var bool
      */
@@ -78,11 +86,13 @@ class Application implements HttpKernelInterface, ContainerInterface
      *
      * @param string $environment
      * @param bool   $debug
+     * @param bool   $cache
      */
-    public function __construct($environment = 'dev', $debug = false)
+    public function __construct($environment = 'dev', $debug = false, $cache = true)
     {
         $this->environment = (string) $environment;
         $this->debug       = (bool) $debug;
+        $this->cache       = (bool) $cache;
 
         $this->registerDefaultExtensions();
     }
@@ -137,142 +147,24 @@ class Application implements HttpKernelInterface, ContainerInterface
      */
     protected function initializeContainer()
     {
-        $class = $this->getContainerClass();
-        $cache = new ConfigCache($this->getCacheDir() . '/' . $class . '.php', $this->debug);
-        if (!$cache->isFresh()) {
-            $container = $this->buildContainer();
-            $container->setParameter('app.env', $this->environment);
-            $container->setParameter('app.debug', $this->debug);
-
-            $container->register('event_dispatcher', 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher')
-                ->setArguments(array(new Reference('service_container')));
-
-            $container->register('app', 'Symfony\Component\HttpKernel\HttpKernelInterface')
-                ->setSynthetic(true);
-
-            $extensions = array();
-            foreach ($this->extensions as $extension) {
-                $container->registerExtension($extension);
-                $extensions[] = $extension->getAlias();
-            }
-
-            $container->addCompilerPass(new MergeExtensionConfigurationPass($extensions));
-            $container->addCompilerPass(new RegisterListenersPass());
-
-            $container->compile();
-            $this->dumpContainer($cache, $container, $class, 'Container');
-        }
-
-        require_once $cache;
-
-        $this->container = new $class();
+        $initializer = $this->getContainerInitializer();
+        $this->container = $initializer->initializeContainer($this);
         $this->container->set('app', $this);
-
+        
         return $this->container;
     }
 
     /**
-     * Gets the container class.
-     *
-     * @return string The container class
+     * @return ContainerInitializerInterface
      */
-    protected function getContainerClass()
+    protected function getContainerInitializer() 
     {
-        return ucfirst($this->environment) . ($this->debug ? 'Debug' : '') . 'ProjectContainer';
-    }
-
-    /**
-     * Builds the service container.
-     *
-     * @return ContainerBuilder The compiled service container
-     *
-     * @throws \RuntimeException
-     */
-    protected function buildContainer()
-    {
-        foreach (array('cache' => $this->getCacheDir(), 'logs' => $this->getLogDir()) as $name => $dir) {
-            if (!is_dir($dir)) {
-                if (false === @mkdir($dir, 0777, true)) {
-                    throw new \RuntimeException(sprintf("Unable to create the %s directory (%s)", $name, $dir));
-                }
-            } elseif (!is_writable($dir)) {
-                throw new \RuntimeException(sprintf("Unable to write in the %s directory (%s)", $name, $dir));
-            }
+        $initializer = new DefaultInitializer($this->getEnvironment(), $this->isDebug());
+        if ($this->cache) {
+            $initializer = new CachedInitializer($initializer, $this->getCacheDir()); 
         }
-
-        $container = $this->getContainerBuilder();
-        $container->addObjectResource($this);
-
-        if (null !== $cont = $this->registerContainerConfiguration($this->getContainerLoader($container))) {
-            $container->merge($cont);
-        }
-
-        return $container;
-    }
-
-    /**
-     * Gets a new ContainerBuilder instance used to build the service container.
-     *
-     * @return ContainerBuilder
-     */
-    protected function getContainerBuilder()
-    {
-        return new ContainerBuilder();
-    }
-
-    /**
-     * Loads the container configuration
-     *
-     * Override this method in a subclass to facilitate loading the
-     * container configuration from a file or other source.
-     *
-     * Return a configured Container and it will be merged
-     * with the main Container.
-     *
-     * @param Loader\LoaderInterface $loader A LoaderInterface instance
-     *
-     * @return null|ContainerInterface
-     */
-    protected function registerContainerConfiguration(Loader\LoaderInterface $loader)
-    {
-        return null;
-    }
-
-    /**
-     * Returns a loader for the container.
-     *
-     * @param ContainerInterface $container The service container
-     *
-     * @return Loader\DelegatingLoader The loader
-     */
-    protected function getContainerLoader(ContainerInterface $container)
-    {
-        $locator = new FileLocator($this);
-        $resolver = new Loader\LoaderResolver(array(
-            new DiLoader\XmlFileLoader($container, $locator),
-            new DiLoader\YamlFileLoader($container, $locator),
-            new DiLoader\IniFileLoader($container, $locator),
-            new DiLoader\PhpFileLoader($container, $locator),
-            new DiLoader\ClosureLoader($container),
-        ));
-
-        return new Loader\DelegatingLoader($resolver);
-    }
-
-    /**
-     * Dumps the service container to PHP code in the cache.
-     *
-     * @param ConfigCache      $cache     The config cache
-     * @param ContainerBuilder $container The service container
-     * @param string           $class     The name of the class to generate
-     * @param string           $baseClass The name of the container's base class
-     */
-    protected function dumpContainer(ConfigCache $cache, ContainerBuilder $container, $class, $baseClass)
-    {
-        $dumper  = new PhpDumper($container);
-        $content = $dumper->dump(array('class' => $class, 'base_class' => $baseClass));
-
-        $cache->write($content, $container->getResources());
+        
+        return $initializer;
     }
 
     /**
@@ -332,11 +224,13 @@ class Application implements HttpKernelInterface, ContainerInterface
     }
 
     /**
-     * @return string
+     * @return string|null Null if Caching should be disabled
      */
     public function getCacheDir()
     {
-        return $this->getRootDir() . '/cache/' . $this->environment;
+        return $this->cache 
+            ? $this->getRootDir() . '/cache/' . $this->environment
+            : null;
     }
 
     /**
@@ -547,6 +441,14 @@ class Application implements HttpKernelInterface, ContainerInterface
     public function isDebug()
     {
         return $this->debug;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isCacheEnabled()
+    {
+        return $this->cache;
     }
 
     /**

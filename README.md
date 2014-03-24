@@ -76,6 +76,29 @@ Visit `index.php` in your browser and you'll see the message "Hello, world".
 Visit `index.php/hello/Tyler` and you will see "Hello, Tyler!".
 
 
+#### A word about caching
+
+Passing `false` as the third parameter of `Nice\Application` constructor will disable
+caching. The cache directory will be null if caching is disabled, which can be checked
+in your own code.
+
+```php
+<?php
+
+use Nice\Application;
+
+// ...
+
+$app = new Application('prod', true, false);
+
+// Caching is disabled; the Cache Directory is null.
+assert($app->getCacheDir() === null);
+
+// or by calling isCacheEnabled
+assert($app->isCacheEnabled() === false);
+```
+
+
 #### Enabling session management
 
 By default, session management is disabled. If you'd like to enable it, add the following:
