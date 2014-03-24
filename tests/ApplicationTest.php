@@ -36,6 +36,18 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($rootDir . '/cache/test', $app->getCacheDir());
         $this->assertEquals($rootDir . '/logs', $app->getLogDir());
         $this->assertEquals('UTF-8', $app->getCharset());
+        $this->assertTrue($app->isCacheEnabled());
+    }
+
+    /**
+     * Test a disabled cache
+     */
+    public function testDisabledCache()
+    {
+        $app = $this->getMockApplication(null, false);
+
+        $this->assertNull($app->getCacheDir());
+        $this->assertFalse($app->isCacheEnabled());
     }
 
     /**
@@ -233,14 +245,14 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
      *
      * @return Application|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function getMockApplication(HttpKernelInterface $kernel = null)
+    protected function getMockApplication(HttpKernelInterface $kernel = null, $cache = true)
     {
         $kernel = $kernel ?: $this->getMockForAbstractClass('Symfony\Component\HttpKernel\HttpKernelInterface');
 
         /** @var \Nice\Application|\PHPUnit_Framework_MockObject_MockObject $app */
         $app = $this->getMockBuilder('Nice\Application')
             ->setMethods(array('getRootDir', 'registerDefaultExtensions', 'initializeContainer'))
-            ->setConstructorArgs(array('test', true))
+            ->setConstructorArgs(array('test', true, $cache))
             ->getMock();
         $app->expects($this->any())
             ->method('getRootDir')
