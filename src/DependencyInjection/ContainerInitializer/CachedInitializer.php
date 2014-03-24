@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Copyright (c) Tyler Sommer
+ *
+ * For the full copyright and license information, please view the LICENSE file
+ * that was distributed with this source code.
+ */
+
 namespace Nice\DependencyInjection\ContainerInitializer;
 
 use Nice\Application;
@@ -15,25 +22,21 @@ use Symfony\Component\HttpKernel\DependencyInjection\RegisterListenersPass;
 class CachedInitializer implements ContainerInitializerInterface
 {
     /**
-     * @var
+     * @var string
      */
     private $cacheDir;
-
-    /**
-     * @var
-     */
-    private $environment;
-
-    /**
-     * @var bool
-     */
-    private $debug;
 
     /**
      * @var \Nice\DependencyInjection\ContainerInitializerInterface
      */
     private $wrappedInitializer;
 
+    /**
+     * Constructor
+     * 
+     * @param ContainerInitializerInterface $wrappedInitializer
+     * @param string                        $cacheDir
+     */
     public function __construct(ContainerInitializerInterface $wrappedInitializer, $cacheDir)
     {
         if (!is_dir($cacheDir)) {
@@ -57,8 +60,8 @@ class CachedInitializer implements ContainerInitializerInterface
      */
     public function initializeContainer(Application $application)
     {
-        $class = $this->getContainerClass();
-        $cache = new ConfigCache($this->cacheDir . '/' . $class . '.php', $this->debug);
+        $class = $this->getContainerClass($application);
+        $cache = new ConfigCache($this->cacheDir . '/' . $class . '.php', $application->isDebug());
         if (!$cache->isFresh()) {
             $container = $this->wrappedInitializer->initializeContainer($application);
             
@@ -75,9 +78,9 @@ class CachedInitializer implements ContainerInitializerInterface
      *
      * @return string The container class
      */
-    protected function getContainerClass()
+    protected function getContainerClass(Application $application)
     {
-        return ucfirst($this->environment) . ($this->debug ? 'Debug' : '') . 'ProjectContainer';
+        return ucfirst($application->getEnvironment()) . ($application->isDebug() ? 'Debug' : '') . 'ProjectContainer';
     }
 
     /**
@@ -94,15 +97,5 @@ class CachedInitializer implements ContainerInitializerInterface
         $content = $dumper->dump(array('class' => $class, 'base_class' => $baseClass));
 
         $cache->write($content, $container->getResources());
-    }
-
-    /**
-     * Gets a new ContainerBuilder instance used to build the service container.
-     *
-     * @return ContainerBuilder
-     */
-    protected function getContainerBuilder()
-    {
-        return new ContainerBuilder();
     }
 }
