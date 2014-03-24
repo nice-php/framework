@@ -44,6 +44,11 @@ class Application implements HttpKernelInterface, ContainerInterface
     /**
      * @var bool
      */
+    private $cache;
+    
+    /**
+     * @var bool
+     */
     protected $debug;
 
     /**
@@ -81,11 +86,13 @@ class Application implements HttpKernelInterface, ContainerInterface
      *
      * @param string $environment
      * @param bool   $debug
+     * @param bool   $cache
      */
-    public function __construct($environment = 'dev', $debug = false)
+    public function __construct($environment = 'dev', $debug = false, $cache = true)
     {
         $this->environment = (string) $environment;
         $this->debug       = (bool) $debug;
+        $this->cache       = (bool) $cache;
 
         $this->registerDefaultExtensions();
     }
@@ -152,20 +159,9 @@ class Application implements HttpKernelInterface, ContainerInterface
      */
     protected function getContainerInitializer() 
     {
-        $writable = true;
-        foreach (array('cache' => $this->getCacheDir(), 'logs' => $this->getLogDir()) as $name => $dir) {
-            if (!is_dir($dir)) {
-                if (false === @mkdir($dir, 0777, true)) {
-                    $writable = false;
-                }
-            } elseif (!is_writable($dir)) {
-                $writable = false;
-            }
-        }
-
         $initializer = new DefaultInitializer($this->getEnvironment(), $this->isDebug());
-        if ($writable) {
-            $initializer = new CachedInitializer($initializer, $this->getCacheDir());
+        if ($this->cache) {
+            $initializer = new CachedInitializer($initializer, $this->getCacheDir()); 
         }
         
         return $initializer;
@@ -228,11 +224,13 @@ class Application implements HttpKernelInterface, ContainerInterface
     }
 
     /**
-     * @return string
+     * @return string|null Null if Caching should be disabled
      */
     public function getCacheDir()
     {
-        return $this->getRootDir() . '/cache/' . $this->environment;
+        return $this->cache 
+            ? $this->getRootDir() . '/cache/' . $this->environment
+            : null;
     }
 
     /**
@@ -443,6 +441,14 @@ class Application implements HttpKernelInterface, ContainerInterface
     public function isDebug()
     {
         return $this->debug;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isCacheEnabled()
+    {
+        return $this->cache;
     }
 
     /**
