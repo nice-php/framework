@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Copyright (c) Tyler Sommer
+ *
+ * For the full copyright and license information, please view the LICENSE file
+ * that was distributed with this source code.
+ */
+
 namespace Nice\DependencyInjection\ContainerInitializer;
 
 use Nice\Application;
@@ -14,28 +21,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\RegisterListenersPass;
 
 class DefaultInitializer implements ContainerInitializerInterface
 {
-    /**
-     * @var string
-     */
-    private $environment;
-
-    /**
-     * @var bool
-     */
-    private $debug;
-
-    /**
-     * Constructor
-     * 
-     * @param string $environment
-     * @param bool   $debug
-     */
-    public function __construct($environment, $debug = false)
-    {
-        $this->environment = $environment;
-        $this->debug       = $debug;
-    }
-
     /**
      * Returns a fully built, ready to use Container
      *

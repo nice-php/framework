@@ -159,7 +159,7 @@ class Application implements HttpKernelInterface, ContainerInterface
      */
     protected function getContainerInitializer() 
     {
-        $initializer = new DefaultInitializer($this->getEnvironment(), $this->isDebug());
+        $initializer = new DefaultInitializer();
         if ($this->cache) {
             $initializer = new CachedInitializer($initializer, $this->getCacheDir()); 
         }
