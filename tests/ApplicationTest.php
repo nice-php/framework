@@ -187,26 +187,6 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test registration of custom container configurations
-     */
-    public function testRegisterContainerConfiguration()
-    {
-        /** @var \Nice\Application|\PHPUnit_Framework_MockObject_MockObject $app */
-        $app = $this->getMockBuilder('Nice\Tests\SimpleApplication')
-            ->setMethods(array('getRootDir'))
-            ->setConstructorArgs(array('register', true))
-            ->getMock();
-        $app->expects($this->any())
-            ->method('getRootDir')
-            ->will($this->returnValue(sys_get_temp_dir()));
-        $app->boot();
-        
-        $container = $app->getContainer();
-        
-        $this->assertTrue($container->has('test'));
-    }
-
-    /**
      * Test failure to create cache directory
      */
     public function testFailureToCreateCacheDir()
@@ -280,20 +260,4 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
 interface TerminableHttpKernelInterface extends HttpKernelInterface, TerminableInterface
 {
 
-}
-
-class SimpleApplication extends Application
-{
-    /**
-     * Loads the container configuration
-     *
-     * @param LoaderInterface $loader A LoaderInterface instance
-     */
-    protected function registerContainerConfiguration(LoaderInterface $loader)
-    {
-        $container = new ContainerBuilder();
-        $container->register('test', 'stdClass');
-        
-        return $container;
-    }
 }
