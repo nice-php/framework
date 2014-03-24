@@ -28,41 +28,31 @@ class CachedInitializerTest extends \PHPUnit_Framework_TestCase
      */
     public function testInitializeContainer()
     {
-        $initializer = $this->getInitializer(sys_get_temp_dir());
+        $initializer = $this->getInitializer(sys_get_temp_dir(), $this->once());
         
         /** @var \Nice\Application|\PHPUnit_Framework_MockObject_MockObject $app */
         $app = $this->getMockBuilder('Nice\Application')
             ->setMethods(array('registerDefaultExtensions'))
-            ->setConstructorArgs(array('cache_init', true))
+            ->setConstructorArgs(array('cache_init' . sha1(uniqid('cache', true)), false))
             ->getMock();
 
         $container = $initializer->initializeContainer($app);
         $this->assertNotNull($container);
         
-        return $initializer;
+        return $app;
     }
 
     /**
      * Test a fresh cache
+     * 
+     * @depends testInitializeContainer
      */
-    public function testCacheIsFresh()
+    public function testCacheIsFresh(Application $app)
     {
-        $initializer = $this->getInitializer(sys_get_temp_dir());
-
-        /** @var \Nice\Application|\PHPUnit_Framework_MockObject_MockObject $app */
-        $app = $this->getMockBuilder('Nice\Application')
-            ->setMethods(array('registerDefaultExtensions'))
-            ->setConstructorArgs(array('cache_fresh', true))
-            ->getMock();
-
-        $firstContainer = $initializer->initializeContainer($app);
-        $this->assertNotNull($firstContainer);
-
         $initializer = $this->getInitializer(sys_get_temp_dir(), $this->never());
 
-        $secondContainer = $initializer->initializeContainer($app);
-        
-        $this->assertNotSame($secondContainer, $firstContainer);
+        $container = $initializer->initializeContainer($app);
+        $this->assertNotNull($container);
     }
 
     /**
