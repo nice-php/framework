@@ -32,6 +32,7 @@ class DefaultInitializer implements ContainerInitializerInterface
         $container->addObjectResource($application);
         $container->setParameter('app.env', $application->getEnvironment());
         $container->setParameter('app.debug', $application->isDebug());
+        $container->setParameter('app.cache', $application->isCacheEnabled());
         $container->setParameter('app.root_dir', $application->getRootDir());
         $container->setParameter('app.cache_dir', $application->getCacheDir());
         $container->setParameter('app.log_dir', $application->getLogDir());
