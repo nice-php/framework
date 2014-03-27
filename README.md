@@ -14,11 +14,12 @@ the [Symfony2 HttpKernel](https://github.com/symfony/HttpKernel) and
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Nice\Application;
+use Nice\Router\RouteCollector;
 
 require __DIR__ . '/../vendor/autoload.php';
 
 $app = new Application();
-$app->set('routes', function (FastRoute\RouteCollector $r) {
+$app->set('routes', function (RouteCollector $r) {
     $r->addRoute('GET', '/', function (Request $request) {
             return new Response('Hello, world');
         });
@@ -52,6 +53,7 @@ In your `web` directory, create `index.php` and add:
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Nice\Application;
+use Nice\Router\RouteCollector;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -61,7 +63,7 @@ Symfony\Component\Debug\Debug::enable();
 $app = new Application();
 
 // Configure your routes
-$app->set('routes', function (FastRoute\RouteCollector $r) {
+$app->set('routes', function (RouteCollector $r) {
     $r->addRoute('GET', '/', function (Application $app, Request $request) {
             return new Response('Hello, world');
         });
@@ -141,6 +143,7 @@ Then, in your front controller:
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Nice\Application;
+use Nice\Router\RouteCollector;
 use Nice\Extension\TwigExtension;
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -150,7 +153,7 @@ $app = new Application();
 // Register the Twig extension
 $app->registerExtension(new TwigExtension(__DIR__ . '/../views'));
 
-$app->set('routes', function (FastRoute\RouteCollector $r) {
+$app->set('routes', function (RouteCollector $r) {
     $r->addRoute('GET', '/hello/{name}', function (Application $app, Request $request, $name) {
             // Use the Twig service to render templates
             $rendered = $app->get('twig')->render('index.html.twig', array(
@@ -185,6 +188,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpCache\HttpCache;
 use Symfony\Component\HttpKernel\HttpCache\Store;
 use Nice\Application;
+use Nice\Router\RouteCollector;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -192,7 +196,7 @@ require __DIR__ . '/../vendor/autoload.php';
 $app = new Application();
 
 // ..add your routes
-$app->set('routes', function (FastRoute\RouteCollector $r) {
+$app->set('routes', function (RouteCollector $r) {
     // ...
 });
 
