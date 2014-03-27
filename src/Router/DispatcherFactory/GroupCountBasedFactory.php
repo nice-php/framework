@@ -11,8 +11,8 @@ namespace Nice\Router\DispatcherFactory;
 
 use FastRoute\Dispatcher\GroupCountBased;
 use FastRoute\Dispatcher;
-use FastRoute\RouteCollector;
 use Nice\Router\DispatcherFactoryInterface;
+use Nice\Router\RouteCollectorInterface;
 
 class GroupCountBasedFactory implements DispatcherFactoryInterface
 {
@@ -22,25 +22,13 @@ class GroupCountBasedFactory implements DispatcherFactoryInterface
     private $collector;
 
     /**
-     * @var callable
-     */
-    private $routeFactory;
-
-    /**
-     * @var bool
-     */
-    private $collected = false;
-
-    /**
      * Constructor
      *
-     * @param RouteCollector $collector
-     * @param callable       $routeFactory
+     * @param RouteCollectorInterface $collector
      */
-    public function __construct(RouteCollector $collector, $routeFactory)
+    public function __construct(RouteCollectorInterface $collector)
     {
         $this->collector = $collector;
-        $this->routeFactory = $routeFactory;
     }
 
     /**
@@ -50,12 +38,6 @@ class GroupCountBasedFactory implements DispatcherFactoryInterface
      */
     public function create()
     {
-        if (!$this->collected) {
-            call_user_func($this->routeFactory, $this->collector);
-
-            $this->collected = true;
-        }
-
         return new GroupCountBased($this->collector->getData());
     }
 }
