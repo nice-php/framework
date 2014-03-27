@@ -4,7 +4,6 @@ namespace Nice\Router\RouteCollector;
 
 use Nice\Router\RouteCollectorInterface;
 use Symfony\Component\Config\ConfigCache;
-use Symfony\Component\Config\Resource\FileResource;
 
 /**
  * A cached RouteCollector that wraps another RouteCollector

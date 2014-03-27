@@ -9,7 +9,6 @@
 
 namespace Nice\Tests\Router\RouteCollector;
 
-use Nice\Router\RouteCollector\CachedCollector;
 use Nice\Router\RouteCollector;
 
 class RouteCollectorTest extends \PHPUnit_Framework_TestCase
