@@ -35,10 +35,6 @@ class CachedCollector implements RouteCollectorInterface
      */
     public function __construct(RouteCollectorInterface $wrappedCollector, $cacheFile, $debug = false)
     {
-        if (file_exists($cacheFile) && !is_writable($cacheFile)) {
-            throw new \RuntimeException(sprintf("Unable to write cache file (%s)", $cacheFile));
-        }
-        
         $this->wrappedCollector = $wrappedCollector;
         $this->cacheFile = $cacheFile;
         $this->debug = $debug;

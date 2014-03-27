@@ -42,6 +42,20 @@ class CachedCollectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test an unwriteable file
+     * 
+     * @todo This relies on something outside of Nice throwing the exception
+     */
+    public function testUnableToWriteCache()
+    {
+        $collector = $this->getCollector('/some/unwriteable/path');
+        
+        $this->setExpectedException('RuntimeException', 'Failed to create "/some/unwriteable".');
+        
+        $collector->getData();
+    }
+
+    /**
      * @param string $filename
      * @param null   $expects
      *
