@@ -21,6 +21,7 @@
             <directory>./src/</directory>
             <exclude>
                 <file>./src/Router/DispatcherFactoryInterface.php</file>
+                <file>./src/Router/RouteCollectorInterface.php</file>
                 <file>./src/DependencyInjection/ContainerInitializerInterface.php</file>
             </exclude>
         </whitelist>
