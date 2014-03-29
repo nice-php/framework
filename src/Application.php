@@ -12,6 +12,7 @@ namespace Nice;
 use Nice\DependencyInjection\ContainerInitializer\CachedInitializer;
 use Nice\DependencyInjection\ContainerInitializer\DefaultInitializer;
 use Nice\DependencyInjection\ContainerInitializerInterface;
+use Nice\DependencyInjection\ExtendableInterface;
 use Nice\Extension\RouterExtension;
 use Symfony\Component\Config\Loader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -19,6 +20,7 @@ use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ScopeInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +32,7 @@ use Symfony\Component\HttpKernel\TerminableInterface;
 /**
  * An Application
  */
-class Application implements HttpKernelInterface, ContainerInterface
+class Application implements HttpKernelInterface, ContainerInterface, ExtendableInterface
 {
     /**
      * @var bool
@@ -104,21 +106,31 @@ class Application implements HttpKernelInterface, ContainerInterface
     }
 
     /**
-     * Register an extension with the Application
+     * Prepend an extension
      *
-     * @param Extension $extension
+     * @param ExtensionInterface $extension
      */
-    public function registerExtension(Extension $extension)
+    public function prependExtension(ExtensionInterface $extension)
     {
-        $this->extensions[] = $extension;
+        array_unshift($this->extensions, $extension);
     }
 
     /**
-     * Get all Extensions registered with the Application
+     * Append an extension
      *
-     * @return array|\Symfony\Component\DependencyInjection\Extension\Extension[]
+     * @param ExtensionInterface $extension
      */
-    public function getRegisteredExtensions()
+    public function appendExtension(ExtensionInterface $extension)
+    {
+        array_push($this->extensions, $extension);
+    }
+
+    /**
+     * Get an ordered list of extensions
+     *
+     * @return array|ExtensionInterface[]
+     */
+    public function getExtensions()
     {
         return $this->extensions;
     }
@@ -130,7 +142,7 @@ class Application implements HttpKernelInterface, ContainerInterface
      */
     protected function registerDefaultExtensions()
     {
-        $this->registerExtension(new RouterExtension());
+        $this->appendExtension(new RouterExtension());
     }
 
     /**
@@ -154,7 +166,7 @@ class Application implements HttpKernelInterface, ContainerInterface
         if ($this->cache) {
             $initializer = new CachedInitializer($initializer, $this->getCacheDir());
         }
-
+        
         return $initializer;
     }
 

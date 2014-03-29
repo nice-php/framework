@@ -32,16 +32,15 @@ class RouterExtension extends Extension
         $container->register('router.parser', 'FastRoute\RouteParser\Std');
         $container->register('router.data_generator', 'FastRoute\DataGenerator\GroupCountBased');
         
+        $container->setParameter('router.collector.class', 'Nice\Router\RouteCollector\SimpleCollector');
 
-        if (!$container->hasDefinition('router.collector')) {
-            $container->register('routes', 'Closure')
-                ->setSynthetic(true);
+        $container->register('routes', 'Closure')
+            ->setSynthetic(true);
 
-            $container->register('router.collector', 'Nice\Router\RouteCollector\SimpleCollector')
-                ->addArgument(new Reference('router.parser'))
-                ->addArgument(new Reference('router.data_generator'))
-                ->addArgument(new Reference('routes'));
-        }
+        $container->register('router.collector', '%router.collector.class%')
+            ->addArgument(new Reference('router.parser'))
+            ->addArgument(new Reference('router.data_generator'))
+            ->addArgument(new Reference('routes'));
 
         $container->register('router.dispatcher_factory', 'Nice\Router\DispatcherFactory\GroupCountBasedFactory')
             ->addArgument(new Reference('router.collector'));

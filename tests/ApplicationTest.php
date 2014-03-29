@@ -38,6 +38,30 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test ExtendableInterface methods
+     */
+    public function testExtensionMethods()
+    {
+        $app = $this->getMockApplication();
+
+        $middleExtension = $this->getMockForAbstractClass('Symfony\Component\DependencyInjection\Extension\ExtensionInterface');
+        $app->appendExtension($middleExtension);
+        
+        $prependedExtension = $this->getMockForAbstractClass('Symfony\Component\DependencyInjection\Extension\ExtensionInterface');
+        $app->prependExtension($prependedExtension);
+        
+        $appendedExtension = $this->getMockForAbstractClass('Symfony\Component\DependencyInjection\Extension\ExtensionInterface');
+        $app->appendExtension($appendedExtension);
+        
+        $extensions = $app->getExtensions();
+        
+        $this->assertCount(3, $extensions);
+        $this->assertSame($prependedExtension, $extensions[0]);
+        $this->assertSame($middleExtension, $extensions[1]);
+        $this->assertSame($appendedExtension, $extensions[2]);
+    }
+
+    /**
      * Test a disabled cache
      */
     public function testDisabledCache()
@@ -184,7 +208,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
             ->method('getRootDir')
             ->will($this->returnValue(sys_get_temp_dir()));
 
-        $extensions = $app->getRegisteredExtensions();
+        $extensions = $app->getExtensions();
         $this->assertCount(1, $extensions);
         $this->assertInstanceOf('Nice\Extension\RouterExtension', $extensions[0]);
         $app->boot();

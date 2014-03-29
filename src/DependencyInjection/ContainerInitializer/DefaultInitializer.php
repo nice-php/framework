@@ -47,7 +47,7 @@ class DefaultInitializer implements ContainerInitializerInterface
             ->setSynthetic(true);
 
         $extensions = array();
-        foreach ($application->getRegisteredExtensions() as $extension) {
+        foreach ($application->getExtensions() as $extension) {
             $container->registerExtension($extension);
             $extensions[] = $extension->getAlias();
         }
