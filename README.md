@@ -216,11 +216,8 @@ Stack\run($app);
 Advanced usage
 --------------
 
-You can subclass `Nice\Application` to accomplish more complex setups. Override 
-the `registerContainerConfiguration` and `registerDefaultExtension` methods to
-allow for extended customization.
-
-This behavior is borrowed from Symfony's `KernelInterface`, allowing
-for annotations, yaml, xml, php, and closures to provide the configuration.
+You can create custom extensions or subclass `Nice\Application` to accomplish 
+more complex setups. Override the `registerDefaultExtensions` methods to
+allow for extended customization, using your own extensions.
 
 An example is coming soon. 
