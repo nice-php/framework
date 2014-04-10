@@ -44,6 +44,11 @@ class TwigExtension extends Extension
     public function load(array $config, ContainerBuilder $container)
     {
         $container->register('twig.asset_extension', 'Nice\Twig\AssetExtension')
+            ->setPublic(false)
+            ->addArgument(new Reference('service_container'));
+
+        $container->register('twig.app_extension', 'Nice\Twig\ApplicationExtension')
+            ->setPublic(false)
             ->addArgument(new Reference('service_container'));
 
         $container->setParameter('twig.template_dir', $this->templateDir);
@@ -52,6 +57,7 @@ class TwigExtension extends Extension
 
         $container->register('twig', 'Twig_Environment')
             ->addArgument(new Reference('twig.loader'))
-            ->addMethodCall('addExtension', array(new Reference('twig.asset_extension')));
+            ->addMethodCall('addExtension', array(new Reference('twig.asset_extension')))
+            ->addMethodCall('addExtension', array(new Reference('twig.app_extension')));
     }
 }
