@@ -38,7 +38,6 @@ class CacheConfiguration implements ConfigurationInterface
                                     ->thenInvalid('Invalid cache driver %s')
                                 ->end()
                             ->end()
-                            ->scalarNode('name')->defaultValue('default')->end()
                             ->scalarNode('namespace')->defaultValue('nice:')->end()
                             ->arrayNode('options')->defaultValue(array())
                                 ->prototype('scalar')

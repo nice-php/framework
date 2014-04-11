@@ -31,7 +31,7 @@ class CacheConfigurationTest extends \PHPUnit_Framework_TestCase
         $config = $processor->processConfiguration(new CacheConfiguration(), array(array('connections' => array('default' => array('driver' => 'redis')))));
 
         $this->assertEquals(
-            array('connections' => array('default' => array_merge(self::getDefaulConnectionConfig(), array('name' => 'default', 'driver' => 'redis')))),
+            array('connections' => array('default' => array_merge(self::getDefaulConnectionConfig(), array('driver' => 'redis')))),
             $config
         );
     }
