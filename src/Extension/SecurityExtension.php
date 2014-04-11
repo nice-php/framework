@@ -37,7 +37,7 @@ class SecurityExtension extends Extension
     /**
      * Returns extension configuration
      *
-     * @param array            $config    $config    An array of configuration values
+     * @param array            $config    An array of configuration values
      * @param ContainerBuilder $container A ContainerBuilder instance
      *
      * @return SecurityConfiguration
@@ -50,7 +50,7 @@ class SecurityExtension extends Extension
     /**
      * Loads a specific configuration.
      *
-     * @param array            $config    An array of configuration values
+     * @param array            $configs   An array of configuration values
      * @param ContainerBuilder $container A ContainerBuilder instance
      */
     public function load(array $configs, ContainerBuilder $container)
