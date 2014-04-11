@@ -37,10 +37,10 @@ class CacheExtension extends Extension
     /**
      * Returns extension configuration
      *
-     * @param array            $config    $config    An array of configuration values
+     * @param array            $config    An array of configuration values
      * @param ContainerBuilder $container A ContainerBuilder instance
      *
-     * @return SecurityConfiguration
+     * @return CacheConfiguration
      */
     public function getConfiguration(array $config, ContainerBuilder $container)
     {
@@ -50,18 +50,19 @@ class CacheExtension extends Extension
     /**
      * Loads a specific configuration.
      *
-     * @param array            $config    An array of configuration values
+     * @param array            $configs   An array of configuration values
      * @param ContainerBuilder $container A ContainerBuilder instance
      *
      * @throws \InvalidArgumentException When provided tag is not defined in this extension
      */
-    public function load(array $config, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container)
     {
         $configs[] = $this->options;
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
         
-        foreach ($config['connections'] as $cacheConfig) {
+        foreach ($config['connections'] as $name => $cacheConfig) {
+            $cacheConfig['name'] = $name;
             switch ($cacheConfig['driver']) {
                 case 'redis':
                     $this->configureRedisCache($cacheConfig, $container);
@@ -78,9 +79,6 @@ class CacheExtension extends Extension
                     $this->configureArrayCache($cacheConfig, $container);
                     
                     break;
-                    
-                default:
-                    throw new \RuntimeException(sprintf('The driver "%s" is not supported.', $cacheConfig['driver']));
             }
         }
     }
