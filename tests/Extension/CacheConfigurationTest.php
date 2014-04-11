@@ -10,7 +10,6 @@
 namespace Nice\Tests\Extension;
 
 use Nice\Extension\CacheConfiguration;
-use Nice\Extension\SecurityConfiguration;
 use Symfony\Component\Config\Definition\Processor;
 
 class CacheConfigurationTest extends \PHPUnit_Framework_TestCase

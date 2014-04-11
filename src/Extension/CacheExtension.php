@@ -11,9 +11,8 @@ namespace Nice\Extension;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Extension\Extension;
-use Symfony\Component\DependencyInjection\Scope;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Sets up Cache services
