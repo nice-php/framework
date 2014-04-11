@@ -200,10 +200,43 @@ class CacheExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('setMemcached', $methodName);
         $this->assertEquals('cache.secondary.driver', $methodArgs[0]);
     }
-    
+
+    /**
+     * Test array cache configurations
+     */
     public function testArrayConfig()
     {
+        $extension = new CacheExtension();
+
+        $container = new ContainerBuilder();
+        $extension->load(array(array(
+                'connections' => array(
+                    'default' => array(
+                        'driver' => 'array',
+                        'namespace' => 'test:'
+                    ),
+                    'secondary' => array(
+                        'driver' => 'array'
+                    )
+                )
+            )), $container);
+
+        $this->assertTrue($container->hasDefinition('cache.default'));
+        $this->assertTrue($container->hasDefinition('cache.secondary'));
+
+        $cacheDefinition = $container->getDefinition('cache.default');
+        $methodCalls = $cacheDefinition->getMethodCalls();
+        $methodName = $methodCalls[0][0];
+        $methodArgs = $methodCalls[0][1];
+        $this->assertEquals('setNamespace', $methodName);
+        $this->assertEquals('test:', $methodArgs[0]);
         
+        $cacheDefinition = $container->getDefinition('cache.secondary');
+        $methodCalls = $cacheDefinition->getMethodCalls();
+        $methodName = $methodCalls[0][0];
+        $methodArgs = $methodCalls[0][1];
+        $this->assertEquals('setNamespace', $methodName);
+        $this->assertEquals('nice:', $methodArgs[0]);
     }
 
     /**
