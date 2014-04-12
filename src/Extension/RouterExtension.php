@@ -30,7 +30,9 @@ class RouterExtension extends Extension
     public function load(array $config, ContainerBuilder $container)
     {
         $container->register('router.parser', 'FastRoute\RouteParser\Std');
-        $container->register('router.data_generator', 'FastRoute\DataGenerator\GroupCountBased');
+        $container->register('router.data_generator.strategy', 'FastRoute\DataGenerator\GroupCountBased');
+        $container->register('router.data_generator', 'Nice\Router\NamedDataGenerator\HandlerWrapperGenerator')
+            ->addArgument(new Reference('router.data_generator.strategy'));
         
         $container->setParameter('router.collector.class', 'Nice\Router\RouteCollector\SimpleCollector');
 
@@ -51,6 +53,9 @@ class RouterExtension extends Extension
 
         $container->register('router.dispatcher_subscriber', 'Nice\Router\RouterSubscriber')
             ->addArgument(new Reference('router.dispatcher'))
+            ->addTag('kernel.event_subscriber');
+
+        $container->register('router.wrapped_handler_subscriber', 'Nice\Router\WrappedHandlerSubscriber')
             ->addTag('kernel.event_subscriber');
 
         $container->register('router.controller_resolver', 'Nice\Router\ContainerAwareControllerResolver')

@@ -53,6 +53,28 @@ abstract class RouteCollector implements RouteCollectorInterface
     }
 
     /**
+     * Adds a named route to the collection
+     *
+     * @param string $name
+     * @param string $httpMethod
+     * @param string $route
+     * @param mixed  $handler
+     *
+     * @throws \RuntimeException
+     */
+    public function addNamedRoute($name, $httpMethod, $route, $handler)
+    {
+        $routeData = $this->routeParser->parse($route);
+
+        if ($this->dataGenerator instanceof NamedDataGeneratorInterface) {
+            $this->dataGenerator->addNamedRoute($name, $httpMethod, $routeData, $handler);
+            
+        } else {
+            throw new \RuntimeException('The injected generator does not support named routes');
+        }
+    }
+
+    /**
      * Returns the collected route data
      *
      * @return array
