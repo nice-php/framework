@@ -47,7 +47,7 @@ class TwigExtension extends Extension
             ->setPublic(false)
             ->addArgument(new Reference('service_container'));
 
-        $container->register('twig.app_extension', 'Nice\Twig\ApplicationExtension')
+        $container->register('twig.router_extension', 'Nice\Twig\RouterExtension')
             ->setPublic(false)
             ->addArgument(new Reference('service_container'));
 
@@ -58,6 +58,6 @@ class TwigExtension extends Extension
         $container->register('twig', 'Twig_Environment')
             ->addArgument(new Reference('twig.loader'))
             ->addMethodCall('addExtension', array(new Reference('twig.asset_extension')))
-            ->addMethodCall('addExtension', array(new Reference('twig.app_extension')));
+            ->addMethodCall('addExtension', array(new Reference('twig.router_extension')));
     }
 }

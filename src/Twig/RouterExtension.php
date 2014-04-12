@@ -12,7 +12,7 @@ namespace Nice\Twig;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class ApplicationExtension extends \Twig_Extension
+class RouterExtension extends \Twig_Extension
 {
     /**
      * @var ContainerInterface
@@ -116,7 +116,7 @@ class ApplicationExtension extends \Twig_Extension
     public function getController()
     {
         if (!$this->controller) {
-            $pattern = "#Controller\\\([a-zA-Z\\\\]*)Controller#";
+            $pattern = "#([a-zA-Z\\\\]*)Controller#";
             $matches = array();
             preg_match($pattern, $this->getCurrentRequest()->get('_controller'), $matches);
 
@@ -166,6 +166,6 @@ class ApplicationExtension extends \Twig_Extension
      */
     public function getName()
     {
-        return 'app';
+        return 'router';
     }
 }
