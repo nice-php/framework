@@ -78,12 +78,13 @@ class RouterExtensionTest extends \PHPUnit_Framework_TestCase
         $functions = $extension->getFunctions();
         $globals   = $extension->getGlobals();
 
-        $this->assertCount(5, $functions);
+        $this->assertCount(6, $functions);
         $this->assertTrue(isset($functions['current_controller']));
         $this->assertTrue(isset($functions['current_action']));
         $this->assertTrue(isset($functions['current_route']));
         $this->assertTrue(isset($functions['is_current_controller']));
         $this->assertTrue(isset($functions['is_current_route']));
+        $this->assertTrue(isset($functions['path']));
 
         $this->assertCount(1, $globals);
         $this->assertTrue(isset($globals['app']));
