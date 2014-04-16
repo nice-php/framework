@@ -70,6 +70,24 @@ class RouterExtensionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests generateUrl
+     */
+    public function testGenerateUrl()
+    {
+        $mockGenerator = $this->getMockForAbstractClass('Nice\Router\UrlGeneratorInterface');
+        $mockGenerator->expects($this->once())->method('generate')
+            ->with('somewhere', array('test' => true), true)
+            ->will($this->returnValue('https://example.com/somewhere/test'));
+        
+        $container = new Container();
+        $container->set('router.url_generator', $mockGenerator);
+        
+        $extension = $this->getExtension('/', 'HomeController::indexAction', 'home', $container);
+
+        $this->assertEquals('https://example.com/somewhere/test', $extension->generateUrl('somewhere', array('test' => true), true));
+    }
+
+    /**
      * Miscellaneous tests
      */
     public function testBasicMethods()
@@ -110,12 +128,12 @@ class RouterExtensionTest extends \PHPUnit_Framework_TestCase
      *
      * @return RouterExtension
      */
-    public function getExtension($uri = '/', $controller = 'HomeController::indexAction', $route = 'home')
+    public function getExtension($uri = '/', $controller = 'HomeController::indexAction', $route = 'home', Container $container = null)
     {
         $request = Request::create($uri);
         $request->attributes->set('_controller', $controller);
         $request->attributes->set('_route', $route);
-        $container = new Container();
+        $container = $container ?: new Container();
         $container->set('request', $request);
         $container->set('app', new \stdClass());
         $container->addScope(new Scope('request'));
