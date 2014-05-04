@@ -16,9 +16,9 @@ use Symfony\Component\HttpFoundation\Request;
 class SimpleUrlGenerator implements UrlGeneratorInterface
 {
     /**
-     * @var DataSourceInterface
+     * @var DataGeneratorInterface
      */
-    private $dataSource;
+    private $dataGenerator;
     
     private $initialized = false;
     
@@ -29,9 +29,9 @@ class SimpleUrlGenerator implements UrlGeneratorInterface
      */
     private $request;
 
-    public function __construct(DataSourceInterface $dataSource, Request $request)
+    public function __construct(DataGeneratorInterface $dataGenerator, Request $request)
     {
-        $this->dataSource = $dataSource;
+        $this->dataGenerator = $dataGenerator;
         $this->request = $request;
     }
     
@@ -50,7 +50,21 @@ class SimpleUrlGenerator implements UrlGeneratorInterface
             $this->initialize();
         }
         
-        return $this->request->getBaseUrl() . $this->routes[$name];
+        $path = $this->routes[$name];
+        if (is_array($path)) {
+            $params = $path['params'];
+            $path = $path['path'];
+            
+            foreach ($params as $param) {
+                if (!isset($parameters[$param])) {
+                    throw new \RuntimeException('Missing required parameter "' . $param . '". Optional parameters not currently supported');
+                }
+                
+                $path = str_replace('{' . $param . '}', $parameters[$param], $path);
+            }
+        }
+        
+        return $this->request->getBaseUrl() . $path;
     }
 
     /**
@@ -58,7 +72,7 @@ class SimpleUrlGenerator implements UrlGeneratorInterface
      */
     private function initialize()
     {
-        $this->routes = $this->dataSource->getData();
+        $this->routes = $this->dataGenerator->getData();
         $this->initialized = true;
     }
 }

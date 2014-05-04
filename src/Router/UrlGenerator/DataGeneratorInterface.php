@@ -9,7 +9,7 @@
 
 namespace Nice\Router\UrlGenerator;
 
-interface DataSourceInterface
+interface DataGeneratorInterface
 {
     /**
      * Get formatted route data for use by a URL generator
