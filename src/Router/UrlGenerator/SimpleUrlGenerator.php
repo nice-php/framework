@@ -29,12 +29,11 @@ class SimpleUrlGenerator implements UrlGeneratorInterface
      */
     private $request;
 
-    public function __construct(DataGeneratorInterface $dataGenerator, Request $request)
+    public function __construct(DataGeneratorInterface $dataGenerator)
     {
         $this->dataGenerator = $dataGenerator;
-        $this->request = $request;
     }
-    
+
     /**
      * Generate a URL for the given route
      *
@@ -64,7 +63,15 @@ class SimpleUrlGenerator implements UrlGeneratorInterface
             }
         }
         
-        return $this->request->getBaseUrl() . $path;
+        return ($this->request ? $this->request->getBaseUrl() : '') . $path;
+    }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     */
+    public function setRequest(Request $request = null)
+    {
+        $this->request = $request;
     }
 
     /**

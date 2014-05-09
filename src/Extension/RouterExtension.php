@@ -66,9 +66,12 @@ class RouterExtension extends Extension
             ->addArgument(new Reference('router.collector'));
         
         $container->register('router.url_generator', 'Nice\Router\UrlGenerator\SimpleUrlGenerator')
-            ->setScope('request')
-            ->addArgument(new Reference('router.url_generator.data_generator', ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, false))
-            ->addArgument(new Reference('request', ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, false));
+            ->addArgument(new Reference('router.url_generator.data_generator'))
+            ->addMethodCall('setRequest', array(new Reference(
+                    'request',
+                    ContainerInterface::NULL_ON_INVALID_REFERENCE,
+                    false
+                )));
 
         $container->register('http_kernel', 'Symfony\Component\HttpKernel\DependencyInjection\ContainerAwareHttpKernel')
             ->addArgument(new Reference('event_dispatcher'))
