@@ -24,11 +24,14 @@
                 <file>./src/Router/RouteCollectorInterface.php</file>
                 <file>./src/DependencyInjection/ContainerInitializerInterface.php</file>
                 <file>./src/Security/AuthenticatorInterface.php</file>
+                <file>./src/Router/NamedDataGeneratorInterface.php</file>
+                <file>./src/Router/UrlGeneratorInterface.php</file>
+                <file>./src/Router/UrlGenerator/DataGeneratorInterface.php</file>
             </exclude>
         </whitelist>
     </filter>
 
     <logging>
-        <!--<log type="coverage-text" target="php://stdout" showUncoveredFiles="true" highlight="true"/>-->
+        <log type="coverage-html" target="report" showUncoveredFiles="true" highlight="true"/>
     </logging>
 </phpunit>
