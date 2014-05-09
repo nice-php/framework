@@ -74,7 +74,5 @@ class RouterExtension extends Extension
             ->addArgument(new Reference('event_dispatcher'))
             ->addArgument(new Reference('service_container'))
             ->addArgument(new Reference('router.controller_resolver'));
-
-        $container->addScope(new Scope('request'));
     }
 }
