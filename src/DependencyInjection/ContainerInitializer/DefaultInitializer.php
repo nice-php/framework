@@ -14,6 +14,7 @@ use Nice\DependencyInjection\ContainerInitializerInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpKernel\DependencyInjection\MergeExtensionConfigurationPass;
 use Symfony\Component\HttpKernel\DependencyInjection\RegisterListenersPass;
 
@@ -44,7 +45,11 @@ class DefaultInitializer implements ContainerInitializerInterface
             ->setSynthetic(true);
 
         $container->register('request', 'Symfony\Componenet\HttpKernel\Request')
-            ->setSynthetic(true);
+            ->setSynthetic(true)
+            ->setSynchronized(true)
+            ->setScope('request');
+        
+        $container->addScope(new Scope('request'));
 
         $extensions = array();
         foreach ($application->getExtensions() as $extension) {

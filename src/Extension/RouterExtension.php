@@ -10,6 +10,7 @@
 namespace Nice\Extension;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Scope;
@@ -60,12 +61,21 @@ class RouterExtension extends Extension
 
         $container->register('router.controller_resolver', 'Nice\Router\ContainerAwareControllerResolver')
             ->addMethodCall('setContainer', array(new Reference('service_container')));
+        
+        $container->register('router.url_generator.data_generator', 'Nice\Router\UrlGenerator\GroupCountBasedDataGenerator')
+            ->addArgument(new Reference('router.collector'));
+        
+        $container->register('router.url_generator', 'Nice\Router\UrlGenerator\SimpleUrlGenerator')
+            ->addArgument(new Reference('router.url_generator.data_generator'))
+            ->addMethodCall('setRequest', array(new Reference(
+                    'request',
+                    ContainerInterface::NULL_ON_INVALID_REFERENCE,
+                    false
+                )));
 
         $container->register('http_kernel', 'Symfony\Component\HttpKernel\DependencyInjection\ContainerAwareHttpKernel')
             ->addArgument(new Reference('event_dispatcher'))
             ->addArgument(new Reference('service_container'))
             ->addArgument(new Reference('router.controller_resolver'));
-
-        $container->addScope(new Scope('request'));
     }
 }
