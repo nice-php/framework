@@ -9,12 +9,16 @@
 
 namespace Nice;
 
+use Nice\DependencyInjection\CacheRoutingDataPass;
 use Nice\DependencyInjection\ContainerInitializer\CachedInitializer;
 use Nice\DependencyInjection\ContainerInitializer\DefaultInitializer;
 use Nice\DependencyInjection\ContainerInitializerInterface;
 use Nice\DependencyInjection\ExtendableInterface;
 use Nice\Extension\RouterExtension;
 use Symfony\Component\Config\Loader;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
@@ -22,9 +26,12 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\DependencyInjection\ScopeInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\DependencyInjection\MergeExtensionConfigurationPass;
+use Symfony\Component\HttpKernel\DependencyInjection\RegisterListenersPass;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
@@ -62,7 +69,12 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
     /**
      * @var array|Extension[]
      */
-    protected $extensions = array();
+    private $extensions = array();
+
+    /**
+     * @var array
+     */
+    private $compilerPasses = array();
 
     /**
      * @var HttpKernelInterface
@@ -86,8 +98,6 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
         $this->environment = (string) $environment;
         $this->debug       = (bool) $debug;
         $this->cache       = (bool) $cache;
-
-        $this->registerDefaultExtensions();
     }
 
     /**
@@ -143,6 +153,21 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
     protected function registerDefaultExtensions()
     {
         $this->appendExtension(new RouterExtension());
+        
+        if ($this->isCacheEnabled()) {
+            $this->addCompilerPass(new CacheRoutingDataPass());
+        }
+    }
+
+    /**
+     * Adds a compiler pass.
+     *
+     * @param CompilerPassInterface $pass A compiler pass
+     * @param string                $type The type of compiler pass
+     */
+    protected function addCompilerPass(CompilerPassInterface $pass, $type = PassConfig::TYPE_BEFORE_OPTIMIZATION)
+    {
+        $this->compilerPasses[] = array($pass, $type);
     }
 
     /**
@@ -151,7 +176,10 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
     protected function initializeContainer()
     {
         $initializer = $this->getContainerInitializer();
-        $this->container = $initializer->initializeContainer($this);
+        
+        $this->registerDefaultExtensions();
+        
+        $this->container = $initializer->initializeContainer($this, $this->extensions, $this->compilerPasses);
         $this->container->set('app', $this);
 
         return $this->container;

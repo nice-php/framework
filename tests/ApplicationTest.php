@@ -195,6 +195,27 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test default Application extensions
+     */
+    public function testDefaultExtensions()
+    {
+        /** @var \Nice\Application|\PHPUnit_Framework_MockObject_MockObject $app */
+        $app = $this->getMockBuilder('Nice\Application')
+            ->setMethods(array('getRootDir'))
+            ->setConstructorArgs(array('init', true))
+            ->getMock();
+        $app->expects($this->any())
+            ->method('getRootDir')
+            ->will($this->returnValue(sys_get_temp_dir()));
+
+        $app->boot();
+
+        $extensions = $app->getExtensions();
+        $this->assertCount(1, $extensions);
+        $this->assertInstanceOf('Nice\Extension\RouterExtension', $extensions[0]);
+    }
+
+    /**
      * Test container initialization
      */
     public function testInitializeContainer()
@@ -208,9 +229,6 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
             ->method('getRootDir')
             ->will($this->returnValue(sys_get_temp_dir()));
 
-        $extensions = $app->getExtensions();
-        $this->assertCount(1, $extensions);
-        $this->assertInstanceOf('Nice\Extension\RouterExtension', $extensions[0]);
         $app->boot();
 
         $container = $app->getContainer();

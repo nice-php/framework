@@ -12,9 +12,11 @@ namespace Nice\DependencyInjection\ContainerInitializer;
 use Nice\Application;
 use Nice\DependencyInjection\ContainerInitializerInterface;
 use Symfony\Component\Config\ConfigCache;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
 class CachedInitializer implements ContainerInitializerInterface
 {
@@ -51,16 +53,18 @@ class CachedInitializer implements ContainerInitializerInterface
     /**
      * Returns a fully built, ready to use Container
      *
-     * @param Application $application
+     * @param Application                   $application
+     * @param array|ExtensionInterface[]    $extensions
+     * @param array|CompilerPassInterface[] $compilerPasses
      *
      * @return ContainerInterface
      */
-    public function initializeContainer(Application $application)
+    public function initializeContainer(Application $application, array $extensions = array(), array $compilerPasses = array())
     {
         $class = $this->getContainerClass($application);
         $cache = new ConfigCache($this->cacheDir . '/' . $class . '.php', $application->isDebug());
         if (!$cache->isFresh()) {
-            $container = $this->wrappedInitializer->initializeContainer($application);
+            $container = $this->wrappedInitializer->initializeContainer($application, $extensions, $compilerPasses);
 
             $this->dumpContainer($cache, $container, $class, 'Container');
         }

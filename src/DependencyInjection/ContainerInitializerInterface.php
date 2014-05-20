@@ -10,16 +10,20 @@
 namespace Nice\DependencyInjection;
 
 use Nice\Application;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
 interface ContainerInitializerInterface
 {
     /**
      * Returns a fully built, ready to use Container
      *
-     * @param Application $application
+     * @param Application                   $application
+     * @param array|ExtensionInterface[]    $extensions
+     * @param array|CompilerPassInterface[] $compilerPasses
      *
      * @return ContainerInterface
      */
-    public function initializeContainer(Application $application);
+    public function initializeContainer(Application $application, array $extensions = array(), array $compilerPasses = array());
 }

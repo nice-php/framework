@@ -10,9 +10,12 @@
 namespace Nice\DependencyInjection\ContainerInitializer;
 
 use Nice\Application;
+use Nice\DependencyInjection\CacheRoutingDataPass;
 use Nice\DependencyInjection\ContainerInitializerInterface;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpKernel\DependencyInjection\MergeExtensionConfigurationPass;
@@ -23,11 +26,13 @@ class DefaultInitializer implements ContainerInitializerInterface
     /**
      * Returns a fully built, ready to use Container
      *
-     * @param Application $application
+     * @param Application                   $application
+     * @param array|ExtensionInterface[]    $extensions
+     * @param array|CompilerPassInterface[] $compilerPasses
      *
      * @return ContainerInterface
      */
-    public function initializeContainer(Application $application)
+    public function initializeContainer(Application $application, array $extensions = array(), array $compilerPasses = array())
     {
         $container = $container = $this->getContainerBuilder();
         $container->addObjectResource($application);
@@ -51,15 +56,24 @@ class DefaultInitializer implements ContainerInitializerInterface
         
         $container->addScope(new Scope('request'));
 
-        $extensions = array();
-        foreach ($application->getExtensions() as $extension) {
+        $extensionAliases = array();
+        foreach ($extensions as $extension) {
             $container->registerExtension($extension);
-            $extensions[] = $extension->getAlias();
+            $extensionAliases[] = $extension->getAlias();
         }
-
-        $container->addCompilerPass(new MergeExtensionConfigurationPass($extensions));
+        
+        $container->addCompilerPass(new MergeExtensionConfigurationPass($extensionAliases));
         $container->addCompilerPass(new RegisterListenersPass());
 
+        foreach ($compilerPasses as $pass) {
+            if (is_array($pass)) {
+                $container->addCompilerPass($pass[0], $pass[1]);
+
+            } else {
+                $container->addCompilerPass($pass);
+            }
+        }
+       
         $container->compile();
 
         return $container;
