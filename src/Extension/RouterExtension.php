@@ -9,6 +9,7 @@
 
 namespace Nice\Extension;
 
+use Nice\DependencyInjection\CacheRoutingDataPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
@@ -77,5 +78,7 @@ class RouterExtension extends Extension
             ->addArgument(new Reference('event_dispatcher'))
             ->addArgument(new Reference('service_container'))
             ->addArgument(new Reference('router.controller_resolver'));
+
+        $container->addCompilerPass(new CacheRoutingDataPass());
     }
 }
