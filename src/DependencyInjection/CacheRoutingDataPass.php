@@ -20,22 +20,20 @@ class CacheRoutingDataPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if ($container->hasParameter('app.cache') && $container->getParameter('app.cache')) {
-            $pathPrefix = '%app.cache_dir%/%app.env%';
+        $pathPrefix = '%app.cache_dir%/%app.env%';
 
-            $definition = $container->getDefinition('router.collector');
-            $container->setDefinition('router.collector.wrapped', $definition);
-            $container->register('router.collector', 'Nice\Router\RouteCollector\CachedCollector')
-                ->addArgument(new Reference('router.collector.wrapped'))
-                ->addArgument($pathPrefix . 'RouteData.php')
-                ->addArgument('%app.debug%');
+        $definition = $container->getDefinition('router.collector');
+        $container->setDefinition('router.collector.wrapped', $definition);
+        $container->register('router.collector', 'Nice\Router\RouteCollector\CachedCollector')
+            ->addArgument(new Reference('router.collector.wrapped'))
+            ->addArgument($pathPrefix . 'RouteData.php')
+            ->addArgument('%app.debug%');
 
-            $definition = $container->getDefinition('router.url_generator.data_generator');
-            $container->setDefinition('router.url_generator.data_generator.wrapped', $definition);
-            $container->register('router.url_generator.data_generator', 'Nice\Router\UrlGenerator\CachedDataGenerator')
-                ->addArgument(new Reference('router.url_generator.data_generator.wrapped'))
-                ->addArgument($pathPrefix . 'UrlGeneratorData.php')
-                ->addArgument('%app.debug%');
-        }
+        $definition = $container->getDefinition('router.url_generator.data_generator');
+        $container->setDefinition('router.url_generator.data_generator.wrapped', $definition);
+        $container->register('router.url_generator.data_generator', 'Nice\Router\UrlGenerator\CachedDataGenerator')
+            ->addArgument(new Reference('router.url_generator.data_generator.wrapped'))
+            ->addArgument($pathPrefix . 'UrlGeneratorData.php')
+            ->addArgument('%app.debug%');
     }
 }
