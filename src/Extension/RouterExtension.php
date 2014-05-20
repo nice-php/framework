@@ -9,12 +9,10 @@
 
 namespace Nice\Extension;
 
-use Nice\DependencyInjection\CacheRoutingDataPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Extension\Extension;
-use Symfony\Component\DependencyInjection\Scope;
 
 /**
  * Sets up FastRoute services
@@ -35,7 +33,7 @@ class RouterExtension extends Extension
         $container->register('router.data_generator.strategy', 'FastRoute\DataGenerator\GroupCountBased');
         $container->register('router.data_generator', 'Nice\Router\NamedDataGenerator\HandlerWrapperGenerator')
             ->addArgument(new Reference('router.data_generator.strategy'));
-        
+
         $container->setParameter('router.collector.class', 'Nice\Router\RouteCollector\SimpleCollector');
 
         $container->register('routes', 'Closure')
@@ -62,10 +60,10 @@ class RouterExtension extends Extension
 
         $container->register('router.controller_resolver', 'Nice\Router\ContainerAwareControllerResolver')
             ->addMethodCall('setContainer', array(new Reference('service_container')));
-        
+
         $container->register('router.url_generator.data_generator', 'Nice\Router\UrlGenerator\GroupCountBasedDataGenerator')
             ->addArgument(new Reference('router.collector'));
-        
+
         $container->register('router.url_generator', 'Nice\Router\UrlGenerator\SimpleUrlGenerator')
             ->addArgument(new Reference('router.url_generator.data_generator'))
             ->addMethodCall('setRequest', array(new Reference(
@@ -78,7 +76,5 @@ class RouterExtension extends Extension
             ->addArgument(new Reference('event_dispatcher'))
             ->addArgument(new Reference('service_container'))
             ->addArgument(new Reference('router.controller_resolver'));
-
-        $container->addCompilerPass(new CacheRoutingDataPass());
     }
 }
