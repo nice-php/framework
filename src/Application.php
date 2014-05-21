@@ -175,10 +175,8 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
      */
     protected function initializeContainer()
     {
-        $initializer = $this->getContainerInitializer();
-        
         $this->registerDefaultExtensions();
-        
+        $initializer = $this->getContainerInitializer();
         $this->container = $initializer->initializeContainer($this, $this->extensions, $this->compilerPasses);
         $this->container->set('app', $this);
 
@@ -247,7 +245,7 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
     public function getRootDir()
     {
         if (!$this->rootDir) {
-            // Assumes application root is one level above web root
+            // Assumes application root is one level above web/console root
             $this->rootDir = dirname($_SERVER['SCRIPT_FILENAME']) . '/..';
         }
 
