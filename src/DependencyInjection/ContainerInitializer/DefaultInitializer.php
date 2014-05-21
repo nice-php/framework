@@ -10,7 +10,6 @@
 namespace Nice\DependencyInjection\ContainerInitializer;
 
 use Nice\Application;
-use Nice\DependencyInjection\CacheRoutingDataPass;
 use Nice\DependencyInjection\ContainerInitializerInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

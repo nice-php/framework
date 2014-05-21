@@ -10,7 +10,6 @@
 namespace Nice\Router\UrlGenerator;
 
 use Nice\Router\UrlGeneratorInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class SimpleUrlGenerator implements UrlGeneratorInterface
