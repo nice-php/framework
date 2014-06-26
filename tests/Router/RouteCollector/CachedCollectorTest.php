@@ -56,19 +56,33 @@ class CachedCollectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test that routes containing closures are never cached
+     */
+    public function testDoesNotCacheClosures()
+    {
+        $filename = sys_get_temp_dir() . '/_collector' . sha1(uniqid('_collector', true));
+        $collector = $this->getCollector($filename, $this->once(), array(array(array('handler' => function() { }))));
+
+        $data = $collector->getData();
+
+        $this->assertFalse(file_exists($filename));
+    }
+
+    /**
      * @param string $filename
      * @param null   $expects
+     * @param array  $routes
      *
      * @return CachedCollector
      */
-    protected function getCollector($filename, $expects = null)
+    protected function getCollector($filename, $expects = null, $routes = array(array(), array()))
     {
         $routeCollector = $this->getMockBuilder('Nice\Router\RouteCollectorInterface')
             ->disableOriginalConstructor()
             ->getMock();
         $routeCollector->expects($expects ?: $this->any())
             ->method('getData')
-            ->will($this->returnValue(array(array(), array())));
+            ->will($this->returnValue($routes));
 
         $collector = new CachedCollector($routeCollector, $filename, false);
 
