@@ -57,9 +57,31 @@ class CachedCollector implements RouteCollectorInterface
         if (!$cache->isFresh()) {
             $routes = $this->wrappedCollector->getData();
 
+            // TODO: This seems a fragile way to handle this
+            if (!$this->isCacheable($routes)) {
+                return $routes;
+            }
+
             $cache->write('<?php return ' . var_export($routes, true) . ';');
         }
 
         return require $cache;
+    }
+
+    /**
+     * Ensures route data does not contain any Closures
+     * 
+     * @return bool
+     */
+    private function isCacheable($data)
+    {
+        $cacheable = true;
+        array_walk_recursive($data, function($value) use (&$cacheable) {
+                if ($value instanceof \Closure) {
+                    $cacheable = false;
+                }
+            });
+
+        return $cacheable;
     }
 }
