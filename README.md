@@ -118,7 +118,7 @@ use Nice\Extension\SessionExtension;
 // ...
 
 $app = new Application();
-$app->registerExtension(new SessionExtension());
+$app->appendExtension(new SessionExtension());
 
 // ...
 
@@ -151,7 +151,7 @@ require __DIR__ . '/../vendor/autoload.php';
 $app = new Application();
 
 // Register the Twig extension
-$app->registerExtension(new TwigExtension(__DIR__ . '/../views'));
+$app->appendExtension(new TwigExtension(__DIR__ . '/../views'));
 
 $app->set('routes', function (RouteCollector $r) {
     $r->addRoute('GET', '/hello/{name}', function (Application $app, Request $request, $name) {
