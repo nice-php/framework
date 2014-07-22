@@ -27,6 +27,16 @@ class RouterExtensionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests getCurrentController with a namespaced Controller
+     */
+    public function testGetControllerNamespace()
+    {
+        $extension = $this->getExtension('/', 'Vendor\Controller\HomeController::indexAction');
+
+        $this->assertEquals('Home', $extension->getController());
+    }
+
+    /**
      * Tests getCurrentAction
      */
     public function testCurrentAction()
@@ -68,7 +78,7 @@ class RouterExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($extension->isCurrentRoute('home'));
         $this->assertFalse($extension->isCurrentRoute('dashboard'));
     }
-
+    
     /**
      * Tests generateUrl
      */

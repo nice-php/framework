@@ -117,11 +117,12 @@ class RouterExtension extends \Twig_Extension
     public function getController()
     {
         if (!$this->controller) {
-            $pattern = "#([a-zA-Z\\\\]*)Controller#";
+            $pattern = '/([a-z]+?)Controller/i';
             $matches = array();
-            preg_match($pattern, $this->getCurrentRequest()->get('_controller'), $matches);
-
-            $this->controller = isset($matches[1]) ? $matches[1] : null;
+            $controller = $this->getCurrentRequest()->get('_controller');
+            preg_match($pattern, $controller, $matches);
+            
+            $this->controller = isset($matches[1]) ? $matches[1] : $controller;
         }
 
         return $this->controller;
@@ -133,7 +134,7 @@ class RouterExtension extends \Twig_Extension
     public function getAction()
     {
         if (!$this->action) {
-            $pattern = "#::([a-zA-Z]*)Action#";
+            $pattern = "/([a-z]+?)Action/i";
             $matches = array();
             preg_match($pattern, $this->getCurrentRequest()->get('_controller'), $matches);
 
