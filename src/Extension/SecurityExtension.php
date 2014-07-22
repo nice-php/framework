@@ -74,6 +74,7 @@ class SecurityExtension extends Extension
             ->addArgument($config['username'])
             ->addArgument($config['password']);
         $container->register('security.security_subscriber', 'Nice\Security\FirewallSubscriber')
+            ->addArgument(new Reference('event_dispatcher'))
             ->addArgument(new Reference('security.firewall_matcher'))
             ->addArgument(new Reference('security.auth_matcher'))
             ->addArgument(new Reference('security.logout_matcher'))

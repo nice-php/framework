@@ -9,6 +9,8 @@
 
 namespace Nice\Security;
 
+use Nice\Security\Event\SecurityEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,17 +60,24 @@ class FirewallSubscriber implements EventSubscriberInterface
     private $authenticator;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * Constructor
      *
-     * @param RequestMatcherInterface $firewallMatcher
-     * @param RequestMatcherInterface $authMatcher
-     * @param RequestMatcherInterface $logoutMatcher
-     * @param AuthenticatorInterface  $authenticator
-     * @param string                  $loginPath
-     * @param string                  $successPath
-     * @param string                  $tokenKey
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param RequestMatcherInterface  $firewallMatcher
+     * @param RequestMatcherInterface  $authMatcher
+     * @param RequestMatcherInterface  $logoutMatcher
+     * @param AuthenticatorInterface   $authenticator
+     * @param string                   $loginPath
+     * @param string                   $successPath
+     * @param string                   $tokenKey
      */
     public function __construct(
+        EventDispatcherInterface $eventDispatcher,
         RequestMatcherInterface $firewallMatcher,
         RequestMatcherInterface $authMatcher,
         RequestMatcherInterface $logoutMatcher,
@@ -84,6 +93,7 @@ class FirewallSubscriber implements EventSubscriberInterface
         $this->successPath = $successPath;
         $this->tokenKey = $tokenKey;
         $this->authenticator = $authenticator;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -147,10 +157,16 @@ class FirewallSubscriber implements EventSubscriberInterface
         if ($this->authenticator->authenticate($request)) {
             $session->set($this->tokenKey, true);
             
+            $successEvent = new SecurityEvent($request);
+            $this->eventDispatcher->dispatch(Events::LOGIN_SUCCESS, $successEvent);
+            
             $event->setResponse(new RedirectResponse($event->getRequest()->getBaseUrl() . $this->successPath));
             
         } else {
-            $event->setResponse(new RedirectResponse($event->getRequest()->getBaseUrl() . $this->loginPath));
+            $failEvent = new SecurityEvent($request);
+            $this->eventDispatcher->dispatch(Events::LOGIN_FAIL, $failEvent);
+            
+            $this->redirectForAuthentication($event);
         }
     }
     
@@ -164,7 +180,10 @@ class FirewallSubscriber implements EventSubscriberInterface
         $request = $event->getRequest();
         $session = $request->getSession();
         $session->remove($this->tokenKey);
-        
-        $event->setResponse(new RedirectResponse($event->getRequest()->getBaseUrl() . $this->loginPath));
+
+        $logoutEvent = new SecurityEvent($request);
+        $this->eventDispatcher->dispatch(Events::LOGOUT, $logoutEvent);
+
+        $this->redirectForAuthentication($event);
     }
 }

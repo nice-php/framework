@@ -48,13 +48,14 @@ class SecurityExtensionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($container->hasDefinition('security.security_subscriber'));
         $subscriberDefinition = $container->getDefinition('security.security_subscriber');
-        $this->assertEquals('security.firewall_matcher', $subscriberDefinition->getArgument(0));
-        $this->assertEquals('security.auth_matcher', $subscriberDefinition->getArgument(1));
-        $this->assertEquals('security.logout_matcher', $subscriberDefinition->getArgument(2));
-        $this->assertEquals('security.authenticator', $subscriberDefinition->getArgument(3));
-        $this->assertEquals('/login', $subscriberDefinition->getArgument(4));
-        $this->assertEquals('/', $subscriberDefinition->getArgument(5));
-        $this->assertEquals('__authed', $subscriberDefinition->getArgument(6));
+        $this->assertEquals('event_dispatcher', $subscriberDefinition->getArgument(0));
+        $this->assertEquals('security.firewall_matcher', $subscriberDefinition->getArgument(1));
+        $this->assertEquals('security.auth_matcher', $subscriberDefinition->getArgument(2));
+        $this->assertEquals('security.logout_matcher', $subscriberDefinition->getArgument(3));
+        $this->assertEquals('security.authenticator', $subscriberDefinition->getArgument(4));
+        $this->assertEquals('/login', $subscriberDefinition->getArgument(5));
+        $this->assertEquals('/', $subscriberDefinition->getArgument(6));
+        $this->assertEquals('__authed', $subscriberDefinition->getArgument(7));
         $this->assertTrue($container->getDefinition('security.security_subscriber')->hasTag('kernel.event_subscriber'));
     }
 

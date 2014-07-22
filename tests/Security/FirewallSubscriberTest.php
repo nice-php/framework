@@ -10,7 +10,9 @@
 namespace Nice\Tests\Security;
 
 use Nice\Security\Authenticator\SimpleAuthenticator;
+use Nice\Security\Events;
 use Nice\Security\FirewallSubscriber;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -86,7 +88,11 @@ class FirewallSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         $request = $this->getRequest('/login', 'POST');
 
-        $susbcriber = $this->getSubscriber(false);
+        $dispatcher = new EventDispatcher();
+        $dispatcher->addListener(Events::LOGIN_FAIL, function() use (&$called) {
+                $called = true;
+            });
+        $susbcriber = $this->getSubscriber(false, null, $dispatcher);
         $event = $this->getEvent($request);
 
         $this->assertNull($event->getResponse());
@@ -95,7 +101,7 @@ class FirewallSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $response = $event->getResponse();
         $this->assertNotNull($response);
-
+        $this->assertTrue($called);
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertContains('/login', $response->headers->get('Location'));
     }
@@ -106,8 +112,13 @@ class FirewallSubscriberTest extends \PHPUnit_Framework_TestCase
     public function testSuccessfulLoginRedirectsToSuccess()
     {
         $request = $this->getRequest('/login', 'POST');
+        $called = false;
 
-        $susbcriber = $this->getSubscriber(true);
+        $dispatcher = new EventDispatcher();
+        $dispatcher->addListener(Events::LOGIN_SUCCESS, function() use (&$called) {
+                $called = true;
+            });
+        $susbcriber = $this->getSubscriber(true, null, $dispatcher);
         $event = $this->getEvent($request);
 
         $this->assertNull($event->getResponse());
@@ -116,7 +127,7 @@ class FirewallSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $response = $event->getResponse();
         $this->assertNotNull($response);
-
+        $this->assertTrue($called);
         $this->assertTrue($request->getSession()->get('__authed'));
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertContains('/admin', $response->headers->get('Location'));
@@ -150,7 +161,13 @@ class FirewallSubscriberTest extends \PHPUnit_Framework_TestCase
         $request = $this->getRequest('/logout');
         $request->getSession()->set('__authed', true);
 
-        $susbcriber = $this->getSubscriber();
+        $called = false;
+        
+        $dispatcher = new EventDispatcher();
+        $dispatcher->addListener(Events::LOGOUT, function() use (&$called) {
+                $called = true;
+            });
+        $susbcriber = $this->getSubscriber(true, null, $dispatcher);
         $event = $this->getEvent($request);
 
         $this->assertNull($event->getResponse());
@@ -159,6 +176,7 @@ class FirewallSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $response = $event->getResponse();
         $this->assertNotNull($response);
+        $this->assertTrue($called);
 
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEmpty($request->getSession()->get('__authed'));
@@ -194,8 +212,9 @@ class FirewallSubscriberTest extends \PHPUnit_Framework_TestCase
     /**
      * @return FirewallSubscriber
      */
-    private function getSubscriber($authenticate = true, $expects = null)
+    private function getSubscriber($authenticate = true, $expects = null, $dispatcher = null)
     {
+        $dispatcher      = $dispatcher ?: new EventDispatcher();
         $firewallMatcher = new RequestMatcher('^/admin');
         $authMatcher     = new RequestMatcher('^/login', null, 'POST');
         $logoutMatcher   = new RequestMatcher('^/logout');
@@ -204,6 +223,7 @@ class FirewallSubscriberTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue((bool) $authenticate));
         
         return new FirewallSubscriber(
+            $dispatcher,
             $firewallMatcher,
             $authMatcher,
             $logoutMatcher,
