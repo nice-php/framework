@@ -24,4 +24,15 @@ class DoctrineDbalConfigurationTest extends \PHPUnit_Framework_TestCase
         $processor = new Processor();
         $config = $processor->processConfiguration(new DoctrineDbalConfiguration(), array(array()));
     }
+
+    public function testDefaultDatabaseConfig()
+    {
+        $processor = new Processor();
+        $config = $processor->processConfiguration(new DoctrineDbalConfiguration(), array('doctrine' => array('database' => array('driver' => 'pdo_mysql'))));
+
+        $this->assertEquals(
+            array('database' => array('driver' => 'pdo_mysql')),
+            $config
+        );
+    }
 }
