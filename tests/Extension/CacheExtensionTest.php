@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class CacheExtensionTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Test the SecurityExtension
+     * Test the CacheExtension
      */
     public function testConfigure()
     {
