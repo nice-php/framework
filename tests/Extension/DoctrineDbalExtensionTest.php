@@ -31,6 +31,7 @@ class DoctrineDbalExtensionTest extends \PHPUnit_Framework_TestCase
         ), $container);
 
         $this->assertTrue($container->has('doctrine.dbal.database_connection'));
+        $this->assertTrue($container->has('doctrine.dbal.configuration'));
     }
 
     /**

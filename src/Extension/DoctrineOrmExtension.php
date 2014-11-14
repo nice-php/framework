@@ -68,6 +68,11 @@ class DoctrineOrmExtension extends Extension
             ->addMethodCall('setMetadataDriverImpl', array(new Reference('doctrine.orm.metadata.annotation')))
             ->addMethodCall('setProxyNamespace', array('Proxy'));
 
+        if ($container->hasParameter('app.cache') && $container->getParameter('app.cache') === true) {
+            $container->getDefinition('doctrine.orm.configuration')
+                ->addMethodCall('setProxyDir', array('%app.cache_dir%/doctrine'));
+        }
+
         $container->register('doctrine.orm.entity_manager', 'Doctrine\ORM\EntityManager')
             ->setFactoryClass('Doctrine\ORM\EntityManager')
             ->setFactoryMethod('create')
