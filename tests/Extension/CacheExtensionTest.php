@@ -96,15 +96,7 @@ class CacheExtensionTest extends \PHPUnit_Framework_TestCase
      */
     public function testRedisConfig()
     {
-        $extension = new CacheExtension();
-
-        $container = new ContainerBuilder();
-        $extension->load(array(self::$redisConfig), $container);
-        
-        $this->assertTrue($container->hasDefinition('cache.default'));
-        $this->assertTrue($container->hasDefinition('cache.default.driver'));
-        $this->assertTrue($container->hasDefinition('cache.secondary'));
-        $this->assertTrue($container->hasDefinition('cache.secondary.driver'));
+        $container = $this->loadContainerBuilder(self::$redisConfig);
         
         $driverDefinition = $container->getDefinition('cache.default.driver');
         $this->assertEquals('Redis', $driverDefinition->getClass());
@@ -132,15 +124,7 @@ class CacheExtensionTest extends \PHPUnit_Framework_TestCase
      */
     public function testMemcacheConfig()
     {
-        $extension = new CacheExtension();
-
-        $container = new ContainerBuilder();
-        $extension->load(array(self::$memcacheConfig), $container);
-
-        $this->assertTrue($container->hasDefinition('cache.default'));
-        $this->assertTrue($container->hasDefinition('cache.default.driver'));
-        $this->assertTrue($container->hasDefinition('cache.secondary'));
-        $this->assertTrue($container->hasDefinition('cache.secondary.driver'));
+        $container = $this->loadContainerBuilder(self::$memcacheConfig);
 
         $driverDefinition = $container->getDefinition('cache.default.driver');
         $this->assertEquals('Memcache', $driverDefinition->getClass());
@@ -161,6 +145,21 @@ class CacheExtensionTest extends \PHPUnit_Framework_TestCase
         $methodCalls = $cacheDefinition->getMethodCalls();
         $this->assertMethodWillBeCalled($methodCalls, 'setNamespace', array('nice:'));
         $this->assertMethodWillBeCalled($methodCalls, 'setMemcached', array('cache.secondary.driver'));
+    }
+
+    protected function loadContainerBuilder($config)
+    {
+        $extension = new CacheExtension();
+
+        $container = new ContainerBuilder();
+        $extension->load(array($config), $container);
+
+        $this->assertTrue($container->hasDefinition('cache.default'));
+        $this->assertTrue($container->hasDefinition('cache.default.driver'));
+        $this->assertTrue($container->hasDefinition('cache.secondary'));
+        $this->assertTrue($container->hasDefinition('cache.secondary.driver'));
+
+        return $container;
     }
 
     /**
