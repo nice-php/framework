@@ -14,6 +14,47 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class CacheExtensionTest extends \PHPUnit_Framework_TestCase
 {
+    private static $redisConfig = array(
+        'connections' => array(
+            'default' => array(
+                'driver' => 'redis',
+                'namespace' => 'test:',
+                'options' => array(
+                    'host' => '10.0.0.155',
+                    'port' => '16379',
+                    'timeout' => 30,
+                    'persistent' => false
+                )
+            ),
+            'secondary' => array(
+                'driver' => 'redis',
+                'options' => array(
+                    'socket' => '/tmp/redis.sock',
+                    'persistent' => true
+                )
+            )
+        )
+    );
+
+    private static $memcacheConfig = array(
+        'connections' => array(
+            'default' => array(
+                'driver' => 'memcache',
+                'namespace' => 'test:',
+                'options' => array(
+                    'host' => '10.0.0.155',
+                    'port' => '1211'
+                )
+            ),
+            'secondary' => array(
+                'driver' => 'memcached',
+                'options' => array(
+                    'socket' => '/tmp/memcache.sock'
+                )
+            )
+        )
+    );
+
     /**
      * Test the CacheExtension
      */
@@ -58,27 +99,7 @@ class CacheExtensionTest extends \PHPUnit_Framework_TestCase
         $extension = new CacheExtension();
 
         $container = new ContainerBuilder();
-        $extension->load(array(array(
-                'connections' => array(
-                    'default' => array(
-                        'driver' => 'redis',
-                        'namespace' => 'test:',
-                        'options' => array(
-                            'host' => '10.0.0.155',
-                            'port' => '16379',
-                            'timeout' => 30,
-                            'persistent' => false
-                        )
-                    ),
-                    'secondary' => array(
-                        'driver' => 'redis',
-                        'options' => array(
-                            'socket' => '/tmp/redis.sock',
-                            'persistent' => true
-                        )
-                    )
-                )
-            )), $container);
+        $extension->load(array(self::$redisConfig), $container);
         
         $this->assertTrue($container->hasDefinition('cache.default'));
         $this->assertTrue($container->hasDefinition('cache.default.driver'));
@@ -87,43 +108,33 @@ class CacheExtensionTest extends \PHPUnit_Framework_TestCase
         
         $driverDefinition = $container->getDefinition('cache.default.driver');
         $methodCalls = $driverDefinition->getMethodCalls();
-        $methodName = $methodCalls[0][0];
-        $methodArgs = $methodCalls[0][1];
+        list($methodName, $methodArgs) = $methodCalls[0];
         $this->assertEquals('Redis', $driverDefinition->getClass());
         $this->assertEquals('connect', $methodName);
-        $this->assertEquals('10.0.0.155', $methodArgs[0]);
-        $this->assertEquals('16379', $methodArgs[1]);
-        $this->assertEquals(30, $methodArgs[2]);
+        $this->assertEquals(array('10.0.0.155', '16379', 30), $methodArgs);
         
         $cacheDefinition = $container->getDefinition('cache.default');
         $methodCalls = $cacheDefinition->getMethodCalls();
-        $methodName = $methodCalls[0][0];
-        $methodArgs = $methodCalls[0][1];
+        list($methodName, $methodArgs) = $methodCalls[0];
         $this->assertEquals('setRedis', $methodName);
         $this->assertEquals('cache.default.driver', $methodArgs[0]);
-        $methodName = $methodCalls[1][0];
-        $methodArgs = $methodCalls[1][1];
+        list($methodName, $methodArgs) = $methodCalls[1];
         $this->assertEquals('setNamespace', $methodName);
         $this->assertEquals('test:', $methodArgs[0]);
 
         $driverDefinition = $container->getDefinition('cache.secondary.driver');
         $methodCalls = $driverDefinition->getMethodCalls();
-        $methodName = $methodCalls[0][0];
-        $methodArgs = $methodCalls[0][1];
+        list($methodName, $methodArgs) = $methodCalls[0];
         $this->assertEquals('Redis', $driverDefinition->getClass());
         $this->assertEquals('pconnect', $methodName);
-        $this->assertEquals('/tmp/redis.sock', $methodArgs[0]);
-        $this->assertEquals(null, $methodArgs[1]);
-        $this->assertEquals(0, $methodArgs[2]);
+        $this->assertEquals(array('/tmp/redis.sock', null, 0), $methodArgs);
 
         $cacheDefinition = $container->getDefinition('cache.secondary');
         $methodCalls = $cacheDefinition->getMethodCalls();
-        $methodName = $methodCalls[0][0];
-        $methodArgs = $methodCalls[0][1];
+        list($methodName, $methodArgs) = $methodCalls[0];
         $this->assertEquals('setRedis', $methodName);
         $this->assertEquals('cache.secondary.driver', $methodArgs[0]);
-        $methodName = $methodCalls[1][0];
-        $methodArgs = $methodCalls[1][1];
+        list($methodName, $methodArgs) = $methodCalls[1];
         $this->assertEquals('setNamespace', $methodName);
         $this->assertEquals('nice:', $methodArgs[0]);
     }
@@ -136,24 +147,7 @@ class CacheExtensionTest extends \PHPUnit_Framework_TestCase
         $extension = new CacheExtension();
 
         $container = new ContainerBuilder();
-        $extension->load(array(array(
-                'connections' => array(
-                    'default' => array(
-                        'driver' => 'memcache',
-                        'namespace' => 'test:',
-                        'options' => array(
-                            'host' => '10.0.0.155',
-                            'port' => '1211'
-                        )
-                    ),
-                    'secondary' => array(
-                        'driver' => 'memcached',
-                        'options' => array(
-                            'socket' => '/tmp/redis.sock'
-                        )
-                    )
-                )
-            )), $container);
+        $extension->load(array(self::$memcacheConfig), $container);
 
         $this->assertTrue($container->hasDefinition('cache.default'));
         $this->assertTrue($container->hasDefinition('cache.default.driver'));
@@ -162,41 +156,33 @@ class CacheExtensionTest extends \PHPUnit_Framework_TestCase
 
         $driverDefinition = $container->getDefinition('cache.default.driver');
         $methodCalls = $driverDefinition->getMethodCalls();
-        $methodName = $methodCalls[0][0];
-        $methodArgs = $methodCalls[0][1];
+        list($methodName, $methodArgs) = $methodCalls[0];
         $this->assertEquals('Memcache', $driverDefinition->getClass());
         $this->assertEquals('addServer', $methodName);
-        $this->assertEquals('10.0.0.155', $methodArgs[0]);
-        $this->assertEquals('1211', $methodArgs[1]);
+        $this->assertEquals(array('10.0.0.155', '1211'), $methodArgs);
 
         $cacheDefinition = $container->getDefinition('cache.default');
         $methodCalls = $cacheDefinition->getMethodCalls();
-        $methodName = $methodCalls[0][0];
-        $methodArgs = $methodCalls[0][1];
+        list($methodName, $methodArgs) = $methodCalls[0];
         $this->assertEquals('setNamespace', $methodName);
         $this->assertEquals('test:', $methodArgs[0]);
-        $methodName = $methodCalls[1][0];
-        $methodArgs = $methodCalls[1][1];
+        list($methodName, $methodArgs) = $methodCalls[1];
         $this->assertEquals('setMemcache', $methodName);
         $this->assertEquals('cache.default.driver', $methodArgs[0]);
 
         $driverDefinition = $container->getDefinition('cache.secondary.driver');
         $methodCalls = $driverDefinition->getMethodCalls();
-        $methodName = $methodCalls[0][0];
-        $methodArgs = $methodCalls[0][1];
+        list($methodName, $methodArgs) = $methodCalls[0];
         $this->assertEquals('Memcached', $driverDefinition->getClass());
         $this->assertEquals('addServer', $methodName);
-        $this->assertEquals('/tmp/redis.sock', $methodArgs[0]);
-        $this->assertEquals(null, $methodArgs[1]);
+        $this->assertEquals(array('/tmp/memcache.sock', null), $methodArgs);
 
         $cacheDefinition = $container->getDefinition('cache.secondary');
         $methodCalls = $cacheDefinition->getMethodCalls();
-        $methodName = $methodCalls[0][0];
-        $methodArgs = $methodCalls[0][1];
+        list($methodName, $methodArgs) = $methodCalls[0];
         $this->assertEquals('setNamespace', $methodName);
         $this->assertEquals('nice:', $methodArgs[0]);
-        $methodName = $methodCalls[1][0];
-        $methodArgs = $methodCalls[1][1];
+        list($methodName, $methodArgs) = $methodCalls[1];
         $this->assertEquals('setMemcached', $methodName);
         $this->assertEquals('cache.secondary.driver', $methodArgs[0]);
     }
