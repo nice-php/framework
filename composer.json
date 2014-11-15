@@ -12,7 +12,8 @@
   "require-dev": {
     "symfony/debug": "~2.3",
     "phpunit/phpunit": "~3.7",
-    "twig/twig": "~1.15"
+    "twig/twig": "~1.15",
+    "codeclimate/php-test-reporter": "dev-master"
   },
   "suggest": {
     "stack/builder": "Stack HttpKernel middlewares - http://stackphp.com",

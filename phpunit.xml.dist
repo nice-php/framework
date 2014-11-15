@@ -32,6 +32,7 @@
     </filter>
 
     <logging>
-        <log type="coverage-html" target="report" showUncoveredFiles="true" highlight="true"/>
+        <log type="coverage-html" target="build/logs/report" showUncoveredFiles="true" highlight="true"/>
+        <log type="coverage-clover" target="build/logs/clover.xml"/>
     </logging>
 </phpunit>
