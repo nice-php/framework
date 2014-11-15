@@ -97,26 +97,9 @@ class CacheExtensionTest extends \PHPUnit_Framework_TestCase
     public function testRedisConfig()
     {
         $container = $this->loadContainerBuilder(self::$redisConfig);
-        
-        $driverDefinition = $container->getDefinition('cache.default.driver');
-        $this->assertEquals('Redis', $driverDefinition->getClass());
-        $methodCalls = $driverDefinition->getMethodCalls();
-        $this->assertMethodWillBeCalled($methodCalls, 'connect', array('10.0.0.155', '16379', 30));
-        
-        $cacheDefinition = $container->getDefinition('cache.default');
-        $methodCalls = $cacheDefinition->getMethodCalls();
-        $this->assertMethodWillBeCalled($methodCalls, 'setRedis', array('cache.default.driver'));
-        $this->assertMethodWillBeCalled($methodCalls, 'setNamespace', array('test:'));
 
-        $driverDefinition = $container->getDefinition('cache.secondary.driver');
-        $this->assertEquals('Redis', $driverDefinition->getClass());
-        $methodCalls = $driverDefinition->getMethodCalls();
-        $this->assertMethodWillBeCalled($methodCalls, 'pconnect', array('/tmp/redis.sock', null, 0));
-
-        $cacheDefinition = $container->getDefinition('cache.secondary');
-        $methodCalls = $cacheDefinition->getMethodCalls();
-        $this->assertMethodWillBeCalled($methodCalls, 'setRedis', array('cache.secondary.driver'));
-        $this->assertMethodWillBeCalled($methodCalls, 'setNamespace', array('nice:'));
+        $this->assertConfigCorrect($container, 'Redis', 'default', array('10.0.0.155', '16379', 30), 'test:', 'connect');
+        $this->assertConfigCorrect($container, 'Redis', 'secondary', array('/tmp/redis.sock', null, 0), 'nice:', 'pconnect');
     }
 
     /**
@@ -126,25 +109,8 @@ class CacheExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $container = $this->loadContainerBuilder(self::$memcacheConfig);
 
-        $driverDefinition = $container->getDefinition('cache.default.driver');
-        $this->assertEquals('Memcache', $driverDefinition->getClass());
-        $methodCalls = $driverDefinition->getMethodCalls();
-        $this->assertMethodWillBeCalled($methodCalls, 'addServer', array('10.0.0.155', '1211'));
-
-        $cacheDefinition = $container->getDefinition('cache.default');
-        $methodCalls = $cacheDefinition->getMethodCalls();
-        $this->assertMethodWillBeCalled($methodCalls, 'setNamespace', array('test:'));
-        $this->assertMethodWillBeCalled($methodCalls, 'setMemcache', array('cache.default.driver'));
-
-        $driverDefinition = $container->getDefinition('cache.secondary.driver');
-        $this->assertEquals('Memcached', $driverDefinition->getClass());
-        $methodCalls = $driverDefinition->getMethodCalls();
-        $this->assertMethodWillBeCalled($methodCalls, 'addServer', array('/tmp/memcache.sock', null));
-
-        $cacheDefinition = $container->getDefinition('cache.secondary');
-        $methodCalls = $cacheDefinition->getMethodCalls();
-        $this->assertMethodWillBeCalled($methodCalls, 'setNamespace', array('nice:'));
-        $this->assertMethodWillBeCalled($methodCalls, 'setMemcached', array('cache.secondary.driver'));
+        $this->assertConfigCorrect($container, 'Memcache', 'default', array('10.0.0.155', '1211'), 'test:', 'addServer');
+        $this->assertConfigCorrect($container, 'Memcached', 'secondary', array('/tmp/memcache.sock', null), 'nice:', 'addServer');
     }
 
     protected function loadContainerBuilder($config)
@@ -160,6 +126,19 @@ class CacheExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($container->hasDefinition('cache.secondary.driver'));
 
         return $container;
+    }
+
+    protected function assertConfigCorrect(ContainerBuilder $container, $className, $name, $server, $namespace, $connectMethod)
+    {
+        $driverDefinition = $container->getDefinition('cache.' . $name . '.driver');
+        $this->assertEquals($className, $driverDefinition->getClass());
+        $methodCalls = $driverDefinition->getMethodCalls();
+        $this->assertMethodWillBeCalled($methodCalls, $connectMethod, $server);
+
+        $cacheDefinition = $container->getDefinition('cache.' . $name);
+        $methodCalls = $cacheDefinition->getMethodCalls();
+        $this->assertMethodWillBeCalled($methodCalls, 'setNamespace', array($namespace));
+        $this->assertMethodWillBeCalled($methodCalls, 'set' . $className, array('cache.' . $name . '.driver'));
     }
 
     /**
