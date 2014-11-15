@@ -107,36 +107,24 @@ class CacheExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($container->hasDefinition('cache.secondary.driver'));
         
         $driverDefinition = $container->getDefinition('cache.default.driver');
-        $methodCalls = $driverDefinition->getMethodCalls();
-        list($methodName, $methodArgs) = $methodCalls[0];
         $this->assertEquals('Redis', $driverDefinition->getClass());
-        $this->assertEquals('connect', $methodName);
-        $this->assertEquals(array('10.0.0.155', '16379', 30), $methodArgs);
+        $methodCalls = $driverDefinition->getMethodCalls();
+        $this->assertMethodWillBeCalled($methodCalls, 'connect', array('10.0.0.155', '16379', 30));
         
         $cacheDefinition = $container->getDefinition('cache.default');
         $methodCalls = $cacheDefinition->getMethodCalls();
-        list($methodName, $methodArgs) = $methodCalls[0];
-        $this->assertEquals('setRedis', $methodName);
-        $this->assertEquals('cache.default.driver', $methodArgs[0]);
-        list($methodName, $methodArgs) = $methodCalls[1];
-        $this->assertEquals('setNamespace', $methodName);
-        $this->assertEquals('test:', $methodArgs[0]);
+        $this->assertMethodWillBeCalled($methodCalls, 'setRedis', array('cache.default.driver'));
+        $this->assertMethodWillBeCalled($methodCalls, 'setNamespace', array('test:'));
 
         $driverDefinition = $container->getDefinition('cache.secondary.driver');
-        $methodCalls = $driverDefinition->getMethodCalls();
-        list($methodName, $methodArgs) = $methodCalls[0];
         $this->assertEquals('Redis', $driverDefinition->getClass());
-        $this->assertEquals('pconnect', $methodName);
-        $this->assertEquals(array('/tmp/redis.sock', null, 0), $methodArgs);
+        $methodCalls = $driverDefinition->getMethodCalls();
+        $this->assertMethodWillBeCalled($methodCalls, 'pconnect', array('/tmp/redis.sock', null, 0));
 
         $cacheDefinition = $container->getDefinition('cache.secondary');
         $methodCalls = $cacheDefinition->getMethodCalls();
-        list($methodName, $methodArgs) = $methodCalls[0];
-        $this->assertEquals('setRedis', $methodName);
-        $this->assertEquals('cache.secondary.driver', $methodArgs[0]);
-        list($methodName, $methodArgs) = $methodCalls[1];
-        $this->assertEquals('setNamespace', $methodName);
-        $this->assertEquals('nice:', $methodArgs[0]);
+        $this->assertMethodWillBeCalled($methodCalls, 'setRedis', array('cache.secondary.driver'));
+        $this->assertMethodWillBeCalled($methodCalls, 'setNamespace', array('nice:'));
     }
 
     /**
@@ -155,36 +143,24 @@ class CacheExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($container->hasDefinition('cache.secondary.driver'));
 
         $driverDefinition = $container->getDefinition('cache.default.driver');
-        $methodCalls = $driverDefinition->getMethodCalls();
-        list($methodName, $methodArgs) = $methodCalls[0];
         $this->assertEquals('Memcache', $driverDefinition->getClass());
-        $this->assertEquals('addServer', $methodName);
-        $this->assertEquals(array('10.0.0.155', '1211'), $methodArgs);
+        $methodCalls = $driverDefinition->getMethodCalls();
+        $this->assertMethodWillBeCalled($methodCalls, 'addServer', array('10.0.0.155', '1211'));
 
         $cacheDefinition = $container->getDefinition('cache.default');
         $methodCalls = $cacheDefinition->getMethodCalls();
-        list($methodName, $methodArgs) = $methodCalls[0];
-        $this->assertEquals('setNamespace', $methodName);
-        $this->assertEquals('test:', $methodArgs[0]);
-        list($methodName, $methodArgs) = $methodCalls[1];
-        $this->assertEquals('setMemcache', $methodName);
-        $this->assertEquals('cache.default.driver', $methodArgs[0]);
+        $this->assertMethodWillBeCalled($methodCalls, 'setNamespace', array('test:'));
+        $this->assertMethodWillBeCalled($methodCalls, 'setMemcache', array('cache.default.driver'));
 
         $driverDefinition = $container->getDefinition('cache.secondary.driver');
-        $methodCalls = $driverDefinition->getMethodCalls();
-        list($methodName, $methodArgs) = $methodCalls[0];
         $this->assertEquals('Memcached', $driverDefinition->getClass());
-        $this->assertEquals('addServer', $methodName);
-        $this->assertEquals(array('/tmp/memcache.sock', null), $methodArgs);
+        $methodCalls = $driverDefinition->getMethodCalls();
+        $this->assertMethodWillBeCalled($methodCalls, 'addServer', array('/tmp/memcache.sock', null));
 
         $cacheDefinition = $container->getDefinition('cache.secondary');
         $methodCalls = $cacheDefinition->getMethodCalls();
-        list($methodName, $methodArgs) = $methodCalls[0];
-        $this->assertEquals('setNamespace', $methodName);
-        $this->assertEquals('nice:', $methodArgs[0]);
-        list($methodName, $methodArgs) = $methodCalls[1];
-        $this->assertEquals('setMemcached', $methodName);
-        $this->assertEquals('cache.secondary.driver', $methodArgs[0]);
+        $this->assertMethodWillBeCalled($methodCalls, 'setNamespace', array('nice:'));
+        $this->assertMethodWillBeCalled($methodCalls, 'setMemcached', array('cache.secondary.driver'));
     }
 
     /**
@@ -212,17 +188,11 @@ class CacheExtensionTest extends \PHPUnit_Framework_TestCase
 
         $cacheDefinition = $container->getDefinition('cache.default');
         $methodCalls = $cacheDefinition->getMethodCalls();
-        $methodName = $methodCalls[0][0];
-        $methodArgs = $methodCalls[0][1];
-        $this->assertEquals('setNamespace', $methodName);
-        $this->assertEquals('test:', $methodArgs[0]);
+        $this->assertMethodWillBeCalled($methodCalls, 'setNamespace', array('test:'));
         
         $cacheDefinition = $container->getDefinition('cache.secondary');
         $methodCalls = $cacheDefinition->getMethodCalls();
-        $methodName = $methodCalls[0][0];
-        $methodArgs = $methodCalls[0][1];
-        $this->assertEquals('setNamespace', $methodName);
-        $this->assertEquals('nice:', $methodArgs[0]);
+        $this->assertMethodWillBeCalled($methodCalls, 'setNamespace', array('nice:'));
     }
 
     /**
@@ -234,5 +204,21 @@ class CacheExtensionTest extends \PHPUnit_Framework_TestCase
 
         $container = new ContainerBuilder();
         $this->assertInstanceOf('Nice\Extension\CacheConfiguration', $extension->getConfiguration(array(), $container));
+    }
+
+    protected function assertMethodWillBeCalled($methodCalls, $method, $arguments = array())
+    {
+        $called = false;
+        foreach ($methodCalls as $call) {
+            if ($call[0] == $method) {
+                $this->assertEquals($method, $call[0]);
+                $this->assertEquals($arguments, $call[1]);
+                $called = true;
+                break;
+            }
+
+        }
+
+        $this->assertTrue($called);
     }
 }
