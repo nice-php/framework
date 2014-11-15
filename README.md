@@ -33,13 +33,14 @@ $app->set('routes', function (RouteCollector $r) {
 $app->run();
 ```
 
-Planned improvements:
+Planned improvements for version 1.0:
 
 * Symfony2 Security Component integration
+* Logging integration
 * Doctrine integration
 
 Documentation
 -------------
 
-Go view [the online documentation](http://niceframework.com), or the download the
-[markdown source](https://github.com/tyler-sommer/nice-docs).
+View [the online documentation](http://niceframework.com), or the check out the
+[markdown documentation source code](https://github.com/tyler-sommer/nice-docs).
