@@ -33,11 +33,6 @@ $app->set('routes', function (RouteCollector $r) {
 $app->run();
 ```
 
-Planned improvements for version 1.0:
-
-* Symfony2 Security Component integration
-* Logging integration
-* Doctrine integration
 
 Documentation
 -------------
