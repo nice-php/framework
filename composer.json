@@ -1,5 +1,5 @@
 {
-  "name": "tyler-sommer/nice",
+  "name": "nice/framework",
   "description": "A nice PHP microframework",
   "license": "MIT",
   "require": {
