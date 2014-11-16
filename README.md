@@ -10,9 +10,9 @@ Nice is a simple microframework for PHP 5.4 and later. Nice integrates nikic's
 the [Symfony2 HttpKernel](https://github.com/symfony/HttpKernel) and 
 [Dependency Injection](https://github.com/symfony/DependencyInjection) components.
 
-Nice comes with built-in [session management](https://github.com/nice-php/framework-docs/blob/master/extensions/sessions.md),
-[simple authentication](https://github.com/nice-php/framework-docs/blob/master/extensions/security.md),
-and [Twig integration](https://github.com/nice-php/framework-docs/blob/master/extensions/twig.md).
+Nice comes with built-in [session management](https://github.com/nice-php/docs/blob/master/extensions/sessions.md),
+[simple authentication](https://github.com/nice-php/docs/blob/master/extensions/security.md),
+and [Twig integration](https://github.com/nice-php/docs/blob/master/extensions/twig.md).
 
 ```php
 <?php
@@ -38,4 +38,4 @@ Documentation
 -------------
 
 View [the online documentation](http://niceframework.com), or the check out the
-[markdown documentation source code](https://github.com/nice-php/framework-docs).
+[markdown documentation source code](https://github.com/nice-php/docs).
