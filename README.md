@@ -1,9 +1,10 @@
 A nice PHP microframework
 =========================
 
-[![Build Status](https://travis-ci.org/nice-php/framework.png?branch=master)](https://travis-ci.org/nice-php/framework)
-[![Code Climate](https://codeclimate.com/github/nice-php/framework/badges/gpa.svg)](https://codeclimate.com/github/nice-php/framework)
-[![Test Coverage](https://codeclimate.com/github/nice-php/framework/badges/coverage.svg)](https://codeclimate.com/github/nice-php/framework)
+[![Build Status](http://img.shields.io/travis/nice-php/framework.svg)](https://travis-ci.org/nice-php/framework)
+[![Coverage](http://img.shields.io/codeclimate/coverage/github/nice-php/framework.svg](https://packagist.org/nice-php/framework)
+[![Code Climate](http://img.shields.io/codeclimate/github/nice-php/framework.svg)](https://codeclimate.com/github/nice-php/framework)
+[![Latest Release](http://img.shields.io/packagist/v/nice/framework.svg)](https://packagist.org/nice-php/framework)
 
 Nice is a simple microframework for PHP 5.4 and later. Nice integrates nikic's 
 [FastRoute](https://github.com/nikic/FastRoute) router with 
