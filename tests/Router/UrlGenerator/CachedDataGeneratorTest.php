@@ -7,9 +7,8 @@
  * that was distributed with this source code.
  */
 
-namespace Nice\Tests\Router\RouteCollector;
+namespace Nice\Tests\Router\UrlGenerator;
 
-use Nice\Router\RouteCollector\CachedCollector;
 use Nice\Router\UrlGenerator\CachedDataGenerator;
 
 class CachedDataGeneratorTest extends \PHPUnit_Framework_TestCase
