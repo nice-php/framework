@@ -12,8 +12,10 @@ the [Symfony2 HttpKernel](https://github.com/symfony/HttpKernel) and
 [Dependency Injection](https://github.com/symfony/DependencyInjection) components.
 
 Nice comes with built-in [session management](https://github.com/nice-php/docs/blob/master/extensions/sessions.md),
-[simple authentication](https://github.com/nice-php/docs/blob/master/extensions/security.md),
-and [Twig integration](https://github.com/nice-php/docs/blob/master/extensions/twig.md).
+[simple authentication](https://github.com/nice-php/docs/blob/master/extensions/security.md).
+[Twig](https://github.com/nice-php/docs/blob/master/extensions/twig.md) and
+[Doctrine DBAL](https://github.com/nice-php/docs/blob/master/extensions/doctrine-dbal.md) integration is
+also available, with additional extensions in development.
 
 ```php
 <?php
