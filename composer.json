@@ -16,7 +16,8 @@
   },
   "suggest": {
     "stack/builder": "Stack HttpKernel middlewares - http://stackphp.com",
-    "doctrine/cache": "Leverage the Doctrine Cache component - http://doctrine-project.org"
+    "doctrine/cache": "Leverage the Doctrine Cache component for caching data",
+    "monolog/monolog": "Provides many different logging handlers"
   },
   "autoload": {
     "psr-4": {
