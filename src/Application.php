@@ -233,15 +233,14 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
     /**
      * Get the root directory
      *
-     * @todo Remove reliance on superglobal
-     *
      * @return string
      */
     public function getRootDir()
     {
         if (!$this->rootDir) {
-            // Assumes application root is one level above web/console root
-            $this->rootDir = dirname($_SERVER['SCRIPT_FILENAME']).'/..';
+            // Assumes application root is one level above source code root
+            $refl = new \ReflectionObject($this);
+            $this->rootDir = str_replace('\\', '/', dirname($refl->getFileName())).'/..';
         }
 
         return $this->rootDir;

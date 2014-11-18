@@ -140,17 +140,13 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @backupGlobals
-     *
      * Test getRootDir method
      */
     public function testGetRootDir()
     {
-        $_SERVER['SCRIPT_FILENAME'] = tempnam(null, 'scopeTest');
+        $expectedRootDir = __DIR__ . '/..';
 
-        $expectedRootDir = dirname($_SERVER['SCRIPT_FILENAME']) . '/..';
-
-        $app = new Application();
+        $app = new ExtendedApplication();
 
         $this->assertEquals($expectedRootDir, $app->getRootDir());
     }
@@ -310,6 +306,11 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
 }
 
 interface TerminableHttpKernelInterface extends HttpKernelInterface, TerminableInterface
+{
+
+}
+
+class ExtendedApplication extends Application
 {
 
 }
