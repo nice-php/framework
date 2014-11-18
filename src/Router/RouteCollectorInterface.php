@@ -11,7 +11,7 @@ namespace Nice\Router;
 
 /**
  * Defines the contract any RouteCollector must implement
- * 
+ *
  * This interface is extracted from FastRoute\RouteCollector
  */
 interface RouteCollectorInterface

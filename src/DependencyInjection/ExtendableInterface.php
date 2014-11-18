@@ -18,21 +18,21 @@ interface ExtendableInterface
 {
     /**
      * Prepend an extension
-     * 
+     *
      * @param ExtensionInterface $extension
      */
     public function prependExtension(ExtensionInterface $extension);
 
     /**
      * Append an extension
-     * 
+     *
      * @param ExtensionInterface $extension
      */
     public function appendExtension(ExtensionInterface $extension);
 
     /**
      * Get an ordered list of extensions
-     * 
+     *
      * @return array|ExtensionInterface[]
      */
     public function getExtensions();

@@ -72,7 +72,7 @@ class RouterSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            KernelEvents::REQUEST => array('onKernelRequest', 0)
+            KernelEvents::REQUEST => array('onKernelRequest', 0),
         );
     }
 }

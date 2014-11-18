@@ -46,7 +46,7 @@ class CacheExtension extends Extension
     {
         return new CacheConfiguration();
     }
-    
+
     /**
      * Loads a specific configuration.
      *
@@ -60,29 +60,29 @@ class CacheExtension extends Extension
         $configs[] = $this->options;
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
-        
+
         foreach ($config['connections'] as $name => $cacheConfig) {
             $cacheConfig['name'] = $name;
             switch ($cacheConfig['driver']) {
                 case 'redis':
                     $this->configureRedisCache($cacheConfig, $container);
-                    
+
                     break;
-                
+
                 case 'memcached':
                 case 'memcache':
                     $this->configureMemcachedCache($cacheConfig, $container);
-                    
+
                     break;
-                    
+
                 case 'array':
                     $this->configureArrayCache($cacheConfig, $container);
-                    
+
                     break;
             }
         }
     }
-    
+
     private function configureRedisCache(array $cacheConfig, ContainerBuilder $container)
     {
         $defaults = array(
@@ -91,9 +91,9 @@ class CacheExtension extends Extension
             'port' => 6379,
             'database' => 0,
             'persistent' => true,
-            'timeout' => 0
+            'timeout' => 0,
         );
-        
+
         $options = array_merge($defaults, $cacheConfig['options']);
         if (isset($options['socket'])) {
             $options['host'] = $options['socket'];
@@ -101,15 +101,15 @@ class CacheExtension extends Extension
         }
 
         $name = $cacheConfig['name'];
-        $cacheService = 'cache.' . $name;
-        $driverService = $cacheService . '.driver';
+        $cacheService = 'cache.'.$name;
+        $driverService = $cacheService.'.driver';
 
         $driverDefinition = $container->register($driverService);
         $driverDefinition->setClass('Redis');
         $driverDefinition->addMethodCall($options['persistent'] ? 'pconnect' : 'connect', array(
                 $options['host'],
                 $options['port'],
-                $options['timeout']
+                $options['timeout'],
             ));
 
         $definition = $container->register($cacheService);
@@ -132,23 +132,22 @@ class CacheExtension extends Extension
             $options['port'] = null;
         }
 
-        $cacheService = 'cache.' . $cacheConfig['name'];
-        $driverService = $cacheService . '.driver';
-        
+        $cacheService = 'cache.'.$cacheConfig['name'];
+        $driverService = $cacheService.'.driver';
+
         $driverDefinition = $container->register($driverService);
         $driverDefinition->addMethodCall('addServer', array(
                 $options['host'],
-                $options['port']
+                $options['port'],
             ));
 
         $cacheDefinition = $container->register($cacheService);
         $cacheDefinition->addMethodCall('setNamespace', array($cacheConfig['namespace']));
-        
+
         if ($cacheConfig['driver'] === 'memcache') {
             $driverDefinition->setClass('Memcache');
             $cacheDefinition->setClass('Doctrine\Common\Cache\MemcacheCache');
             $cacheDefinition->addMethodCall('setMemcache', array(new Reference($driverService)));
-            
         } else {
             $driverDefinition->setClass('Memcached');
             $cacheDefinition->setClass('Doctrine\Common\Cache\MemcachedCache');
@@ -159,7 +158,7 @@ class CacheExtension extends Extension
     private function configureArrayCache(array $cacheConfig, ContainerBuilder $container)
     {
         $name = $cacheConfig['name'];
-        $cacheService = 'cache.' . $name;
+        $cacheService = 'cache.'.$name;
 
         $definition = $container->register($cacheService);
         $definition->setClass('Doctrine\Common\Cache\ArrayCache');

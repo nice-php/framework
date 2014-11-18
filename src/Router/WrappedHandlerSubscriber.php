@@ -38,7 +38,7 @@ class WrappedHandlerSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            KernelEvents::REQUEST => array('onKernelRequest', -1)
+            KernelEvents::REQUEST => array('onKernelRequest', -1),
         );
     }
 }

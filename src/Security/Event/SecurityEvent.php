@@ -21,7 +21,7 @@ class SecurityEvent extends Event
 
     /**
      * Constructor
-     * 
+     *
      * @param Request $request
      */
     public function __construct(Request $request)

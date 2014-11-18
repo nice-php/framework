@@ -28,7 +28,6 @@ use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\DependencyInjection\ScopeInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
 
@@ -149,7 +148,7 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
     protected function registerDefaultExtensions()
     {
         $this->appendExtension(new RouterExtension());
-        
+
         if ($this->isCacheEnabled()) {
             $this->addCompilerPass(new CacheRoutingDataPass());
         }
@@ -188,7 +187,7 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
         if ($this->cache) {
             $initializer = new CachedInitializer($initializer, $this->getCacheDir());
         }
-        
+
         return $initializer;
     }
 
@@ -242,7 +241,7 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
     {
         if (!$this->rootDir) {
             // Assumes application root is one level above web/console root
-            $this->rootDir = dirname($_SERVER['SCRIPT_FILENAME']) . '/..';
+            $this->rootDir = dirname($_SERVER['SCRIPT_FILENAME']).'/..';
         }
 
         return $this->rootDir;
@@ -254,7 +253,7 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
     public function getCacheDir()
     {
         return $this->cache
-            ? $this->getRootDir() . '/cache/' . $this->environment
+            ? $this->getRootDir().'/cache/'.$this->environment
             : null;
     }
 
@@ -263,7 +262,7 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
      */
     public function getLogDir()
     {
-        return $this->getRootDir() . '/logs';
+        return $this->getRootDir().'/logs';
     }
 
     /**

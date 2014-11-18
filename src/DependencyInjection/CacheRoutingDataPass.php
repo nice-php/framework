@@ -26,14 +26,14 @@ class CacheRoutingDataPass implements CompilerPassInterface
         $container->setDefinition('router.collector.wrapped', $definition);
         $container->register('router.collector', 'Nice\Router\RouteCollector\CachedCollector')
             ->addArgument(new Reference('router.collector.wrapped'))
-            ->addArgument($pathPrefix . 'RouteData.php')
+            ->addArgument($pathPrefix.'RouteData.php')
             ->addArgument('%app.debug%');
 
         $definition = $container->getDefinition('router.url_generator.data_generator');
         $container->setDefinition('router.url_generator.data_generator.wrapped', $definition);
         $container->register('router.url_generator.data_generator', 'Nice\Router\UrlGenerator\CachedDataGenerator')
             ->addArgument(new Reference('router.url_generator.data_generator.wrapped'))
-            ->addArgument($pathPrefix . 'UrlGeneratorData.php')
+            ->addArgument($pathPrefix.'UrlGeneratorData.php')
             ->addArgument('%app.debug%');
     }
 }

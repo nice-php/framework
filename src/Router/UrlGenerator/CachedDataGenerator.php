@@ -30,7 +30,7 @@ class CachedDataGenerator implements DataGeneratorInterface
 
     /**
      * Constructor
-     * 
+     *
      * @param DataGeneratorInterface $wrappedGenerator
      * @param string                 $cacheFile
      * @param bool                   $debug
@@ -53,7 +53,7 @@ class CachedDataGenerator implements DataGeneratorInterface
         if (!$cache->isFresh()) {
             $routes = $this->wrappedGenerator->getData();
 
-            $cache->write('<?php return ' . var_export($routes, true) . ';');
+            $cache->write('<?php return '.var_export($routes, true).';');
         }
 
         return require $cache;

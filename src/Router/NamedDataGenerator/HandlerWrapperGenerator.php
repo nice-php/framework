@@ -23,7 +23,7 @@ class HandlerWrapperGenerator implements NamedDataGeneratorInterface
     {
         $this->wrappedGenerator = $wrappedGenerator;
     }
-    
+
     /**
      * Adds a route to the data generator. The route data uses the
      * same format that is returned by RouterParser::parser().
@@ -68,7 +68,7 @@ class HandlerWrapperGenerator implements NamedDataGeneratorInterface
     {
         $handler = array(
             'name' => $name,
-            'handler' => $handler
+            'handler' => $handler,
         );
 
         $this->addRoute($httpMethod, $routeData, $handler);

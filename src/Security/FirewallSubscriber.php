@@ -82,7 +82,7 @@ class FirewallSubscriber implements EventSubscriberInterface
         RequestMatcherInterface $authMatcher,
         RequestMatcherInterface $logoutMatcher,
         AuthenticatorInterface $authenticator,
-        $loginPath, 
+        $loginPath,
         $successPath,
         $tokenKey
     ) {
@@ -108,7 +108,7 @@ class FirewallSubscriber implements EventSubscriberInterface
         $request = $event->getRequest();
         if ($this->authMatcher->matches($request)) {
             $this->handleAuthentication($event);
-            
+
             return;
         }
 
@@ -117,17 +117,17 @@ class FirewallSubscriber implements EventSubscriberInterface
 
             return;
         }
-        
+
         if (!$this->firewallMatcher->matches($request)) {
             return;
         }
-        
+
         if (!$request->hasSession()) {
             $event->setResponse(new Response('', 403));
-            
+
             return;
         }
-        
+
         if (!$request->getSession()->has($this->tokenKey)) {
             $this->redirectForAuthentication($event);
         }
@@ -143,36 +143,35 @@ class FirewallSubscriber implements EventSubscriberInterface
         );
     }
 
-    private function handleAuthentication(GetResponseEvent $event) 
-    { 
+    private function handleAuthentication(GetResponseEvent $event)
+    {
         $request = $event->getRequest();
         $session = $request->getSession();
-        
+
         if (!$session) {
             $event->setResponse(new Response('', 403));
-            
+
             return;
         }
-        
+
         if ($this->authenticator->authenticate($request)) {
             $session->set($this->tokenKey, true);
-            
+
             $successEvent = new SecurityEvent($request);
             $this->eventDispatcher->dispatch(Events::LOGIN_SUCCESS, $successEvent);
-            
-            $event->setResponse(new RedirectResponse($event->getRequest()->getBaseUrl() . $this->successPath));
-            
+
+            $event->setResponse(new RedirectResponse($event->getRequest()->getBaseUrl().$this->successPath));
         } else {
             $failEvent = new SecurityEvent($request);
             $this->eventDispatcher->dispatch(Events::LOGIN_FAIL, $failEvent);
-            
+
             $this->redirectForAuthentication($event);
         }
     }
-    
+
     private function redirectForAuthentication(GetResponseEvent $event)
     {
-        $event->setResponse(new RedirectResponse($event->getRequest()->getBaseUrl() . $this->loginPath));
+        $event->setResponse(new RedirectResponse($event->getRequest()->getBaseUrl().$this->loginPath));
     }
 
     private function handleLogout(GetResponseEvent $event)

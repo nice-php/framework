@@ -26,7 +26,7 @@ class SimpleAuthenticator implements AuthenticatorInterface
 
     /**
      * Constructor
-     * 
+     *
      * @param string $username
      * @param string $password
      */

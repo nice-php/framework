@@ -22,7 +22,7 @@ class GroupCountBasedDataGenerator implements DataGeneratorInterface
     {
         $this->routeCollector = $routeCollector;
     }
-    
+
     /**
      * Get formatted route data for use by a URL generator
      *
@@ -44,34 +44,34 @@ class GroupCountBasedDataGenerator implements DataGeneratorInterface
                 if (!isset($parts[$matchIndex - 1])) {
                     continue;
                 }
-                
+
                 $part = $parts[$matchIndex - 1];
-                
+
                 $method = reset($methods);
                 $parameters = $method[1];
                 $path = rtrim($part, '()$~');
-                
+
                 foreach ($parameters as $parameter) {
-                    $path = $this->replaceOnce('([^/]+)', '{' . $parameter . '}', $path);
+                    $path = $this->replaceOnce('([^/]+)', '{'.$parameter.'}', $path);
                 }
-                
+
                 $data[$method[0]['name']] = array(
                     'path' => $path,
-                    'params' => $parameters
+                    'params' => $parameters,
                 );
             }
         }
 
         return $data;
     }
-    
+
     private function replaceOnce($search, $replace, $subject)
     {
         $pos = strpos($subject, $search);
         if ($pos !== false) {
             $subject = substr_replace($subject, $replace, $pos, strlen($search));
         }
-        
+
         return $subject;
     }
 }

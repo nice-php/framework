@@ -10,7 +10,6 @@
 namespace Nice\Extension;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Reference;
 
@@ -46,7 +45,7 @@ class LogExtension extends Extension
     {
         return new LogConfiguration();
     }
-    
+
     /**
      * Loads a specific configuration.
      *
@@ -60,15 +59,15 @@ class LogExtension extends Extension
         $configs[] = $this->options;
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
-        
+
         foreach ($config['channels'] as $name => $channelConfig) {
             $channelConfig['name'] = $name;
             switch ($channelConfig['handler']) {
                 case 'stream':
                     $this->configureStreamChannel($channelConfig, $container);
-                    
+
                     break;
-                
+
                 case 'error_log':
                     $this->configureErrorLogChannel($channelConfig, $container);
 
@@ -89,8 +88,8 @@ class LogExtension extends Extension
         $level = (int) $channelConfig['level'];
         $file = $options['file'];
 
-        $loggerService = 'logger.' . $name;
-        $handlerService = 'logger.' . $name . '.handler';
+        $loggerService = 'logger.'.$name;
+        $handlerService = 'logger.'.$name.'.handler';
 
         $container->register($handlerService)
             ->setClass('Monolog\Handler\StreamHandler')
@@ -108,8 +107,8 @@ class LogExtension extends Extension
         $name = $channelConfig['name'];
         $level = (int) $channelConfig['level'];
 
-        $loggerService = 'logger.' . $name;
-        $handlerService = 'logger.' . $name . '.handler';
+        $loggerService = 'logger.'.$name;
+        $handlerService = 'logger.'.$name.'.handler';
 
         $container->register($handlerService)
             ->setClass('Monolog\Handler\ErrorLogHandler')

@@ -62,7 +62,7 @@ class CachedCollector implements RouteCollectorInterface
                 return $routes;
             }
 
-            $cache->write('<?php return ' . var_export($routes, true) . ';');
+            $cache->write('<?php return '.var_export($routes, true).';');
         }
 
         return require $cache;
@@ -70,13 +70,13 @@ class CachedCollector implements RouteCollectorInterface
 
     /**
      * Ensures route data does not contain any Closures
-     * 
+     *
      * @return bool
      */
     private function isCacheable($data)
     {
         $cacheable = true;
-        array_walk_recursive($data, function($value) use (&$cacheable) {
+        array_walk_recursive($data, function ($value) use (&$cacheable) {
                 if ($value instanceof \Closure) {
                     $cacheable = false;
                 }

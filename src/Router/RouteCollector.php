@@ -39,7 +39,7 @@ abstract class RouteCollector implements RouteCollectorInterface
      * @param RouteParser   $routeParser
      * @param DataGenerator $dataGenerator
      */
-    public function __construct(RouteParser $routeParser, DataGenerator $dataGenerator) 
+    public function __construct(RouteParser $routeParser, DataGenerator $dataGenerator)
     {
         $this->routeParser   = $routeParser;
         $this->dataGenerator = $dataGenerator;
@@ -75,7 +75,6 @@ abstract class RouteCollector implements RouteCollectorInterface
 
         if ($this->dataGenerator instanceof NamedDataGeneratorInterface) {
             $this->dataGenerator->addNamedRoute($name, $httpMethod, $routeData, $handler);
-            
         } else {
             throw new \RuntimeException('The injected generator does not support named routes');
         }
@@ -90,7 +89,7 @@ abstract class RouteCollector implements RouteCollectorInterface
     {
         if (!$this->collected) {
             $this->collectRoutes();
-            
+
             $this->collected = true;
         }
 
@@ -99,7 +98,7 @@ abstract class RouteCollector implements RouteCollectorInterface
 
     /**
      * Perform any collection
-     * 
+     *
      * @return void
      */
     abstract protected function collectRoutes();

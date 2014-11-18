@@ -45,7 +45,7 @@ class SecurityExtension extends Extension
     {
         return new SecurityConfiguration();
     }
-    
+
     /**
      * Loads a specific configuration.
      *
@@ -86,7 +86,6 @@ class SecurityExtension extends Extension
 
     private function configureAuthenticator(array $config, ContainerBuilder $container)
     {
-
         $authenticatorService = 'security.authenticator';
         switch ($config['type']) {
             case 'username':

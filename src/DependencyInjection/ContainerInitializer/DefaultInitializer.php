@@ -52,7 +52,7 @@ class DefaultInitializer implements ContainerInitializerInterface
             ->setSynthetic(true)
             ->setSynchronized(true)
             ->setScope('request');
-        
+
         $container->addScope(new Scope('request'));
 
         $extensionAliases = array();
@@ -60,19 +60,18 @@ class DefaultInitializer implements ContainerInitializerInterface
             $container->registerExtension($extension);
             $extensionAliases[] = $extension->getAlias();
         }
-        
+
         $container->addCompilerPass(new MergeExtensionConfigurationPass($extensionAliases));
         $container->addCompilerPass(new RegisterListenersPass());
 
         foreach ($compilerPasses as $pass) {
             if (is_array($pass)) {
                 $container->addCompilerPass($pass[0], $pass[1]);
-
             } else {
                 $container->addCompilerPass($pass);
             }
         }
-       
+
         $container->compile();
 
         return $container;

@@ -15,7 +15,7 @@ interface AuthenticatorInterface
 {
     /**
      * Returns true if the given Request meets authentication requirements
-     * 
+     *
      * @param Request $request
      *
      * @return bool

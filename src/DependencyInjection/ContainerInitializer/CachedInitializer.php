@@ -62,7 +62,7 @@ class CachedInitializer implements ContainerInitializerInterface
     public function initializeContainer(Application $application, array $extensions = array(), array $compilerPasses = array())
     {
         $class = $this->getContainerClass($application);
-        $cache = new ConfigCache($this->cacheDir . '/' . $class . '.php', $application->isDebug());
+        $cache = new ConfigCache($this->cacheDir.'/'.$class.'.php', $application->isDebug());
         if (!$cache->isFresh()) {
             $container = $this->wrappedInitializer->initializeContainer($application, $extensions, $compilerPasses);
 
@@ -81,7 +81,7 @@ class CachedInitializer implements ContainerInitializerInterface
      */
     protected function getContainerClass(Application $application)
     {
-        return ucfirst($application->getEnvironment()) . ($application->isDebug() ? 'Debug' : '') . 'ProjectContainer';
+        return ucfirst($application->getEnvironment()).($application->isDebug() ? 'Debug' : '').'ProjectContainer';
     }
 
     /**

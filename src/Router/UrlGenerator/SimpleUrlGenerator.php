@@ -18,9 +18,9 @@ class SimpleUrlGenerator implements UrlGeneratorInterface
      * @var DataGeneratorInterface
      */
     private $dataGenerator;
-    
+
     private $initialized = false;
-    
+
     private $routes = array();
 
     /**
@@ -47,22 +47,22 @@ class SimpleUrlGenerator implements UrlGeneratorInterface
         if (!$this->initialized) {
             $this->initialize();
         }
-        
+
         $path = $this->routes[$name];
         if (is_array($path)) {
             $params = $path['params'];
             $path = $path['path'];
-            
+
             foreach ($params as $param) {
                 if (!isset($parameters[$param])) {
-                    throw new \RuntimeException('Missing required parameter "' . $param . '". Optional parameters not currently supported');
+                    throw new \RuntimeException('Missing required parameter "'.$param.'". Optional parameters not currently supported');
                 }
-                
-                $path = str_replace('{' . $param . '}', $parameters[$param], $path);
+
+                $path = str_replace('{'.$param.'}', $parameters[$param], $path);
             }
         }
-        
-        return ($this->request ? (($absolute ? $this->request->getSchemeAndHttpHost() : '') . $this->request->getBaseUrl()) : '') . $path;
+
+        return ($this->request ? (($absolute ? $this->request->getSchemeAndHttpHost() : '').$this->request->getBaseUrl()) : '').$path;
     }
 
     /**
