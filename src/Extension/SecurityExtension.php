@@ -69,19 +69,48 @@ class SecurityExtension extends Extension
         $container->register('security.logout_matcher', 'Symfony\Component\HttpFoundation\RequestMatcher')
             ->setPublic(false)
             ->addArgument($config['logout_path']);
-        $container->register('security.authenticator', 'Nice\Security\Authenticator\SimpleAuthenticator')
-            ->setPublic(false)
-            ->addArgument($config['username'])
-            ->addArgument($config['password']);
+
+        $authenticatorService = $this->configureAuthenticator($config['authenticator'], $container);
+
         $container->register('security.security_subscriber', 'Nice\Security\FirewallSubscriber')
             ->addArgument(new Reference('event_dispatcher'))
             ->addArgument(new Reference('security.firewall_matcher'))
             ->addArgument(new Reference('security.auth_matcher'))
             ->addArgument(new Reference('security.logout_matcher'))
-            ->addArgument(new Reference('security.authenticator'))
+            ->addArgument(new Reference($authenticatorService))
             ->addArgument($config['login_path'])
             ->addArgument($config['success_path'])
             ->addArgument($config['token_session_key'])
             ->addTag('kernel.event_subscriber');
+    }
+
+    private function configureAuthenticator(array $config, ContainerBuilder $container)
+    {
+
+        $authenticatorService = 'security.authenticator';
+        switch ($config['type']) {
+            case 'username':
+                if (!isset($config['username']) || !isset($config['password'])) {
+                    throw new \RuntimeException('Username and password is required for the username authenticator');
+                }
+
+                $container->register('security.authenticator', 'Nice\Security\Authenticator\SimpleAuthenticator')
+                    ->setPublic(false)
+                    ->addArgument($config['username'])
+                    ->addArgument($config['password']);
+
+                break;
+
+            case 'closure':
+                $authenticatorService = 'security.authenticator.real';
+                $container->register('security.authenticator.real', 'Nice\Security\Authenticator\ClosureAuthenticator')
+                    ->setPublic(false)
+                    ->addArgument(new Reference('security.authenticator'));
+
+                $container->register('security.authenticator', 'Closure')
+                    ->setSynthetic(true);
+        }
+
+        return $authenticatorService;
     }
 }

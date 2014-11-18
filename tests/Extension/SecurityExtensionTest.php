@@ -21,8 +21,11 @@ class SecurityExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $extension = new SecurityExtension(array(
             'firewall' => '.*',
-            'username' => 'user',
-            'password' => 'pass',
+            'authenticator' => array(
+                'type' => 'username',
+                'username' => 'user',
+                'password' => 'pass',
+            ),
             'login_path' => '/login',
             'success_path' => '/',
             'logout_path' => '/logout',
@@ -60,6 +63,48 @@ class SecurityExtensionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test the SecurityExtension with a missing password
+     */
+    public function testConfigureUsernameTypeWithoutPasswordFails()
+    {
+        $extension = new SecurityExtension(array(
+            'firewall' => '.*',
+            'authenticator' => array(
+                'type' => 'username',
+                'username' => 'user',
+            ),
+            'login_path' => '/login',
+            'success_path' => '/',
+            'logout_path' => '/logout',
+            'token_session_key' => '__authed'
+        ));
+
+        $this->setExpectedException('RuntimeException', 'Username and password is required for the username authenticator');
+
+        $container = new ContainerBuilder();
+        $extension->load(array(), $container);
+    }
+
+    /**
+     * Test the SecurityExtension with a Closure authenticator
+     */
+    public function testConfigureClosure()
+    {
+        $extension = new SecurityExtension(array(
+            'firewall' => '.*',
+            'authenticator' => array(
+                'type' => 'closure'
+            ),
+        ));
+
+        $container = new ContainerBuilder();
+        $extension->load(array(), $container);
+
+        $this->assertTrue($container->hasDefinition('security.authenticator'));
+        $this->assertTrue($container->getDefinition('security.authenticator')->isSynthetic());
+    }
+
+    /**
      * Test configuration merging functionality
      */
     public function testLoadMergesConfigs()
@@ -70,8 +115,11 @@ class SecurityExtensionTest extends \PHPUnit_Framework_TestCase
         $extension->load(array(
                 'security' => array(
                     'firewall' => '.*',
-                    'username' => 'user',
-                    'password' => '1234'
+                    'authenticator' => array(
+                        'type' => 'username',
+                        'username' => 'user',
+                        'password' => '1234',
+                    ),
                 )
             ), $container);
 

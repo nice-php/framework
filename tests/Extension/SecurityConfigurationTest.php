@@ -17,15 +17,15 @@ class SecurityConfigurationTest extends \PHPUnit_Framework_TestCase
     public function testDefaultConfig()
     {
         $processor = new Processor();
-        $config = $processor->processConfiguration(new SecurityConfiguration(), array(array('firewall' => '.*', 'username' => 'user', 'password' => 'pass')));
+        $config = $processor->processConfiguration(new SecurityConfiguration(), array(array('firewall' => '.*', 'authenticator' => array('type' => 'username', 'username' => 'user', 'password' => 'pass'))));
 
         $this->assertEquals(
-            array_merge(array('firewall' => '.*', 'username' => 'user', 'password' => 'pass'), self::getBundleDefaultConfig()),
+            array_merge(array('firewall' => '.*', 'authenticator' => array('type' => 'username', 'username' => 'user', 'password' => 'pass')), self::getDefaultConfig()),
             $config
         );
     }
 
-    protected static function getBundleDefaultConfig()
+    protected static function getDefaultConfig()
     {
         return array(
             'login_path' => '/login',
