@@ -7,7 +7,7 @@
     "symfony/config": "~2.3",
     "symfony/http-kernel": "~2.3",
     "symfony/dependency-injection": "~2.3",
-    "nikic/fast-route": "dev-master"
+    "nikic/fast-route": "~0.2"
   },
   "require-dev": {
     "symfony/debug": "~2.3",
@@ -30,6 +30,6 @@
       "dev-master": "1.0-dev"
     }
   },
-  "minimum-stability": "beta",
+  "minimum-stability": "alpha",
   "prefer-stable": true
 }
