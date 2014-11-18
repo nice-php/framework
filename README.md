@@ -2,7 +2,7 @@ A nice PHP microframework
 =========================
 
 [![Build Status](http://img.shields.io/travis/nice-php/framework.svg)](https://travis-ci.org/nice-php/framework)
-[![Coverage](http://img.shields.io/codeclimate/coverage/github/nice-php/framework.svg)](https://packagist.org/nice-php/framework)
+[![Coverage](http://img.shields.io/codeclimate/coverage/github/nice-php/framework.svg)](https://codeclimate.com/github/nice-php/framework)
 [![Code Climate](http://img.shields.io/codeclimate/github/nice-php/framework.svg)](https://codeclimate.com/github/nice-php/framework)
 [![Latest Release](http://img.shields.io/packagist/v/nice/framework.svg)](https://packagist.org/packages/nice/framework)
 
@@ -13,7 +13,8 @@ the [Symfony2 HttpKernel](https://github.com/symfony/HttpKernel) and
 
 Nice comes with built-in [session management](https://github.com/nice-php/docs/blob/master/extensions/sessions.md),
 [simple authentication](https://github.com/nice-php/docs/blob/master/extensions/security.md).
-[Twig](https://github.com/nice-php/docs/blob/master/extensions/twig.md) and
+[Twig](https://github.com/nice-php/docs/blob/master/extensions/twig.md),
+[Monolog](https://github.com/nice-php/docs/blob/master/extensions/log.md), and
 [Doctrine DBAL](https://github.com/nice-php/docs/blob/master/extensions/doctrine-dbal.md) integration is
 also available, with additional extensions in development.
 
