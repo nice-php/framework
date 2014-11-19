@@ -7,36 +7,37 @@
  * that was distributed with this source code.
  */
 
-namespace Nice\Tests\Security;
+namespace Nice\tests\Security;
 
-use Nice\Security\Authenticator\SimpleAuthenticator;
 use Nice\Security\Events;
 use Nice\Security\FirewallSubscriber;
+use Nice\Tests\Helpers\MockRequestFactoryTrait;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class FirewallSubscriberTest extends \PHPUnit_Framework_TestCase
 {
+    use MockRequestFactoryTrait;
+
     /**
      * Test an unmatched firewall
      */
     public function testUnmatchedFirewall()
     {
-        $request = $this->getRequest('/');
-        
+        $request = $this->createRequest('/');
+
         $susbcriber = $this->getSubscriber();
         $event = $this->getEvent($request);
 
         $this->assertNull($event->getResponse());
-        
+
         $susbcriber->onKernelRequest($event);
-        
+
         $this->assertNull($event->getResponse());
     }
 
@@ -45,7 +46,7 @@ class FirewallSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     public function testRedirectsToLogin()
     {
-        $request = $this->getRequest('/admin');
+        $request = $this->createRequest('/admin');
 
         $susbcriber = $this->getSubscriber();
         $event = $this->getEvent($request);
@@ -56,7 +57,7 @@ class FirewallSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $response = $event->getResponse();
         $this->assertNotNull($response);
-        
+
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertContains('/login', $response->headers->get('Location'));
     }
@@ -66,7 +67,7 @@ class FirewallSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     public function testRedirectToLoginWithoutSessionCreatesForbiddenResponse()
     {
-        $request = $this->getRequest('/admin', 'GET', false);
+        $request = $this->createRequest('/admin', 'GET', false);
 
         $susbcriber = $this->getSubscriber();
         $event = $this->getEvent($request);
@@ -86,10 +87,10 @@ class FirewallSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     public function testFailedLoginRedirectsToLogin()
     {
-        $request = $this->getRequest('/login', 'POST');
+        $request = $this->createRequest('/login', 'POST');
 
         $dispatcher = new EventDispatcher();
-        $dispatcher->addListener(Events::LOGIN_FAIL, function() use (&$called) {
+        $dispatcher->addListener(Events::LOGIN_FAIL, function () use (&$called) {
                 $called = true;
             });
         $susbcriber = $this->getSubscriber(false, null, $dispatcher);
@@ -111,11 +112,11 @@ class FirewallSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     public function testSuccessfulLoginRedirectsToSuccess()
     {
-        $request = $this->getRequest('/login', 'POST');
+        $request = $this->createRequest('/login', 'POST');
         $called = false;
 
         $dispatcher = new EventDispatcher();
-        $dispatcher->addListener(Events::LOGIN_SUCCESS, function() use (&$called) {
+        $dispatcher->addListener(Events::LOGIN_SUCCESS, function () use (&$called) {
                 $called = true;
             });
         $susbcriber = $this->getSubscriber(true, null, $dispatcher);
@@ -138,7 +139,7 @@ class FirewallSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoginWithoutSessionCreatesForbiddenResponse()
     {
-        $request = $this->getRequest('/login', 'POST', false);
+        $request = $this->createRequest('/login', 'POST', false);
 
         $susbcriber = $this->getSubscriber(true);
         $event = $this->getEvent($request);
@@ -158,13 +159,13 @@ class FirewallSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     public function testLogout()
     {
-        $request = $this->getRequest('/logout');
+        $request = $this->createRequest('/logout');
         $request->getSession()->set('__authed', true);
 
         $called = false;
-        
+
         $dispatcher = new EventDispatcher();
-        $dispatcher->addListener(Events::LOGOUT, function() use (&$called) {
+        $dispatcher->addListener(Events::LOGOUT, function () use (&$called) {
                 $called = true;
             });
         $susbcriber = $this->getSubscriber(true, null, $dispatcher);
@@ -187,7 +188,7 @@ class FirewallSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     public function testIgnoresSubRequests()
     {
-        $request = $this->getRequest('/admin');
+        $request = $this->createRequest('/admin');
 
         $susbcriber = $this->getSubscriber();
         $event = $this->getEvent($request, HttpKernelInterface::SUB_REQUEST);
@@ -198,7 +199,7 @@ class FirewallSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->assertNull($event->getResponse());
     }
-    
+
     /**
      * Tests the static getSubscribedEvents method
      */
@@ -221,7 +222,7 @@ class FirewallSubscriberTest extends \PHPUnit_Framework_TestCase
         $authenticator   = $this->getMockForAbstractClass('Nice\Security\AuthenticatorInterface');
         $authenticator->expects($expects ?: $this->any())->method('authenticate')
             ->will($this->returnValue((bool) $authenticate));
-        
+
         return new FirewallSubscriber(
             $dispatcher,
             $firewallMatcher,
@@ -232,23 +233,6 @@ class FirewallSubscriberTest extends \PHPUnit_Framework_TestCase
             '/admin',
             '__authed'
         );
-    }
-
-    /**
-     * @param string $url
-     * @param string $method
-     *
-     * @return Request
-     */
-    private function getRequest($url, $method = 'GET', $session = true)
-    {
-        $request = Request::create($url, $method);
-        
-        if ($session) {
-            $request->setSession(new Session(new MockArraySessionStorage()));
-        }
-        
-        return $request;
     }
 
     /**

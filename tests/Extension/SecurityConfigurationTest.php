@@ -7,7 +7,7 @@
  * that was distributed with this source code.
  */
 
-namespace Nice\Tests\Extension;
+namespace Nice\tests\Extension;
 
 use Nice\Extension\SecurityConfiguration;
 use Symfony\Component\Config\Definition\Processor;
@@ -31,7 +31,7 @@ class SecurityConfigurationTest extends \PHPUnit_Framework_TestCase
             'login_path' => '/login',
             'success_path' => '/',
             'logout_path' => '/logout',
-            'token_session_key' => '__nice_is_authenticated'
+            'token_session_key' => '__nice.is_authenticated',
         );
     }
 }

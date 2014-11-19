@@ -82,6 +82,9 @@ class SecurityExtension extends Extension
             ->addArgument($config['success_path'])
             ->addArgument($config['token_session_key'])
             ->addTag('kernel.event_subscriber');
+
+        $container->register('security.auth_failure_subscriber', 'Nice\Security\AuthenticationFailureSubscriber')
+            ->addTag('kernel.event_subscriber');
     }
 
     private function configureAuthenticator(array $config, ContainerBuilder $container)

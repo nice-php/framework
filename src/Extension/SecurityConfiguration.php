@@ -45,7 +45,7 @@ class SecurityConfiguration implements ConfigurationInterface
             ->scalarNode('login_path')->defaultValue('/login')->end()
             ->scalarNode('success_path')->defaultValue('/')->end()
             ->scalarNode('logout_path')->defaultValue('/logout')->end()
-            ->scalarNode('token_session_key')->defaultValue('__nice_is_authenticated')->end()
+            ->scalarNode('token_session_key')->defaultValue('__nice.is_authenticated')->end()
             ->end();
 
         return $treeBuilder;
