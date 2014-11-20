@@ -7,7 +7,7 @@
  * that was distributed with this source code.
  */
 
-namespace Nice\tests\Security;
+namespace Nice\Tests\Security;
 
 use Nice\Security\AuthenticationFailureSubscriber;
 use Nice\Security\Event\SecurityEvent;

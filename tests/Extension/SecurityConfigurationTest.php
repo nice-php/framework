@@ -7,7 +7,7 @@
  * that was distributed with this source code.
  */
 
-namespace Nice\tests\Extension;
+namespace Nice\Tests\Extension;
 
 use Nice\Extension\SecurityConfiguration;
 use Symfony\Component\Config\Definition\Processor;
