@@ -233,15 +233,20 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
     /**
      * Get the root directory
      *
-     * Override this method in a subclass to customize.
-     *
      * @return string
      */
     public function getRootDir()
     {
         if (!$this->rootDir) {
-            // Assumes application root is one level above web/console root
-            $this->rootDir = dirname($_SERVER['SCRIPT_FILENAME']).'/..';
+            $refl = new \ReflectionObject($this);
+            $filename = $refl->getFileName();
+            if (false !== ($pos = strrpos($filename, '/vendor/'))) {
+                $filename = substr($filename, 0, $pos);
+            } else {
+                $filename = dirname($filename).'/..';
+            }
+
+            $this->rootDir = str_replace('\\', '/', $filename);
         }
 
         return $this->rootDir;

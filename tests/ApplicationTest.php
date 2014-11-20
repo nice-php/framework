@@ -140,17 +140,27 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @backupGlobals
-     *
      * Test getRootDir method
      */
     public function testGetRootDir()
     {
-        $_SERVER['SCRIPT_FILENAME'] = tempnam(null, 'scopeTest');
+        $expectedRootDir = __DIR__ . '/..';
 
-        $expectedRootDir = dirname($_SERVER['SCRIPT_FILENAME']) . '/..';
+        $app = new ExtendedApplication();
 
-        $app = new Application();
+        $this->assertEquals($expectedRootDir, $app->getRootDir());
+    }
+
+    /**
+     * Test getRootDir method when installed with composer
+     */
+    public function testGetRootDirVendor()
+    {
+        require_once __DIR__ . '/Mocks/vendor/nice/framework/src/TestApplication.php';
+
+        $expectedRootDir = __DIR__ . '/Mocks';
+
+        $app = new \TestApplication();
 
         $this->assertEquals($expectedRootDir, $app->getRootDir());
     }
