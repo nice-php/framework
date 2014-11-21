@@ -34,7 +34,9 @@ class GroupCountBasedDataGenerator implements DataGeneratorInterface
         $data = array();
         foreach ($routes[0] as $path => $methods) {
             $handler = reset($methods);
-            $data[$handler['name']] = $path;
+            if (is_array($handler) && isset($handler['name'])) {
+                $data[$handler['name']] = $path;
+            }
         }
 
         foreach ($routes[1] as $group) {
@@ -48,16 +50,22 @@ class GroupCountBasedDataGenerator implements DataGeneratorInterface
                 $part = $parts[$matchIndex - 1];
 
                 $method = reset($methods);
+                if (!is_array($method[0]) || !isset($method[0]['name'])) {
+                    continue;
+                }
                 $parameters = $method[1];
-                $path = rtrim($part, '()$~');
+
+                $path = $part;
 
                 foreach ($parameters as $parameter) {
-                    $path = $this->replaceOnce('([^/]+)', '{'.$parameter.'}', $path);
+                    $path = $this->replaceOnce('([^/]+)', '{' . $parameter . '}', $path);
                 }
+
+                $path = rtrim($path, '()$~');
 
                 $data[$method[0]['name']] = array(
                     'path' => $path,
-                    'params' => $parameters,
+                    'params' => $parameters
                 );
             }
         }
