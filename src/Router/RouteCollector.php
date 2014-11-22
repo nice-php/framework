@@ -113,11 +113,13 @@ abstract class RouteCollector implements RouteCollectorInterface, RouteMapperInt
      */
     public function map($route, $name, $handler, array $methods = array('GET'))
     {
-        if (null === $name) {
-            $this->addRoute($methods, $route, $handler);
-        }
+        foreach ($methods as $method) {
+            if (null === $name) {
+                $this->addRoute($method, $route, $handler);
+            }
 
-        $this->addNamedRoute($name, $methods, $route, $handler);
+            $this->addNamedRoute($name, $method, $route, $handler);
+        }
     }
 
     /**

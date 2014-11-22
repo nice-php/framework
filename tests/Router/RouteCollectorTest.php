@@ -19,11 +19,11 @@ class RouteCollectorTest extends \PHPUnit_Framework_TestCase
     public function testFunctionality()
     {
         $parser = $this->getMock('FastRoute\RouteParser');
-        $parser->expects($this->exactly(6))->method('parse')
+        $parser->expects($this->exactly(7))->method('parse')
             ->will($this->returnArgument(1));
         $generator = $this->getMockForAbstractClass('Nice\Router\NamedDataGeneratorInterface');
         $generator->expects($this->exactly(2))->method('addRoute');
-        $generator->expects($this->exactly(4))->method('addNamedRoute');
+        $generator->expects($this->exactly(5))->method('addNamedRoute');
         $generator->expects($this->once())->method('getData');
 
         $collector = new ConcreteRouteCollector($parser, $generator);
