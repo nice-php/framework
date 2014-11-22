@@ -30,7 +30,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $app = new Application();
 $app->set('routes', function (RouteCollector $r) {
-    $r->addRoute('GET', '/', function (Request $request) {
+    $r->map('/', 'home', function (Request $request) {
         return new Response('Hello, world');
     });
 });
