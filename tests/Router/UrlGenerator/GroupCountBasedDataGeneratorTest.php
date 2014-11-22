@@ -66,4 +66,53 @@ class GroupCountBasedDataGeneratorTest extends \PHPUnit_Framework_TestCase
             )
         ), $data);
     }
+
+    /**
+     * Test invalid data handling
+     */
+    public function testInvalidData()
+    {
+        $collector = $this->getMockForAbstractClass('Nice\Router\RouteCollectorInterface');
+        $collector->expects($this->once())
+            ->method('getData')
+            ->will($this->returnValue(array(
+                array(),
+
+                array(
+                    array(
+                        'regex' => '~^(?|/user/([^/]+)/show|/user/([^/]+)/edit)$~',
+                        'routeMap' => array(
+                            // Invalid index
+                            0 => array(
+                                'GET' => array(
+                                    array(
+                                        'name' => 'user_show',
+                                        'handler' => 'handler2'
+                                    ),
+                                    array(
+                                        'id' => 'id'
+                                    )
+                                )
+                            ),
+                            // Valid, but No "name" attribute
+                            3 => array(
+                                'GET' => array(
+                                    array(
+                                        'handler' => 'handler2'
+                                    ),
+                                    array(
+                                        'id' => 'id'
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            )));
+
+        $generator = new GroupCountBasedDataGenerator($collector);
+        $data = $generator->getData();
+
+        $this->assertEquals(array(), $data);
+    }
 }
