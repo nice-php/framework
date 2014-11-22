@@ -98,6 +98,26 @@ class LogExtensionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test the LogExtension configuring a stream channel with a missing file
+     */
+    public function testConfigureStreamWithoutFileFails()
+    {
+        $extension = new LogExtension(array(
+            'channels' => array(
+                'default' => array(
+                    'handler' => 'stream',
+                )
+            )
+        ));
+
+        $this->setExpectedException('RuntimeException', 'The option "file" must be specified for the stream handler.');
+
+        $container = new ContainerBuilder();
+        $extension->load(array(), $container);
+    }
+
+
+    /**
      * Test the getConfiguration method
      */
     public function testGetConfiguration()
