@@ -49,6 +49,9 @@ abstract class RouteCollector implements RouteCollectorInterface, RouteMapperInt
     /**
      * Adds a route to the collection
      *
+     * @deprecated
+     * @see map
+     *
      * @param string $httpMethod
      * @param string $route
      * @param mixed  $handler
@@ -62,6 +65,9 @@ abstract class RouteCollector implements RouteCollectorInterface, RouteMapperInt
 
     /**
      * Adds a named route to the collection
+     *
+     * @deprecated
+     * @see map
      *
      * @param string $name
      * @param string $httpMethod
