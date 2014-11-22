@@ -12,11 +12,11 @@ the [Symfony2 HttpKernel](https://github.com/symfony/HttpKernel) and
 [Dependency Injection](https://github.com/symfony/DependencyInjection) components.
 
 Nice comes with built-in [session management](https://github.com/nice-php/docs/blob/master/extensions/sessions.md),
-[simple authentication](https://github.com/nice-php/docs/blob/master/extensions/security.md).
-[Twig](https://github.com/nice-php/docs/blob/master/extensions/twig.md),
-[Monolog](https://github.com/nice-php/docs/blob/master/extensions/log.md), and
+[simple authentication](https://github.com/nice-php/docs/blob/master/extensions/security.md), and logging utilizing
+[Monolog](https://github.com/nice-php/docs/blob/master/extensions/log.md).
+[Twig](https://github.com/nice-php/docs/blob/master/extensions/twig.md), and
 [Doctrine DBAL](https://github.com/nice-php/docs/blob/master/extensions/doctrine-dbal.md) integration is
-also available, with additional extensions in development.
+also available.
 
 ```php
 <?php
@@ -31,8 +31,8 @@ require __DIR__ . '/../vendor/autoload.php';
 $app = new Application();
 $app->set('routes', function (RouteCollector $r) {
     $r->addRoute('GET', '/', function (Request $request) {
-            return new Response('Hello, world');
-        });
+        return new Response('Hello, world');
+    });
 });
 $app->run();
 ```
