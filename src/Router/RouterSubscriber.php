@@ -42,6 +42,10 @@ class RouterSubscriber implements EventSubscriberInterface
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
+        if ($request->get('_controller')) {
+            return;
+        }
+        
         $routeInfo = $this->dispatcher->dispatch($request->getMethod(), $request->getPathInfo());
         switch ($routeInfo[0]) {
             case Dispatcher::NOT_FOUND:
