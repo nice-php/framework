@@ -19,11 +19,11 @@ class RouteCollectorTest extends \PHPUnit_Framework_TestCase
     public function testFunctionality()
     {
         $parser = $this->getMock('FastRoute\RouteParser');
-        $parser->expects($this->exactly(2))->method('parse')
+        $parser->expects($this->exactly(6))->method('parse')
             ->will($this->returnArgument(1));
         $generator = $this->getMockForAbstractClass('Nice\Router\NamedDataGeneratorInterface');
-        $generator->expects($this->once())->method('addRoute');
-        $generator->expects($this->once())->method('addNamedRoute');
+        $generator->expects($this->exactly(2))->method('addRoute');
+        $generator->expects($this->exactly(4))->method('addNamedRoute');
         $generator->expects($this->once())->method('getData');
 
         $collector = new ConcreteRouteCollector($parser, $generator);
@@ -57,6 +57,10 @@ class ConcreteRouteCollector extends RouteCollector
     protected function collectRoutes()
     {
         $this->addRoute('GET', '/', 'handler0');
-        $this->addNamedRoute('test', 'GET', '/test', 'handler1');
+        $this->addRoute('GET', '/foo', 'handler1');
+        $this->addNamedRoute('test', 'GET', '/test', 'handler2');
+        $this->addNamedRoute('bar', 'GET', '/bar', 'handler3');
+        $this->map('/testing', 'testing_home', 'handler4');
+        $this->map('/user/{id}/update', 'users', 'handler5', array('POST', 'PATCH'));
     }
 }

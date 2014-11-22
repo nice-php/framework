@@ -98,75 +98,20 @@ abstract class RouteCollector implements RouteCollectorInterface, RouteMapperInt
     }
 
     /**
-     * Map a handler to a GET method route
+     * Map a handler to the given methods and route
      *
-     * @param string          $route
-     * @param string          $name
-     * @param string|callable $handler
+     * @param string          $route    The route to match against
+     * @param string          $name     The name of the route
+     * @param string|callable $handler  The handler for the route
+     * @param array|string[]  $methods  The HTTP methods for this handler
      */
-    public function get($route, $name, $handler)
+    public function map($route, $name, $handler, array $methods = array('GET'))
     {
-        $this->addNamedRoute($name, 'GET', $route, $handler);
-    }
+        if (null === $name) {
+            $this->addRoute($methods, $route, $handler);
+        }
 
-    /**
-     * Map a handler to a POST method route
-     *
-     * @param string          $route
-     * @param string          $name
-     * @param string|callable $handler
-     */
-    public function post($route, $name, $handler)
-    {
-        $this->addNamedRoute($name, 'POST', $route, $handler);
-    }
-
-    /**
-     * Map a handler to a HEAD method route
-     *
-     * @param string          $route
-     * @param string          $name
-     * @param string|callable $handler
-     */
-    public function head($route, $name, $handler)
-    {
-        $this->addNamedRoute($name, 'HEAD', $route, $handler);
-    }
-
-    /**
-     * Map a handler to a PUT method route
-     *
-     * @param string          $route
-     * @param string          $name
-     * @param string|callable $handler
-     */
-    public function put($route, $name, $handler)
-    {
-        $this->addNamedRoute($name, 'PUT', $route, $handler);
-    }
-
-    /**
-     * Map a handler to a DELETE method route
-     *
-     * @param string          $route
-     * @param string          $name
-     * @param string|callable $handler
-     */
-    public function delete($route, $name, $handler)
-    {
-        $this->addNamedRoute($name, 'DELETE', $route, $handler);
-    }
-
-    /**
-     * Map a handler to a PATCH method route
-     *
-     * @param string          $route
-     * @param string          $name
-     * @param string|callable $handler
-     */
-    public function patch($route, $name, $handler)
-    {
-        $this->addNamedRoute($name, 'PATCH', $route, $handler);
+        $this->addNamedRoute($name, $methods, $route, $handler);
     }
 
     /**

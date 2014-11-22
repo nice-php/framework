@@ -15,62 +15,13 @@ namespace Nice\Router;
 interface RouteMapperInterface
 {
     /**
-     * Map a handler to a GET method route
+     * Map a handler to the given methods and route
      *
-     * @param string          $route
-     * @param string          $name
-     * @param string|callable $handler
+     * @param string          $route    The route to match against
+     * @param string          $name     The name of the route
+     * @param string|callable $handler  The handler for the route
+     * @param array|string[]  $methods  The HTTP methods for this handler
      * @return void
      */
-    public function get($route, $name, $handler);
-
-    /**
-     * Map a handler to a POST method route
-     *
-     * @param string          $route
-     * @param string          $name
-     * @param string|callable $handler
-     * @return void
-     */
-    public function post($route, $name, $handler);
-
-    /**
-     * Map a handler to a HEAD method route
-     *
-     * @param string          $route
-     * @param string          $name
-     * @param string|callable $handler
-     * @return void
-     */
-    public function head($route, $name, $handler);
-
-    /**
-     * Map a handler to a PUT method route
-     *
-     * @param string          $route
-     * @param string          $name
-     * @param string|callable $handler
-     * @return void
-     */
-    public function put($route, $name, $handler);
-
-    /**
-     * Map a handler to a DELETE method route
-     *
-     * @param string          $route
-     * @param string          $name
-     * @param string|callable $handler
-     * @return void
-     */
-    public function delete($route, $name, $handler);
-
-    /**
-     * Map a handler to a PATCH method route
-     *
-     * @param string          $route
-     * @param string          $name
-     * @param string|callable $handler
-     * @return void
-     */
-    public function patch($route, $name, $handler);
+    public function map($route, $name, $handler, array $methods = array('GET'));
 }
