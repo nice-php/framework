@@ -11,7 +11,10 @@ namespace Nice\Tests\DependencyInjection\ContainerInitializer;
 
 use Nice\Application;
 use Nice\DependencyInjection\ContainerInitializer\DefaultInitializer;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class DefaultInitializerTest extends \PHPUnit_Framework_TestCase
 {
@@ -48,7 +51,7 @@ class DefaultInitializerTest extends \PHPUnit_Framework_TestCase
         $app->expects($this->atLeastOnce())->method('isCacheEnabled')
             ->will($this->returnValue(true));
 
-        $container = $initializer->initializeContainer($app);
+        $container = $initializer->initializeContainer($app, array(), array(new TestCompilerPass()));
         $this->assertNotNull($container);
 
         $this->assertEquals('/some/path', $container->getParameter('app.root_dir'));
@@ -61,5 +64,15 @@ class DefaultInitializerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($container->has('event_dispatcher'));
         $this->assertTrue($container->has('app'));
         $this->assertTrue($container->has('request'));
+
+        $this->assertTrue($container->has('test'));
+    }
+}
+
+class TestCompilerPass implements CompilerPassInterface
+{
+    public function process(ContainerBuilder $container)
+    {
+        $container->register('test', '\stdClass');
     }
 }
