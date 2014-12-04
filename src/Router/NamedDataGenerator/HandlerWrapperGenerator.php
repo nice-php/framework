@@ -12,6 +12,9 @@ namespace Nice\Router\NamedDataGenerator;
 use FastRoute\DataGenerator;
 use Nice\Router\NamedDataGeneratorInterface;
 
+/**
+ * HandlerWrapperGenerator adds extra metadata to routes to support named routes
+ */
 class HandlerWrapperGenerator implements NamedDataGeneratorInterface
 {
     /**
@@ -19,6 +22,11 @@ class HandlerWrapperGenerator implements NamedDataGeneratorInterface
      */
     private $wrappedGenerator;
 
+    /**
+     * Constructor
+     *
+     * @param DataGenerator $wrappedGenerator
+     */
     public function __construct(DataGenerator $wrappedGenerator)
     {
         $this->wrappedGenerator = $wrappedGenerator;

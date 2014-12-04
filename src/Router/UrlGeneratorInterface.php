@@ -9,6 +9,9 @@
 
 namespace Nice\Router;
 
+/**
+ * Defines the contract any UrlGenerator must implement
+ */
 interface UrlGeneratorInterface
 {
     /**

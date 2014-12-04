@@ -13,6 +13,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
+/**
+ * Modifies controller data in the request to support named routes
+ */
 class WrappedHandlerSubscriber implements EventSubscriberInterface
 {
     /**

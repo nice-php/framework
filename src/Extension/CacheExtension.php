@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Sets up Cache services
+ * Sets up Doctrine Cache services
  */
 class CacheExtension extends Extension
 {

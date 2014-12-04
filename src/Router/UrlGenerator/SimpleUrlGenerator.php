@@ -12,6 +12,9 @@ namespace Nice\Router\UrlGenerator;
 use Nice\Router\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * A simple URL generator implementation
+ */
 class SimpleUrlGenerator implements UrlGeneratorInterface
 {
     /**
@@ -28,6 +31,11 @@ class SimpleUrlGenerator implements UrlGeneratorInterface
      */
     private $request;
 
+    /**
+     * Constructor
+     *
+     * @param DataGeneratorInterface $dataGenerator
+     */
     public function __construct(DataGeneratorInterface $dataGenerator)
     {
         $this->dataGenerator = $dataGenerator;

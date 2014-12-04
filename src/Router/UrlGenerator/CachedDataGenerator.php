@@ -11,6 +11,9 @@ namespace Nice\Router\UrlGenerator;
 
 use Symfony\Component\Config\ConfigCache;
 
+/**
+ * A file-based cached DataGenerator which wraps another DataGenerator
+ */
 class CachedDataGenerator implements DataGeneratorInterface
 {
     /**

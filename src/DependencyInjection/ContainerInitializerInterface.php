@@ -14,6 +14,12 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
+/**
+ * Defines the contract any ContainerInitializer must follow
+ *
+ * A ContainerInitializer is responsible for creating a DependencyInjection Container
+ * and readying it for use by a Nice Application
+ */
 interface ContainerInitializerInterface
 {
     /**

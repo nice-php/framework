@@ -9,6 +9,9 @@
 
 namespace Nice\Router\UrlGenerator;
 
+/**
+ * A URL generator DataGeneratorInterface transforms route data
+ */
 interface DataGeneratorInterface
 {
     /**

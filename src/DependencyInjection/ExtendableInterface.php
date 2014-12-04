@@ -12,7 +12,7 @@ namespace Nice\DependencyInjection;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
 /**
- * Defines the contract any Extendable object should implement
+ * Defines the contract any Extendable object must implement
  */
 interface ExtendableInterface
 {

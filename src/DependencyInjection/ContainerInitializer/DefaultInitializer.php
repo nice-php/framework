@@ -20,6 +20,9 @@ use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpKernel\DependencyInjection\MergeExtensionConfigurationPass;
 use Symfony\Component\HttpKernel\DependencyInjection\RegisterListenersPass;
 
+/**
+ * Creates and initializes a Service Container, ready for use by the Application
+ */
 class DefaultInitializer implements ContainerInitializerInterface
 {
     /**

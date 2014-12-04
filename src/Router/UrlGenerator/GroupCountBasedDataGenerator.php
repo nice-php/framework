@@ -11,6 +11,9 @@ namespace Nice\Router\UrlGenerator;
 
 use Nice\Router\RouteCollectorInterface;
 
+/**
+ * URL data generator for FastRoute's GroupCountBased route data generator
+ */
 class GroupCountBasedDataGenerator implements DataGeneratorInterface
 {
     /**
@@ -18,6 +21,11 @@ class GroupCountBasedDataGenerator implements DataGeneratorInterface
      */
     private $routeCollector;
 
+    /**
+     * Constructor
+     *
+     * @param RouteCollectorInterface $routeCollector
+     */
     public function __construct(RouteCollectorInterface $routeCollector)
     {
         $this->routeCollector = $routeCollector;
@@ -41,34 +49,55 @@ class GroupCountBasedDataGenerator implements DataGeneratorInterface
 
         foreach ($routes[1] as $method) {
             foreach ($method as $group) {
-                $regex = $group['regex'];
-                $parts = explode('|', $regex);
-                foreach ($group['routeMap'] as $matchIndex => $routeData) {
-                    if (!isset($routeData[0]['name']) || !isset($parts[$matchIndex - 1])) {
-                        continue;
-                    }
-
-                    $parameters = $routeData[1];
-                    $path = $parts[$matchIndex - 1];
-
-                    foreach ($parameters as $parameter) {
-                        $path = $this->replaceOnce('([^/]+)', '{' . $parameter . '}', $path);
-                    }
-
-                    $path = rtrim($path, '()$~');
-
-                    $data[$routeData[0]['name']] = array(
-                        'path' => $path,
-                        'params' => $parameters
-                    );
-                }
+                $data = array_merge($data, $this->parseDynamicGroup($group));
             }
         }
-
 
         return $data;
     }
 
+    /**
+     * Parse a group of dynamic routes
+     *
+     * @param $group
+     * @return array
+     */
+    private function parseDynamicGroup($group)
+    {
+        $regex = $group['regex'];
+        $parts = explode('|', $regex);
+        $data = array();
+        foreach ($group['routeMap'] as $matchIndex => $routeData) {
+            if (!isset($routeData[0]['name']) || !isset($parts[$matchIndex - 1])) {
+                continue;
+            }
+
+            $parameters = $routeData[1];
+            $path = $parts[$matchIndex - 1];
+
+            foreach ($parameters as $parameter) {
+                $path = $this->replaceOnce('([^/]+)', '{' . $parameter . '}', $path);
+            }
+
+            $path = rtrim($path, '()$~');
+
+            $data[$routeData[0]['name']] = array(
+                'path' => $path,
+                'params' => $parameters
+            );
+        }
+
+        return $data;
+    }
+
+    /**
+     * Replace the first occurrence of a string
+     *
+     * @param string $search
+     * @param string $replace
+     * @param string $subject
+     * @return mixed
+     */
     private function replaceOnce($search, $replace, $subject)
     {
         $pos = strpos($subject, $search);

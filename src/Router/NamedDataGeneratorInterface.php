@@ -11,6 +11,11 @@ namespace Nice\Router;
 
 use FastRoute\DataGenerator;
 
+/**
+ * Defines the contract any NamedDataGenerator must implement
+ *
+ * A NamedDataGenerator special DataGenerator that can handle named routes
+ */
 interface NamedDataGeneratorInterface extends DataGenerator
 {
     /**

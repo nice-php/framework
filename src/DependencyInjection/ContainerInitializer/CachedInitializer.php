@@ -18,6 +18,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
+/**
+ * Wraps a ContainerInitializer, providing a file-based cache for the built container
+ */
 class CachedInitializer implements ContainerInitializerInterface
 {
     /**

@@ -13,6 +13,10 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
+/**
+ * Overrides the default RouteCollector and URL DataGenerator with
+ * cache-based implementations.
+ */
 class CacheRoutingDataPass implements CompilerPassInterface
 {
     /**

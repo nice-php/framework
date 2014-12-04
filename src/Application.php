@@ -32,7 +32,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
 
 /**
- * An Application
+ * A Nice Application
  */
 class Application implements HttpKernelInterface, ContainerInterface, ExtendableInterface
 {

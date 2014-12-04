@@ -16,6 +16,9 @@ use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 
+/**
+ * Handles resolving a controller for the incoming Request
+ */
 class RouterSubscriber implements EventSubscriberInterface
 {
     /**

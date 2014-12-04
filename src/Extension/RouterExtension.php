@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 
 /**
- * Sets up FastRoute services
+ * Sets up routing related services
  */
 class RouterExtension extends Extension
 {
