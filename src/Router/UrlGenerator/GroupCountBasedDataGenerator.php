@@ -39,36 +39,32 @@ class GroupCountBasedDataGenerator implements DataGeneratorInterface
             }
         }
 
-        foreach ($routes[1] as $group) {
-            $regex = $group['regex'];
-            $parts = explode('|', $regex);
-            foreach ($group['routeMap'] as $matchIndex => $methods) {
-                if (!isset($parts[$matchIndex - 1])) {
-                    continue;
+        foreach ($routes[1] as $method) {
+            foreach ($method as $group) {
+                $regex = $group['regex'];
+                $parts = explode('|', $regex);
+                foreach ($group['routeMap'] as $matchIndex => $routeData) {
+                    if (!isset($routeData[0]['name']) || !isset($parts[$matchIndex - 1])) {
+                        continue;
+                    }
+
+                    $parameters = $routeData[1];
+                    $path = $parts[$matchIndex - 1];
+
+                    foreach ($parameters as $parameter) {
+                        $path = $this->replaceOnce('([^/]+)', '{' . $parameter . '}', $path);
+                    }
+
+                    $path = rtrim($path, '()$~');
+
+                    $data[$routeData[0]['name']] = array(
+                        'path' => $path,
+                        'params' => $parameters
+                    );
                 }
-
-                $part = $parts[$matchIndex - 1];
-
-                $method = reset($methods);
-                if (!is_array($method[0]) || !isset($method[0]['name'])) {
-                    continue;
-                }
-                $parameters = $method[1];
-
-                $path = $part;
-
-                foreach ($parameters as $parameter) {
-                    $path = $this->replaceOnce('([^/]+)', '{' . $parameter . '}', $path);
-                }
-
-                $path = rtrim($path, '()$~');
-
-                $data[$method[0]['name']] = array(
-                    'path' => $path,
-                    'params' => $parameters
-                );
             }
         }
+
 
         return $data;
     }
