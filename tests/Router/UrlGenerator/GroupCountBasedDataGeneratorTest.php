@@ -34,11 +34,11 @@ class GroupCountBasedDataGeneratorTest extends \PHPUnit_Framework_TestCase
 
                 // Dynamic routes
                 array(
-                    array(
-                        'regex' => '~^(?|/user/([^/]+)/show)$~',
-                        'routeMap' => array(
-                            2 => array(
-                                'GET' => array(
+                    'GET' => array(
+                        array(
+                            'regex' => '~^(?|/user/([^/]+)/show)$~',
+                            'routeMap' => array(
+                                2 => array(
                                     array(
                                         'name' => 'user_show',
                                         'handler' => 'handler2'
@@ -79,12 +79,12 @@ class GroupCountBasedDataGeneratorTest extends \PHPUnit_Framework_TestCase
                 array(),
 
                 array(
-                    array(
-                        'regex' => '~^(?|/user/([^/]+)/show|/user/([^/]+)/edit)$~',
-                        'routeMap' => array(
-                            // Invalid index
-                            0 => array(
-                                'GET' => array(
+                    'GET' => array(
+                        array(
+                            'regex' => '~^(?|/user/([^/]+)/show|/user/([^/]+)/edit)$~',
+                            'routeMap' => array(
+                                // Invalid index
+                                0 => array(
                                     array(
                                         'name' => 'user_show',
                                         'handler' => 'handler2'
@@ -92,11 +92,9 @@ class GroupCountBasedDataGeneratorTest extends \PHPUnit_Framework_TestCase
                                     array(
                                         'id' => 'id'
                                     )
-                                )
-                            ),
-                            // Valid, but No "name" attribute
-                            3 => array(
-                                'GET' => array(
+                                ),
+                                // Valid, but No "name" attribute
+                                3 => array(
                                     array(
                                         'handler' => 'handler2'
                                     ),
