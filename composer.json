@@ -7,7 +7,7 @@
     "symfony/config": "~2.3",
     "symfony/http-kernel": "~2.3",
     "symfony/dependency-injection": "~2.3",
-    "nikic/fast-route": "~0.3"
+    "nikic/fast-route": ">=0.3"
   },
   "require-dev": {
     "symfony/debug": "~2.3",
@@ -16,7 +16,6 @@
   },
   "suggest": {
     "stack/builder": "Stack HttpKernel middlewares - http://stackphp.com",
-    "doctrine/cache": "Leverage the Doctrine Cache component for caching data",
     "monolog/monolog": "Provides many different logging handlers"
   },
   "autoload": {
