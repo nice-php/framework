@@ -56,10 +56,10 @@ class ConcreteRouteCollector extends RouteCollector
      */
     protected function collectRoutes()
     {
-        $this->addRoute('GET', '/', 'handler0');
-        $this->addRoute('GET', '/foo', 'handler1');
-        $this->addNamedRoute('test', 'GET', '/test', 'handler2');
-        $this->addNamedRoute('bar', 'GET', '/bar', 'handler3');
+        $this->map('/', null, 'handler0');
+        $this->map('/foo', null, 'handler1');
+        $this->map('/test', 'test', 'handler2');
+        $this->map('/bar', 'bar', 'handler3');
         $this->map('/testing', 'testing_home', 'handler4');
         $this->map('/user/{id}/update', 'users', 'handler5', array('POST', 'PATCH'));
     }

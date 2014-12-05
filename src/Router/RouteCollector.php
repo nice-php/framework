@@ -47,47 +47,6 @@ abstract class RouteCollector implements RouteCollectorInterface, RouteMapperInt
     }
 
     /**
-     * Adds a route to the collection
-     *
-     * @deprecated
-     * @see map
-     *
-     * @param string $httpMethod
-     * @param string $route
-     * @param mixed  $handler
-     */
-    public function addRoute($httpMethod, $route, $handler)
-    {
-        $routeData = $this->routeParser->parse($route);
-
-        $this->dataGenerator->addRoute($httpMethod, $routeData, $handler);
-    }
-
-    /**
-     * Adds a named route to the collection
-     *
-     * @deprecated
-     * @see map
-     *
-     * @param string $name
-     * @param string $httpMethod
-     * @param string $route
-     * @param mixed  $handler
-     *
-     * @throws \RuntimeException
-     */
-    public function addNamedRoute($name, $httpMethod, $route, $handler)
-    {
-        $routeData = $this->routeParser->parse($route);
-
-        if ($this->dataGenerator instanceof NamedDataGeneratorInterface) {
-            $this->dataGenerator->addNamedRoute($name, $httpMethod, $routeData, $handler);
-        } else {
-            throw new \RuntimeException('The injected generator does not support named routes');
-        }
-    }
-
-    /**
      * Returns the collected route data
      *
      * @return array
@@ -119,6 +78,41 @@ abstract class RouteCollector implements RouteCollectorInterface, RouteMapperInt
             } else {
                 $this->addNamedRoute($name, $method, $route, $handler);
             }
+        }
+    }
+
+    /**
+     * Add an un-named route to the collection
+     *
+     * @param string $httpMethod
+     * @param string $route
+     * @param mixed  $handler
+     */
+    private function addRoute($httpMethod, $route, $handler)
+    {
+        $routeData = $this->routeParser->parse($route);
+
+        $this->dataGenerator->addRoute($httpMethod, $routeData, $handler);
+    }
+
+    /**
+     * Add a named route to the collection
+     *
+     * @param string $name
+     * @param string $httpMethod
+     * @param string $route
+     * @param mixed  $handler
+     *
+     * @throws \RuntimeException
+     */
+    private function addNamedRoute($name, $httpMethod, $route, $handler)
+    {
+        $routeData = $this->routeParser->parse($route);
+
+        if ($this->dataGenerator instanceof NamedDataGeneratorInterface) {
+            $this->dataGenerator->addNamedRoute($name, $httpMethod, $routeData, $handler);
+        } else {
+            throw new \RuntimeException('The injected generator does not support named routes');
         }
     }
 
