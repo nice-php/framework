@@ -64,6 +64,22 @@ class RouterSubscriberTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test a Request that already has a _controller
+     */
+    public function testRequestAlreadyResolved()
+    {
+        $subscriber = $this->getSubscriber();
+        $request = Request::create('/', 'POST');
+        $request->attributes->set('_controller', 'handler0');
+
+        $event = $this->getEvent($request);
+
+        $subscriber->onKernelRequest($event);
+
+        $this->assertEquals('handler0', $request->attributes->get('_controller'));
+    }
+
+    /**
      * Test not found
      */
     public function testNotFound()

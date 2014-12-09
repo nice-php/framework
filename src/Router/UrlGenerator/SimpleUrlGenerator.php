@@ -70,7 +70,15 @@ class SimpleUrlGenerator implements UrlGeneratorInterface
             }
         }
 
-        return ($this->request ? (($absolute ? $this->request->getSchemeAndHttpHost() : '').$this->request->getBaseUrl()) : '').$path;
+        if ($this->request) {
+            $path = $this->request->getBaseUrl().$path;
+
+            if ($absolute) {
+                $path = $this->request->getSchemeAndHttpHost().$path;
+            }
+        }
+
+        return $path;
     }
 
     /**

@@ -23,6 +23,7 @@
                 <file>./src/DependencyInjection/ExtendableInterface.php</file>
                 <file>./src/Router/DispatcherFactoryInterface.php</file>
                 <file>./src/Router/RouteCollectorInterface.php</file>
+                <file>./src/Router/RouteMapperInterface.php</file>
                 <file>./src/DependencyInjection/ContainerInitializerInterface.php</file>
                 <file>./src/Security/AuthenticatorInterface.php</file>
                 <file>./src/Router/NamedDataGeneratorInterface.php</file>
