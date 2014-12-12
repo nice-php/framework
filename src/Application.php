@@ -39,7 +39,7 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
     /**
      * @var bool
      */
-    private $cache;
+    protected $cache;
 
     /**
      * @var bool
@@ -82,7 +82,7 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
     private $booted = false;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param string $environment
      * @param bool   $debug
@@ -96,7 +96,7 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
     }
 
     /**
-     * Boot the Application
+     * Boots the Application.
      */
     public function boot()
     {
@@ -111,7 +111,7 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
     }
 
     /**
-     * Prepend an extension
+     * Prepends an extension.
      *
      * @param ExtensionInterface $extension
      */
@@ -121,7 +121,7 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
     }
 
     /**
-     * Append an extension
+     * Appends an extension.
      *
      * @param ExtensionInterface $extension
      */
@@ -131,7 +131,7 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
     }
 
     /**
-     * Get an ordered list of extensions
+     * Gets an ordered list of extensions.
      *
      * @return array|ExtensionInterface[]
      */
@@ -141,7 +141,18 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
     }
 
     /**
-     * Register default extensions
+     * Adds a compiler pass.
+     *
+     * @param CompilerPassInterface $pass A compiler pass
+     * @param string                $type The type of compiler pass
+     */
+    public function addCompilerPass(CompilerPassInterface $pass, $type = PassConfig::TYPE_BEFORE_OPTIMIZATION)
+    {
+        $this->compilerPasses[] = array($pass, $type);
+    }
+
+    /**
+     * Registers default extensions.
      *
      * This method allows a subclass to customize default extensions
      */
@@ -152,17 +163,6 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
         if ($this->isCacheEnabled()) {
             $this->addCompilerPass(new CacheRoutingDataPass());
         }
-    }
-
-    /**
-     * Adds a compiler pass.
-     *
-     * @param CompilerPassInterface $pass A compiler pass
-     * @param string                $type The type of compiler pass
-     */
-    protected function addCompilerPass(CompilerPassInterface $pass, $type = PassConfig::TYPE_BEFORE_OPTIMIZATION)
-    {
-        $this->compilerPasses[] = array($pass, $type);
     }
 
     /**
@@ -231,7 +231,7 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
     }
 
     /**
-     * Get the root directory
+     * Gets the root directory.
      *
      * @return string
      */
@@ -253,6 +253,8 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
     }
 
     /**
+     * Gets the cache directory.
+     *
      * @return string|null Null if Caching should be disabled
      */
     public function getCacheDir()
@@ -263,6 +265,8 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
     }
 
     /**
+     * Gets the log directory.
+     *
      * @return string
      */
     public function getLogDir()
@@ -271,6 +275,19 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
     }
 
     /**
+     * Gets the environment.
+     *
+     * @return string
+     */
+    public function getEnvironment()
+    {
+        return $this->environment;
+    }
+
+
+    /**
+     * Gets the charset.
+     *
      * @return string
      */
     public function getCharset()
@@ -279,6 +296,28 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
     }
 
     /**
+     * Returns true if debug is enabled.
+     *
+     * @return boolean
+     */
+    public function isDebug()
+    {
+        return $this->debug;
+    }
+
+    /**
+     * Returns true if caching is enabled.
+     *
+     * @return boolean
+     */
+    public function isCacheEnabled()
+    {
+        return $this->cache;
+    }
+
+    /**
+     * Gets the service container.
+     *
      * @return ContainerInterface
      */
     public function getContainer()
@@ -462,29 +501,5 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
         }
 
         return $this->container->isScopeActive($name);
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isDebug()
-    {
-        return $this->debug;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isCacheEnabled()
-    {
-        return $this->cache;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEnvironment()
-    {
-        return $this->environment;
     }
 }

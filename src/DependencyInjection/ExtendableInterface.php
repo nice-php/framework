@@ -9,6 +9,8 @@
 
 namespace Nice\DependencyInjection;
 
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
 /**
@@ -36,4 +38,12 @@ interface ExtendableInterface
      * @return array|ExtensionInterface[]
      */
     public function getExtensions();
+
+    /**
+     * Adds a compiler pass.
+     *
+     * @param CompilerPassInterface $pass A compiler pass
+     * @param string                $type The type of compiler pass
+     */
+    public function addCompilerPass(CompilerPassInterface $pass, $type = PassConfig::TYPE_BEFORE_OPTIMIZATION);
 }
