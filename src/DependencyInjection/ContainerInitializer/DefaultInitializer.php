@@ -10,6 +10,7 @@
 namespace Nice\DependencyInjection\ContainerInitializer;
 
 use Nice\Application;
+use Nice\DependencyInjection\CompilerAwareExtensionInterface;
 use Nice\DependencyInjection\ContainerInitializerInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -62,6 +63,10 @@ class DefaultInitializer implements ContainerInitializerInterface
         foreach ($extensions as $extension) {
             $container->registerExtension($extension);
             $extensionAliases[] = $extension->getAlias();
+
+            if ($extension instanceof CompilerAwareExtensionInterface) {
+                $compilerPasses = array_merge($compilerPasses, $extension->getCompilerPasses());
+            }
         }
 
         $container->addCompilerPass(new MergeExtensionConfigurationPass($extensionAliases));
