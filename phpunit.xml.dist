@@ -21,6 +21,7 @@
             <directory>./src/</directory>
             <exclude>
                 <file>./src/DependencyInjection/ExtendableInterface.php</file>
+                <file>./src/DependencyInjection/CompilerAwareExtensionInterface.php</file>
                 <file>./src/Router/DispatcherFactoryInterface.php</file>
                 <file>./src/Router/RouteCollectorInterface.php</file>
                 <file>./src/Router/RouteMapperInterface.php</file>

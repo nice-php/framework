@@ -65,7 +65,12 @@ class DefaultInitializer implements ContainerInitializerInterface
             $extensionAliases[] = $extension->getAlias();
 
             if ($extension instanceof CompilerAwareExtensionInterface) {
-                $compilerPasses = array_merge($compilerPasses, $extension->getCompilerPasses());
+                $passes = $extension->getCompilerPasses();
+                if (!is_array($passes)) {
+                    $passes = array($passes);
+                }
+
+                $compilerPasses = array_merge($compilerPasses, $passes);
             }
         }
 

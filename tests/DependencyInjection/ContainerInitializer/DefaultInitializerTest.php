@@ -10,11 +10,13 @@
 namespace Nice\Tests\DependencyInjection\ContainerInitializer;
 
 use Nice\Application;
+use Nice\DependencyInjection\CompilerAwareExtensionInterface;
 use Nice\DependencyInjection\ContainerInitializer\DefaultInitializer;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 
 class DefaultInitializerTest extends \PHPUnit_Framework_TestCase
 {
@@ -51,7 +53,7 @@ class DefaultInitializerTest extends \PHPUnit_Framework_TestCase
         $app->expects($this->atLeastOnce())->method('isCacheEnabled')
             ->will($this->returnValue(true));
 
-        $container = $initializer->initializeContainer($app, array(), array(new TestCompilerPass()));
+        $container = $initializer->initializeContainer($app, array(new TestExtension()), array(new TestCompilerPass()));
         $this->assertNotNull($container);
 
         $this->assertEquals('/some/path', $container->getParameter('app.root_dir'));
@@ -66,13 +68,51 @@ class DefaultInitializerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($container->has('request'));
 
         $this->assertTrue($container->has('test'));
+        $this->assertTrue($container->has('aware'));
     }
 }
 
 class TestCompilerPass implements CompilerPassInterface
 {
+    /**
+     * @var string
+     */
+    private $serviceName;
+
+    public function __construct($serviceName = 'test')
+    {
+        $this->serviceName = $serviceName;
+    }
+
     public function process(ContainerBuilder $container)
     {
-        $container->register('test', '\stdClass');
+        $container->register($this->serviceName, '\stdClass');
+    }
+}
+
+class TestExtension extends Extension implements CompilerAwareExtensionInterface
+{
+    /**
+     * Gets the CompilerPasses this extension requires.
+     *
+     * @return array|CompilerPassInterface[]
+     */
+    public function getCompilerPasses()
+    {
+        return new TestCompilerPass('aware');
+    }
+
+    /**
+     * Loads a specific configuration.
+     *
+     * @param array $config An array of configuration values
+     * @param ContainerBuilder $container A ContainerBuilder instance
+     *
+     * @throws \InvalidArgumentException When provided tag is not defined in this extension
+     *
+     * @api
+     */
+    public function load(array $config, ContainerBuilder $container)
+    {
     }
 }
