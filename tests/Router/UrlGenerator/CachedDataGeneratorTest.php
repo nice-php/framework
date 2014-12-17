@@ -50,7 +50,7 @@ class CachedDataGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $generator = $this->getGenerator('/some/unwriteable/path');
 
-        $this->setExpectedException('RuntimeException', 'Failed to create "/some/unwriteable"');
+        $this->setExpectedException('RuntimeException', 'Failed to create');
 
         $generator->getData();
     }

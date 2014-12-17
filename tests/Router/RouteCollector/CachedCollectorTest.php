@@ -50,7 +50,7 @@ class CachedCollectorTest extends \PHPUnit_Framework_TestCase
     {
         $collector = $this->getCollector('/some/unwriteable/path');
         
-        $this->setExpectedException('RuntimeException', 'Failed to create "/some/unwriteable"');
+        $this->setExpectedException('RuntimeException', 'Failed to create');
         
         $collector->getData();
     }
