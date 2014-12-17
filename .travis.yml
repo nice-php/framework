@@ -6,10 +6,16 @@ php:
   - 5.6
   - hhvm
 
+matrix:
+  include:
+    - php: 5.4
+      env: DEPS=lowest
+
 sudo: false
 
 before_script:
-  - composer install
+  - composer selfupdate
+  - if [ "$DEPS" = "lowest" ]; then composer update --prefer-lowest -n; else composer install -n; fi;
 
 after_script:
   - "vendor/bin/test-reporter --stdout > codeclimate.json"
