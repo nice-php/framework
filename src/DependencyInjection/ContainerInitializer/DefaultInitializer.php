@@ -49,11 +49,6 @@ class DefaultInitializer implements ContainerInitializerInterface
     {
         $container = $this->getContainerBuilder();
         $container->addObjectResource($application);
-        if (null !== $configLoader) {
-            $loader = $this->getContainerLoader($container);
-            $configLoader($loader);
-        }
-
         $container->setParameter('app.env', $application->getEnvironment());
         $container->setParameter('app.debug', $application->isDebug());
         $container->setParameter('app.cache', $application->isCacheEnabled());
@@ -98,6 +93,11 @@ class DefaultInitializer implements ContainerInitializerInterface
             } else {
                 $container->addCompilerPass($pass);
             }
+        }
+
+        if (null !== $configLoader) {
+            $loader = $this->getContainerLoader($container);
+            $configLoader($loader);
         }
 
         $container->compile();
