@@ -15,6 +15,7 @@ use Nice\DependencyInjection\ContainerInitializer\DefaultInitializer;
 use Nice\DependencyInjection\ContainerInitializerInterface;
 use Nice\DependencyInjection\ExtendableInterface;
 use Nice\Extension\RouterExtension;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -151,6 +152,10 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
         $this->compilerPasses[] = array($pass, $type);
     }
 
+    protected function registerConfiguration(LoaderInterface $loader)
+    {
+    }
+
     /**
      * Registers default extensions.
      *
@@ -166,19 +171,32 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
     }
 
     /**
+     * Initializes a new container.
+     *
      * @return ContainerInterface
      */
     protected function initializeContainer()
     {
         $this->registerDefaultExtensions();
         $initializer = $this->getContainerInitializer();
-        $this->container = $initializer->initializeContainer($this, $this->extensions, $this->compilerPasses);
+        $this->container = $initializer->initializeContainer(
+            $this,
+            $this->extensions,
+            $this->compilerPasses,
+            function (LoaderInterface $loader) {
+                $this->registerConfiguration($loader);
+            }
+        );
         $this->container->set('app', $this);
 
         return $this->container;
     }
 
     /**
+     * Returns a ContainerInitializer.
+     *
+     * A ContainerInitializer creates fully-built, ready-to-use containers.
+     *
      * @return ContainerInitializerInterface
      */
     protected function getContainerInitializer()
@@ -283,7 +301,6 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
     {
         return $this->environment;
     }
-
 
     /**
      * Gets the charset.
