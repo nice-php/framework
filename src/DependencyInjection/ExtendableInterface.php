@@ -14,7 +14,10 @@ use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
 /**
- * Defines the contract any Extendable object must implement
+ * Defines the contract any Extendable object must implement.
+ *
+ * An Extendable object is one that manages its own list of
+ * Dependency Injection Extensions and Compiler Passes.
  */
 interface ExtendableInterface
 {

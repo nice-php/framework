@@ -31,9 +31,8 @@ interface ContainerInitializerInterface
      * @param Application                   $application
      * @param array|ExtensionInterface[]    $extensions
      * @param array|CompilerPassInterface[] $compilerPasses
-     * @param callable                      $configLoader
      *
      * @return ContainerInterface
      */
-    public function initializeContainer(Application $application, array $extensions = array(), array $compilerPasses = array(), callable $configLoader = null);
+    public function initializeContainer(Application $application, array $extensions = array(), array $compilerPasses = array());
 }

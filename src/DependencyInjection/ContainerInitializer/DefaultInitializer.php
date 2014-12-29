@@ -11,20 +11,12 @@ namespace Nice\DependencyInjection\ContainerInitializer;
 
 use Nice\Application;
 use Nice\DependencyInjection\CompilerAwareExtensionInterface;
+use Nice\DependencyInjection\ConfigurationProviderInterface;
 use Nice\DependencyInjection\ContainerInitializerInterface;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Config\Loader\DelegatingLoader;
-use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader\ClosureLoader;
-use Symfony\Component\DependencyInjection\Loader\IniFileLoader;
-use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpKernel\DependencyInjection\MergeExtensionConfigurationPass;
@@ -36,16 +28,30 @@ use Symfony\Component\HttpKernel\DependencyInjection\RegisterListenersPass;
 class DefaultInitializer implements ContainerInitializerInterface
 {
     /**
+     * @var ConfigurationProviderInterface
+     */
+    private $configProvider;
+
+    /**
+     * Constructor
+     *
+     * @param ConfigurationProviderInterface $configProvider
+     */
+    public function __construct(ConfigurationProviderInterface $configProvider)
+    {
+        $this->configProvider = $configProvider;
+    }
+
+    /**
      * Returns a fully built, ready to use Container
      *
      * @param Application                   $application
      * @param array|ExtensionInterface[]    $extensions
      * @param array|CompilerPassInterface[] $compilerPasses
-     * @param callable                      $configLoader
      *
      * @return ContainerInterface
      */
-    public function initializeContainer(Application $application, array $extensions = array(), array $compilerPasses = array(), callable $configLoader = null)
+    public function initializeContainer(Application $application, array $extensions = array(), array $compilerPasses = array())
     {
         $container = $this->getContainerBuilder();
         $container->addObjectResource($application);
@@ -95,10 +101,7 @@ class DefaultInitializer implements ContainerInitializerInterface
             }
         }
 
-        if (null !== $configLoader) {
-            $loader = $this->getContainerLoader($container);
-            $configLoader($loader);
-        }
+        $this->configProvider->load($container);
 
         $container->compile();
 
@@ -113,28 +116,5 @@ class DefaultInitializer implements ContainerInitializerInterface
     protected function getContainerBuilder()
     {
         return new ContainerBuilder();
-    }
-
-    /**
-     * Returns a loader for the container.
-     *
-     * This loader can be used to load extension configurations from various sources.
-     *
-     * @param ContainerInterface $container The service container
-     *
-     * @return LoaderInterface
-     */
-    protected function getContainerLoader(ContainerInterface $container)
-    {
-        $locator = new FileLocator($this);
-        $resolver = new LoaderResolver(array(
-            new XmlFileLoader($container, $locator),
-            new YamlFileLoader($container, $locator),
-            new IniFileLoader($container, $locator),
-            new PhpFileLoader($container, $locator),
-            new ClosureLoader($container),
-        ));
-
-        return new DelegatingLoader($resolver);
     }
 }

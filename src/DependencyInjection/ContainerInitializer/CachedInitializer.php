@@ -59,16 +59,15 @@ class CachedInitializer implements ContainerInitializerInterface
      * @param Application                   $application
      * @param array|ExtensionInterface[]    $extensions
      * @param array|CompilerPassInterface[] $compilerPasses
-     * @param callable                      $configLoader
      *
      * @return ContainerInterface
      */
-    public function initializeContainer(Application $application, array $extensions = array(), array $compilerPasses = array(), callable $configLoader = null)
+    public function initializeContainer(Application $application, array $extensions = array(), array $compilerPasses = array())
     {
         $class = $this->getContainerClass($application);
         $cache = new ConfigCache($this->cacheDir.'/'.$class.'.php', $application->isDebug());
         if (!$cache->isFresh()) {
-            $container = $this->wrappedInitializer->initializeContainer($application, $extensions, $compilerPasses, $configLoader);
+            $container = $this->wrappedInitializer->initializeContainer($application, $extensions, $compilerPasses);
 
             $this->dumpContainer($cache, $container, $class, 'Container');
         }

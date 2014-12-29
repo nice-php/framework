@@ -10,6 +10,8 @@
 namespace Nice;
 
 use Nice\DependencyInjection\CacheRoutingDataPass;
+use Nice\DependencyInjection\ConfigurationProvider\NullConfigurationProvider;
+use Nice\DependencyInjection\ConfigurationProviderInterface;
 use Nice\DependencyInjection\ContainerInitializer\CachedInitializer;
 use Nice\DependencyInjection\ContainerInitializer\DefaultInitializer;
 use Nice\DependencyInjection\ContainerInitializerInterface;
@@ -61,6 +63,11 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
      * @var ContainerInterface
      */
     protected $container;
+
+    /**
+     * @var ConfigurationProviderInterface
+     */
+    protected $configProvider;
 
     /**
      * @var array|Extension[]
@@ -179,14 +186,7 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
     {
         $this->registerDefaultExtensions();
         $initializer = $this->getContainerInitializer();
-        $this->container = $initializer->initializeContainer(
-            $this,
-            $this->extensions,
-            $this->compilerPasses,
-            function (LoaderInterface $loader) {
-                $this->registerConfiguration($loader);
-            }
-        );
+        $this->container = $initializer->initializeContainer($this, $this->extensions, $this->compilerPasses);
         $this->container->set('app', $this);
 
         return $this->container;
@@ -201,12 +201,34 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
      */
     protected function getContainerInitializer()
     {
-        $initializer = new DefaultInitializer();
+        $initializer = new DefaultInitializer($this->getConfigurationProvider());
         if ($this->cache) {
             $initializer = new CachedInitializer($initializer, $this->getCacheDir());
         }
 
         return $initializer;
+    }
+
+    /**
+     * Sets the ConfigurationProvider.
+     *
+     * @param ConfigurationProviderInterface $configProvider
+     */
+    public function setConfigurationProvider(ConfigurationProviderInterface $configProvider)
+    {
+        $this->configProvider = $configProvider;
+    }
+
+    /**
+     * Returns a ConfigurationProvider.
+     *
+     * A ConfigurationProvider can load configuration files and configure ContainerBuilders.
+     *
+     * @return ConfigurationProviderInterface
+     */
+    public function getConfigurationProvider()
+    {
+        return $this->configProvider ?: new NullConfigurationProvider();
     }
 
     /**

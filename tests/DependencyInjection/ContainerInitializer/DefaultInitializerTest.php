@@ -11,9 +11,9 @@ namespace Nice\Tests\DependencyInjection\ContainerInitializer;
 
 use Nice\Application;
 use Nice\DependencyInjection\CompilerAwareExtensionInterface;
+use Nice\DependencyInjection\ConfigurationProvider\NullConfigurationProvider;
 use Nice\DependencyInjection\ContainerInitializer\DefaultInitializer;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
-use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -25,18 +25,18 @@ class DefaultInitializerTest extends \PHPUnit_Framework_TestCase
      */
     public function testInitializeContainer()
     {
-        $initializer = new DefaultInitializer();
+        $initializer = new DefaultInitializer(new NullConfigurationProvider());
 
         /** @var \Nice\Application|\PHPUnit_Framework_MockObject_MockObject $app */
         $app = $this->getMockBuilder('Nice\Application')
             ->setMethods(array(
-                    'registerDefaultExtensions', 
-                    'getRootDir', 
+                    'registerDefaultExtensions',
+                    'getRootDir',
                     'getLogDir',
                     'getCacheDir',
                     'getEnvironment',
                     'isDebug',
-                    'isCacheEnabled'
+                    'isCacheEnabled',
                 ))
             ->disableOriginalConstructor()
             ->getMock();
@@ -62,7 +62,7 @@ class DefaultInitializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('env', $container->getParameter('app.env'));
         $this->assertTrue($container->getParameter('app.debug'));
         $this->assertTrue($container->getParameter('app.cache'));
-        
+
         $this->assertTrue($container->has('event_dispatcher'));
         $this->assertTrue($container->has('app'));
         $this->assertTrue($container->has('request'));
@@ -105,7 +105,7 @@ class TestExtension extends Extension implements CompilerAwareExtensionInterface
     /**
      * Loads a specific configuration.
      *
-     * @param array $config An array of configuration values
+     * @param array            $config    An array of configuration values
      * @param ContainerBuilder $container A ContainerBuilder instance
      *
      * @throws \InvalidArgumentException When provided tag is not defined in this extension
