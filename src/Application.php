@@ -159,10 +159,6 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
         $this->compilerPasses[] = array($pass, $type);
     }
 
-    protected function registerConfiguration(LoaderInterface $loader)
-    {
-    }
-
     /**
      * Registers default extensions.
      *
