@@ -18,20 +18,20 @@ class CachedCollectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateWritesCache()
     {
-        $filename = sys_get_temp_dir() . '/_collector' . sha1(uniqid('_collector', true));
+        $filename = sys_get_temp_dir().'/_collector'.sha1(uniqid('_collector', true));
         $collector = $this->getCollector($filename, $this->once());
 
         $data = $collector->getData();
 
         $this->assertNotEmpty(file_get_contents($filename));
         $this->assertEquals(array(array(), array()), $data);
-        
+
         return $filename;
     }
 
     /**
      * Test create with a fresh cache
-     * 
+     *
      * @depends testCreateWritesCache
      */
     public function testCreateWithFreshCache($filename)
@@ -43,15 +43,15 @@ class CachedCollectorTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test an unwriteable file
-     * 
+     *
      * @todo This relies on something outside of Nice throwing the exception
      */
     public function testUnableToWriteCache()
     {
         $collector = $this->getCollector('/some/unwriteable/path');
-        
+
         $this->setExpectedException('RuntimeException', 'Failed to create');
-        
+
         $collector->getData();
     }
 
@@ -60,8 +60,8 @@ class CachedCollectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testDoesNotCacheClosures()
     {
-        $filename = sys_get_temp_dir() . '/_collector' . sha1(uniqid('_collector', true));
-        $collector = $this->getCollector($filename, $this->once(), array(array(array('handler' => function() { }))));
+        $filename = sys_get_temp_dir().'/_collector'.sha1(uniqid('_collector', true));
+        $collector = $this->getCollector($filename, $this->once(), array(array(array('handler' => function () { }))));
 
         $data = $collector->getData();
 

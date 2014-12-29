@@ -27,9 +27,9 @@ class GroupCountBasedDataGeneratorTest extends \PHPUnit_Framework_TestCase
                     '/' => array(
                         'GET' => array(
                             'name' => 'home',
-                            'controller' => 'handler1'
-                        )
-                    )
+                            'controller' => 'handler1',
+                        ),
+                    ),
                 ),
 
                 // Dynamic routes
@@ -41,16 +41,16 @@ class GroupCountBasedDataGeneratorTest extends \PHPUnit_Framework_TestCase
                                 2 => array(
                                     array(
                                         'name' => 'user_show',
-                                        'handler' => 'handler2'
+                                        'handler' => 'handler2',
                                     ),
                                     array(
-                                        'id' => 'id'
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
+                                        'id' => 'id',
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
             )));
 
         $generator = new GroupCountBasedDataGenerator($collector);
@@ -61,9 +61,9 @@ class GroupCountBasedDataGeneratorTest extends \PHPUnit_Framework_TestCase
             'user_show' => array(
                 'path' => '/user/{id}/show',
                 'params' => array(
-                    'id' => 'id'
-                )
-            )
+                    'id' => 'id',
+                ),
+            ),
         ), $data);
     }
 
@@ -87,25 +87,25 @@ class GroupCountBasedDataGeneratorTest extends \PHPUnit_Framework_TestCase
                                 0 => array(
                                     array(
                                         'name' => 'user_show',
-                                        'handler' => 'handler2'
+                                        'handler' => 'handler2',
                                     ),
                                     array(
-                                        'id' => 'id'
-                                    )
+                                        'id' => 'id',
+                                    ),
                                 ),
                                 // Valid, but No "name" attribute
                                 3 => array(
                                     array(
-                                        'handler' => 'handler2'
+                                        'handler' => 'handler2',
                                     ),
                                     array(
-                                        'id' => 'id'
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
+                                        'id' => 'id',
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
             )));
 
         $generator = new GroupCountBasedDataGenerator($collector);

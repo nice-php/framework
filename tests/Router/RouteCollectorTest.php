@@ -27,7 +27,7 @@ class RouteCollectorTest extends \PHPUnit_Framework_TestCase
         $generator->expects($this->once())->method('getData');
 
         $collector = new ConcreteRouteCollector($parser, $generator);
-        
+
         $collector->getData();
     }
 
@@ -38,11 +38,11 @@ class RouteCollectorTest extends \PHPUnit_Framework_TestCase
     {
         $parser = $this->getMock('FastRoute\RouteParser');
         $generator = $this->getMockForAbstractClass('FastRoute\DataGenerator');
-        
+
         $collector = new ConcreteRouteCollector($parser, $generator);
 
         $this->setExpectedException('RuntimeException', 'The injected generator does not support named routes');
-        
+
         $collector->getData();
     }
 }

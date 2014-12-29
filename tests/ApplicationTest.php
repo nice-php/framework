@@ -31,8 +31,8 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
 
         $rootDir = $app->getRootDir();
         $this->assertEquals(sys_get_temp_dir(), $rootDir);
-        $this->assertEquals($rootDir . '/cache/test', $app->getCacheDir());
-        $this->assertEquals($rootDir . '/logs', $app->getLogDir());
+        $this->assertEquals($rootDir.'/cache/test', $app->getCacheDir());
+        $this->assertEquals($rootDir.'/logs', $app->getLogDir());
         $this->assertEquals('UTF-8', $app->getCharset());
         $this->assertTrue($app->isCacheEnabled());
     }
@@ -46,15 +46,15 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
 
         $middleExtension = $this->getMockForAbstractClass('Symfony\Component\DependencyInjection\Extension\ExtensionInterface');
         $app->appendExtension($middleExtension);
-        
+
         $prependedExtension = $this->getMockForAbstractClass('Symfony\Component\DependencyInjection\Extension\ExtensionInterface');
         $app->prependExtension($prependedExtension);
-        
+
         $appendedExtension = $this->getMockForAbstractClass('Symfony\Component\DependencyInjection\Extension\ExtensionInterface');
         $app->appendExtension($appendedExtension);
-        
+
         $extensions = $app->getExtensions();
-        
+
         $this->assertCount(3, $extensions);
         $this->assertSame($prependedExtension, $extensions[0]);
         $this->assertSame($middleExtension, $extensions[1]);
@@ -103,11 +103,9 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
 
             try {
                 call_user_func_array(array($app, $method), $parts[0]);
-
             } catch (\Exception $e) {
                 if (isset($parts[1])) {
                     $this->assertEquals($parts[1], get_class($e));
-
                 } else {
                     throw $e;
                 }
@@ -144,7 +142,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetRootDir()
     {
-        $expectedRootDir = __DIR__ . '/..';
+        $expectedRootDir = __DIR__.'/..';
 
         $app = new ExtendedApplication();
 
@@ -156,9 +154,9 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetRootDirVendor()
     {
-        require_once __DIR__ . '/Mocks/vendor/nice/framework/src/TestApplication.php';
+        require_once __DIR__.'/Mocks/vendor/nice/framework/src/TestApplication.php';
 
-        $expectedRootDir = __DIR__ . '/Mocks';
+        $expectedRootDir = __DIR__.'/Mocks';
 
         $app = new \TestApplication();
 
@@ -272,7 +270,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
      */
     public function testFailureToWriteCacheDir()
     {
-        $tmpdir = sys_get_temp_dir() . '/' . md5(uniqid());
+        $tmpdir = sys_get_temp_dir().'/'.md5(uniqid());
         mkdir($tmpdir, 0700, true);
         chmod($tmpdir, 0000);
 
@@ -321,10 +319,8 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
 
 interface TerminableHttpKernelInterface extends HttpKernelInterface, TerminableInterface
 {
-
 }
 
 class ExtendedApplication extends Application
 {
-
 }

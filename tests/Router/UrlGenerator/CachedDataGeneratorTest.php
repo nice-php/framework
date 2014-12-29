@@ -18,7 +18,7 @@ class CachedDataGeneratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateWritesCache()
     {
-        $filename = sys_get_temp_dir() . '/_collector' . sha1(uniqid('_collector', true));
+        $filename = sys_get_temp_dir().'/_collector'.sha1(uniqid('_collector', true));
         $generator = $this->getGenerator($filename, $this->once());
 
         $data = $generator->getData();
@@ -68,7 +68,7 @@ class CachedDataGeneratorTest extends \PHPUnit_Framework_TestCase
         $generator->expects($expects ?: $this->any())
             ->method('getData')
             ->will($this->returnValue($routes));
-        
+
         return new CachedDataGenerator($generator, $filename, false);
     }
 }

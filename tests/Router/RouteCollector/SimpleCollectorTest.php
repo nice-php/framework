@@ -20,16 +20,15 @@ class SimpleCollectorTest extends \PHPUnit_Framework_TestCase
     {
         $parser = $this->getMock('FastRoute\RouteParser');
         $generator = $this->getMock('FastRoute\DataGenerator');
-        
+
         $called = false;
-        
-        $collector = new SimpleCollector($parser, $generator, function(SimpleCollector $collector) use (&$called) {
+
+        $collector = new SimpleCollector($parser, $generator, function (SimpleCollector $collector) use (&$called) {
                 $called = true;
             });
-        
 
         $collector->getData();
-        
+
         $this->assertTrue($called);
     }
 }

@@ -42,7 +42,7 @@ class LogConfigurationTest extends \PHPUnit_Framework_TestCase
             'Symfony\Component\Config\Definition\Exception\InvalidConfigurationException',
             'Invalid logging handler "fake"'
         );
-        
+
         $processor = new Processor();
         $processor->processConfiguration(new LogConfiguration(), array(array('channels' => array('default' => array('handler' => 'fake')))));
     }
@@ -51,8 +51,8 @@ class LogConfigurationTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             'channels' => array(
-                
-            )
+
+            ),
         );
     }
 

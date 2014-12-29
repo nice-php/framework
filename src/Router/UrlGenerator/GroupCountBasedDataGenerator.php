@@ -76,14 +76,14 @@ class GroupCountBasedDataGenerator implements DataGeneratorInterface
             $path = $parts[$matchIndex - 1];
 
             foreach ($parameters as $parameter) {
-                $path = $this->replaceOnce('([^/]+)', '{' . $parameter . '}', $path);
+                $path = $this->replaceOnce('([^/]+)', '{'.$parameter.'}', $path);
             }
 
             $path = rtrim($path, '()$~');
 
             $data[$routeData[0]['name']] = array(
                 'path' => $path,
-                'params' => $parameters
+                'params' => $parameters,
             );
         }
 
@@ -93,9 +93,9 @@ class GroupCountBasedDataGenerator implements DataGeneratorInterface
     /**
      * Replace the first occurrence of a string
      *
-     * @param string $search
-     * @param string $replace
-     * @param string $subject
+     * @param  string $search
+     * @param  string $replace
+     * @param  string $subject
      * @return mixed
      */
     private function replaceOnce($search, $replace, $subject)

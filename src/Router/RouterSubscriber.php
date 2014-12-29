@@ -48,7 +48,7 @@ class RouterSubscriber implements EventSubscriberInterface
         if ($request->get('_controller')) {
             return;
         }
-        
+
         $routeInfo = $this->dispatcher->dispatch($request->getMethod(), $request->getPathInfo());
         switch ($routeInfo[0]) {
             case Dispatcher::NOT_FOUND:

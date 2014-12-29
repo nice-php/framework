@@ -33,17 +33,17 @@ class LogExtensionTest extends \PHPUnit_Framework_TestCase
         $extension = new LogExtension(array(
             'channels' => array(
                 'secondary' => array(
-                    'handler' => 'error_log'
-                )
-            )));
+                    'handler' => 'error_log',
+                ),
+            ), ));
 
         $container = new ContainerBuilder();
         $extension->load(array(array(
                 'channels' => array(
                     'default' => array(
-                        'handler' => 'error_log'
-                    )
-                )
+                        'handler' => 'error_log',
+                    ),
+                ),
             )), $container);
 
         $this->assertTrue($container->hasDefinition('logger.default'));
@@ -61,14 +61,14 @@ class LogExtensionTest extends \PHPUnit_Framework_TestCase
                     'handler' => 'stream',
                     'level' => 500,
                     'options' => array(
-                        'file' => '/var/log/file'
-                    )
+                        'file' => '/var/log/file',
+                    ),
                 ),
                 'secondary' => array(
                     'handler' => 'error_log',
-                    'level' => 300
-                )
-            )
+                    'level' => 300,
+                ),
+            ),
         ));
 
         $this->assertConfigCorrect($container, 'Monolog\Handler\StreamHandler', 'default', array('/var/log/file', 500));
@@ -77,7 +77,7 @@ class LogExtensionTest extends \PHPUnit_Framework_TestCase
 
     private function assertConfigCorrect(ContainerBuilder $container, $handlerClass, $name, $ctorArgs)
     {
-        $handlerDefinition = $container->getDefinition('logger.' . $name . '.handler');
+        $handlerDefinition = $container->getDefinition('logger.'.$name.'.handler');
         $this->assertEquals($handlerClass, $handlerDefinition->getClass());
         $this->assertEquals($ctorArgs, $handlerDefinition->getArguments());
     }
@@ -106,8 +106,8 @@ class LogExtensionTest extends \PHPUnit_Framework_TestCase
             'channels' => array(
                 'default' => array(
                     'handler' => 'stream',
-                )
-            )
+                ),
+            ),
         ));
 
         $this->setExpectedException('RuntimeException', 'The option "file" must be specified for the stream handler.');
@@ -115,7 +115,6 @@ class LogExtensionTest extends \PHPUnit_Framework_TestCase
         $container = new ContainerBuilder();
         $extension->load(array(), $container);
     }
-
 
     /**
      * Test the getConfiguration method

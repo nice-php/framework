@@ -26,7 +26,7 @@ class CachedInitializerTest extends \PHPUnit_Framework_TestCase
         /** @var \Nice\Application|\PHPUnit_Framework_MockObject_MockObject $app */
         $app = $this->getMockBuilder('Nice\Application')
             ->setMethods(array('registerDefaultExtensions'))
-            ->setConstructorArgs(array('cache_init' . sha1(uniqid('cache', true)), false))
+            ->setConstructorArgs(array('cache_init'.sha1(uniqid('cache', true)), false))
             ->getMock();
 
         $container = $initializer->initializeContainer($app);
@@ -63,7 +63,7 @@ class CachedInitializerTest extends \PHPUnit_Framework_TestCase
      */
     public function testFailureToWriteCacheDir()
     {
-        $tmpdir = sys_get_temp_dir() . '/' . md5(uniqid());
+        $tmpdir = sys_get_temp_dir().'/'.md5(uniqid());
         mkdir($tmpdir, 0700, true);
         chmod($tmpdir, 0000);
 

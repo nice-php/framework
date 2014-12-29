@@ -33,7 +33,7 @@ class SimpleUrlGeneratorTest extends \PHPUnit_Framework_TestCase
 
         $request = Request::create('https://www.example.com/subdirectory/somepage', 'GET', array(), array(), array(), array(
             'SCRIPT_FILENAME' => 'index.php',
-            'PHP_SELF' => '/subdirectory/index.php'
+            'PHP_SELF' => '/subdirectory/index.php',
         ));
         $generator->setRequest($request);
 
@@ -49,7 +49,7 @@ class SimpleUrlGeneratorTest extends \PHPUnit_Framework_TestCase
 
         $request = Request::create('https://www.example.com/subdirectory/somepage', 'GET', array(), array(), array(), array(
             'SCRIPT_FILENAME' => 'index.php',
-            'PHP_SELF' => '/subdirectory/index.php'
+            'PHP_SELF' => '/subdirectory/index.php',
         ));
         $generator->setRequest($request);
 
@@ -64,10 +64,10 @@ class SimpleUrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $generator = $this->getGenerator(array(
             'user_edit' => array(
                 'params' => array(
-                    'id'
+                    'id',
                 ),
-                'path' => '/user/{id}/edit'
-            )
+                'path' => '/user/{id}/edit',
+            ),
         ));
 
         $this->assertEquals('/user/123/edit', $generator->generate('user_edit', array('id' => 123)));
@@ -81,10 +81,10 @@ class SimpleUrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $generator = $this->getGenerator(array(
             'user_edit' => array(
                 'params' => array(
-                    'id'
+                    'id',
                 ),
-                'path' => '/user/{id}/edit'
-            )
+                'path' => '/user/{id}/edit',
+            ),
         ));
 
         $this->setExpectedException('RuntimeException', 'Missing required parameter');

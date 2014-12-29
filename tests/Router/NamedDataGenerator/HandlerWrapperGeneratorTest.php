@@ -21,11 +21,11 @@ class HandlerWrapperGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $wrappedGenerator = new ConcreteGenerator();
         $generator = new HandlerWrapperGenerator($wrappedGenerator);
-        
+
         $generator->addRoute('GET', '/', 'handler0');
-        
+
         $data = $generator->getData();
-        
+
         $this->assertCount(1, $data);
         $this->assertEquals(array('GET', '/', 'handler0'), $data[0]);
     }
@@ -50,7 +50,7 @@ class HandlerWrapperGeneratorTest extends \PHPUnit_Framework_TestCase
 class ConcreteGenerator implements DataGenerator
 {
     private $routes = array();
-    
+
     public function addRoute($httpMethod, $routeData, $handler)
     {
         $this->routes[] = func_get_args();
