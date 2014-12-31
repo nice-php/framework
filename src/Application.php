@@ -37,7 +37,7 @@ use Symfony\Component\HttpKernel\TerminableInterface;
 /**
  * A Nice Application
  */
-class Application implements HttpKernelInterface, ContainerInterface, ExtendableInterface
+class Application implements HttpKernelInterface, ExtendableInterface
 {
     /**
      * @var bool
@@ -361,13 +361,13 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
     }
 
     /**
-     * Sets a service.
+     * Sets a service within the service container.
      *
      * @param string          $id      The service identifier
      * @param object|callable $service The service instance
      * @param string          $scope   The scope of the service
      */
-    public function set($id, $service, $scope = self::SCOPE_CONTAINER)
+    public function set($id, $service, $scope = ContainerInterface::SCOPE_CONTAINER)
     {
         if (!$this->booted) {
             $this->boot();
@@ -377,164 +377,19 @@ class Application implements HttpKernelInterface, ContainerInterface, Extendable
     }
 
     /**
-     * Gets a service.
+     * Gets a service from the service container.
      *
      * @param string $id              The service identifier
      * @param int    $invalidBehavior The behavior when the service does not exist
      *
      * @return object The associated service
-     *
-     * @throws InvalidArgumentException          if the service is not defined
-     * @throws ServiceCircularReferenceException When a circular reference is detected
-     * @throws ServiceNotFoundException          When the service is not defined
-     *
-     * @see Reference
      */
-    public function get($id, $invalidBehavior = self::EXCEPTION_ON_INVALID_REFERENCE)
+    public function get($id, $invalidBehavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE)
     {
         if (!$this->booted) {
             $this->boot();
         }
 
         return $this->container->get($id, $invalidBehavior);
-    }
-
-    /**
-     * Returns true if the given service is defined.
-     *
-     * @param string $id The service identifier
-     *
-     * @return bool true if the service is defined, false otherwise
-     */
-    public function has($id)
-    {
-        if (!$this->booted) {
-            $this->boot();
-        }
-
-        return $this->container->has($id);
-    }
-
-    /**
-     * Gets a parameter.
-     *
-     * @param string $name The parameter name
-     *
-     * @return mixed The parameter value
-     *
-     * @throws InvalidArgumentException if the parameter is not defined
-     */
-    public function getParameter($name)
-    {
-        if (!$this->booted) {
-            $this->boot();
-        }
-
-        return $this->container->getParameter($name);
-    }
-
-    /**
-     * Checks if a parameter exists.
-     *
-     * @param string $name The parameter name
-     *
-     * @return bool The presence of parameter in container
-     */
-    public function hasParameter($name)
-    {
-        if (!$this->booted) {
-            $this->boot();
-        }
-
-        return $this->container->hasParameter($name);
-    }
-
-    /**
-     * Sets a parameter.
-     *
-     * @param string $name  The parameter name
-     * @param mixed  $value The parameter value
-     */
-    public function setParameter($name, $value)
-    {
-        if (!$this->booted) {
-            $this->boot();
-        }
-
-        $this->container->setParameter($name, $value);
-    }
-
-    /**
-     * Enters the given scope
-     *
-     * @param string $name
-     */
-    public function enterScope($name)
-    {
-        if (!$this->booted) {
-            $this->boot();
-        }
-
-        $this->container->enterScope($name);
-    }
-
-    /**
-     * Leaves the current scope, and re-enters the parent scope
-     *
-     * @param string $name
-     */
-    public function leaveScope($name)
-    {
-        if (!$this->booted) {
-            $this->boot();
-        }
-
-        $this->container->leaveScope($name);
-    }
-
-    /**
-     * Adds a scope to the container
-     *
-     * @param ScopeInterface $scope
-     */
-    public function addScope(ScopeInterface $scope)
-    {
-        if (!$this->booted) {
-            $this->boot();
-        }
-
-        $this->container->addScope($scope);
-    }
-
-    /**
-     * Whether this container has the given scope
-     *
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function hasScope($name)
-    {
-        if (!$this->booted) {
-            $this->boot();
-        }
-
-        return $this->container->hasScope($name);
-    }
-
-    /**
-     * Determines whether the given scope is currently active.
-     *
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function isScopeActive($name)
-    {
-        if (!$this->booted) {
-            $this->boot();
-        }
-
-        return $this->container->isScopeActive($name);
     }
 }

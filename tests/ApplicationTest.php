@@ -84,16 +84,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
          */
         $methods = array(
             'set'           => array(array('test', new \stdClass())),
-            'has'           => array(array('test')),
-            'hasParameter'  => array(array('test')),
-            'addScope'      => array(array(new Scope('test'))),
-            'hasScope'      => array(array('test')),
-            'isScopeActive' => array(array('test')),
             'get'           => array(array('test'), 'Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException'),
-            'getParameter'  => array(array('test'), 'Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException'),
-            'setParameter'  => array(array('test', 'value'), 'Symfony\Component\DependencyInjection\Exception\LogicException'),
-            'enterScope'    => array(array('test'), 'Symfony\Component\DependencyInjection\Exception\InvalidArgumentException'),
-            'leaveScope'    => array(array('test'), 'Symfony\Component\DependencyInjection\Exception\InvalidArgumentException'),
         );
 
         foreach ($methods as $method => $parts) {
@@ -113,28 +104,6 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
 
             $this->assertNotNull($app->getContainer());
         }
-    }
-
-    /**
-     * Test entering and leaving scope
-     */
-    public function testEnterAndLeaveScope()
-    {
-        $app = $this->getMockApplication();
-
-        $app->boot();
-
-        $app->addScope(new Scope('test'));
-
-        $this->assertTrue($app->hasScope('test'));
-        $this->assertFalse($app->isScopeActive('test'));
-
-        $app->enterScope('test');
-
-        $this->assertTrue($app->isScopeActive('test'));
-
-        $app->leaveScope('test');
-        $this->assertFalse($app->isScopeActive('test'));
     }
 
     /**
