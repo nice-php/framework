@@ -11,11 +11,12 @@ Nice is a simple microframework for PHP 5.4 and later. Nice integrates nikic's
 the [Symfony2 HttpKernel](https://github.com/symfony/HttpKernel) and 
 [Dependency Injection](https://github.com/symfony/DependencyInjection) components.
 
-Nice comes with built-in [session management](https://github.com/nice-php/docs/blob/master/extensions/sessions.md),
-[simple authentication](https://github.com/nice-php/docs/blob/master/extensions/security.md), and logging utilizing
-[Monolog](https://github.com/nice-php/docs/blob/master/extensions/log.md).
-[Twig](https://github.com/nice-php/docs/blob/master/extensions/twig.md), and
-[Doctrine DBAL](https://github.com/nice-php/docs/blob/master/extensions/doctrine-dbal.md) integration is
+Nice comes with built-in [session management](http://docs.niceframework.com/nice/latest/extensions/sessions),
+[simple authentication](http://docs.niceframework.com/nice/latest/extensions/security), and logging utilizing
+[Monolog](http://docs.niceframework.com/nice/latest/extensions/log).
+[Twig](http://docs.niceframework.com/nice/latest/extensions/twig), along with
+[Doctrine DBAL](http://docs.niceframework.com/nice/latest/extensions/doctrine-dbal) and
+[ORM](http://docs.niceframework.com/nice/latest/extensions/doctrine-orm) integration is
 also available.
 
 ```php
@@ -41,5 +42,5 @@ $app->run();
 Documentation
 -------------
 
-View [the online documentation](http://niceframework.com), or the check out the
+View [the online documentation](http://docs.niceframework.com), or the check out the
 [markdown documentation source code](https://github.com/nice-php/docs).
