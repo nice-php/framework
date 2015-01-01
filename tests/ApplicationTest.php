@@ -107,6 +107,19 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test configuration provider methods
+     */
+    public function testConfigurationProvider()
+    {
+        $mockProvider = $this->getMockForAbstractClass('Nice\DependencyInjection\ConfigurationProviderInterface');
+
+        $app = new Application();
+        $app->setConfigurationProvider($mockProvider);
+
+        $this->assertSame($mockProvider, $app->getConfigurationProvider());
+    }
+
+    /**
      * Test getRootDir method
      */
     public function testGetRootDir()

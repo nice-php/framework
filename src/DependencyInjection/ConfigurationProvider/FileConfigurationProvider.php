@@ -29,6 +29,11 @@ class FileConfigurationProvider implements ConfigurationProviderInterface
     /**
      * @var string
      */
+    protected $configDir;
+
+    /**
+     * @var string
+     */
     protected $configFile;
 
     /**
@@ -38,7 +43,8 @@ class FileConfigurationProvider implements ConfigurationProviderInterface
      */
     public function __construct($configFile)
     {
-        $this->configFile = $configFile;
+        $this->configDir = dirname($configFile);
+        $this->configFile = basename($configFile);
     }
 
     /**
@@ -52,7 +58,7 @@ class FileConfigurationProvider implements ConfigurationProviderInterface
     {
         $loader = $this->getContainerLoader($container);
 
-        $loader->load($container);
+        $loader->load($this->configFile);
     }
 
     /**
@@ -66,7 +72,7 @@ class FileConfigurationProvider implements ConfigurationProviderInterface
      */
     protected function getContainerLoader(ContainerInterface $container)
     {
-        $locator = new FileLocator($this->configFile);
+        $locator = new FileLocator($this->configDir);
         $resolver = new LoaderResolver(array(
             new XmlFileLoader($container, $locator),
             new YamlFileLoader($container, $locator),
