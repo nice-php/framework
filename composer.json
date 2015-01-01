@@ -11,6 +11,7 @@
   },
   "require-dev": {
     "symfony/debug": "~2.3",
+    "symfony/expression-language": "~2.4",
     "phpunit/phpunit": "~3.7",
     "codeclimate/php-test-reporter": "dev-master"
   },
