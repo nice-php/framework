@@ -20,9 +20,6 @@ class WrappedHandlerSubscriber implements EventSubscriberInterface
 {
     /**
      * @param GetResponseEvent $event
-     *
-     * @throws \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
