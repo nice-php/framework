@@ -1,4 +1,4 @@
-A nice PHP microframework
+Nice PHP microframework
 =========================
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/nice-php/framework?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
