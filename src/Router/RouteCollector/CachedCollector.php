@@ -36,7 +36,7 @@ class CachedCollector implements RouteCollectorInterface
      * Constructor
      *
      * @param RouteCollectorInterface $wrappedCollector
-     * @param string                  $cacheDir
+     * @param string                  $cacheFile
      * @param bool                    $debug
      */
     public function __construct(RouteCollectorInterface $wrappedCollector, $cacheFile, $debug = false)

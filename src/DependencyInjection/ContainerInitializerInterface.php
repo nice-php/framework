@@ -25,9 +25,6 @@ interface ContainerInitializerInterface
     /**
      * Returns a fully built, ready to use Container
      *
-     * A $configLoader should accept a Symfony\Component\Config\LoaderInterface as its only argument.
-     * This can be used to register application configuration from a variety of sources.
-     *
      * @param Application                   $application
      * @param array|ExtensionInterface[]    $extensions
      * @param array|CompilerPassInterface[] $compilerPasses

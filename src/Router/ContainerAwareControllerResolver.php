@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 
 /**
- * Extends the basic ControllerResolver to support ContainerAware controllers
+ * Extends the basic ControllerResolver to support ContainerAware controllers and controllers as services
  */
 class ContainerAwareControllerResolver extends ControllerResolver implements ContainerAwareInterface
 {
@@ -27,8 +27,6 @@ class ContainerAwareControllerResolver extends ControllerResolver implements Con
      * Sets the Container.
      *
      * @param ContainerInterface|null $container A ContainerInterface instance or null
-     *
-     * @api
      */
     public function setContainer(ContainerInterface $container = null)
     {
@@ -40,9 +38,7 @@ class ContainerAwareControllerResolver extends ControllerResolver implements Con
      *
      * @param string $controller A Controller string
      *
-     * @return mixed A PHP callable
-     *
-     * @throws \InvalidArgumentException
+     * @return callable
      */
     protected function createController($controller)
     {
