@@ -46,8 +46,14 @@ class ContainerAwareControllerResolver extends ControllerResolver implements Con
      */
     protected function createController($controller)
     {
-        $controller = parent::createController($controller);
+        $parts = explode(':', $controller);
+        if (count($parts) === 2) {
+            $service = $this->container->get($parts[0]);
 
+            return array($service, $parts[1]);
+        }
+
+        $controller = parent::createController($controller);
         if ($controller[0] instanceof ContainerAwareInterface) {
             $controller[0]->setContainer($this->container);
         }

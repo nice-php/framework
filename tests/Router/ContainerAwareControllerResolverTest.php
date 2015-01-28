@@ -34,6 +34,26 @@ class ContainerAwareControllerResolverTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(2, $controller);
         $this->assertSame($container, $controller[0]->getContainer());
     }
+
+    /**
+     * Test that the ControllerResolver knows how to get services to be used as controllers
+     */
+    public function testServicesAsControllers()
+    {
+        $request = new Request();
+        $request->attributes->set('_controller', 'nice.some_controller:someAction');
+        $resolver = new ContainerAwareControllerResolver();
+
+        $container = new Container();
+        $service = new ContainerAwareController();
+        $container->set('nice.some_controller', $service);
+        $resolver->setContainer($container);
+
+        $controller = $resolver->getController($request);
+
+        $this->assertCount(2, $controller);
+        $this->assertSame($service, $controller[0]);
+    }
 }
 
 class ContainerAwareController implements ContainerAwareInterface
