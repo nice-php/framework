@@ -7,7 +7,7 @@
     "symfony/config": "~2.3",
     "symfony/http-kernel": "~2.3",
     "symfony/dependency-injection": "~2.3",
-    "nikic/fast-route": ">=0.7"
+    "nikic/fast-route": ">=0.6"
   },
   "require-dev": {
     "symfony/debug": "~2.3",
