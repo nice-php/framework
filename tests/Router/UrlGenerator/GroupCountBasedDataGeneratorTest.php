@@ -24,8 +24,8 @@ class GroupCountBasedDataGeneratorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(array(
                 // Static routes
                 array(
-                    '/' => array(
-                        'GET' => array(
+                    'GET' => array(
+                        '/' => array(
                             'name' => 'home',
                             'controller' => 'handler1',
                         ),

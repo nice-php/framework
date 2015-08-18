@@ -40,10 +40,11 @@ class GroupCountBasedDataGenerator implements DataGeneratorInterface
     {
         $routes = $this->routeCollector->getData();
         $data = array();
-        foreach ($routes[0] as $path => $methods) {
-            $handler = reset($methods);
-            if (is_array($handler) && isset($handler['name'])) {
-                $data[$handler['name']] = $path;
+        foreach ($routes[0] as $method => $paths) {
+            foreach ($paths as $path => $handler) {
+                if (is_array($handler) && isset($handler['name'])) {
+                    $data[$handler['name']] = $path;
+                }
             }
         }
 

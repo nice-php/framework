@@ -92,7 +92,9 @@ abstract class RouteCollector implements RouteCollectorInterface, RouteMapperInt
     {
         $routeData = $this->routeParser->parse($route);
 
-        $this->dataGenerator->addRoute($httpMethod, $routeData, $handler);
+        foreach ($routeData as $routeDatum) {
+            $this->dataGenerator->addRoute($httpMethod, $routeDatum, $handler);
+        }
     }
 
     /**
@@ -107,12 +109,14 @@ abstract class RouteCollector implements RouteCollectorInterface, RouteMapperInt
      */
     private function addNamedRoute($name, $httpMethod, $route, $handler)
     {
+        if (! ($this->dataGenerator instanceof NamedDataGeneratorInterface)) {
+            throw new \RuntimeException('The injected generator does not support named routes');
+        }
+
         $routeData = $this->routeParser->parse($route);
 
-        if ($this->dataGenerator instanceof NamedDataGeneratorInterface) {
-            $this->dataGenerator->addNamedRoute($name, $httpMethod, $routeData, $handler);
-        } else {
-            throw new \RuntimeException('The injected generator does not support named routes');
+        foreach ($routeData as $routeDatum) {
+            $this->dataGenerator->addNamedRoute($name, $httpMethod, $routeDatum, $handler);
         }
     }
 

@@ -20,7 +20,9 @@ class RouteCollectorTest extends \PHPUnit_Framework_TestCase
     {
         $parser = $this->getMock('FastRoute\RouteParser');
         $parser->expects($this->exactly(7))->method('parse')
-            ->will($this->returnArgument(1));
+            ->will($this->returnCallback(function($route) {
+                return array($route);
+            }));
         $generator = $this->getMockForAbstractClass('Nice\Router\NamedDataGeneratorInterface');
         $generator->expects($this->exactly(2))->method('addRoute');
         $generator->expects($this->exactly(5))->method('addNamedRoute');
@@ -37,6 +39,9 @@ class RouteCollectorTest extends \PHPUnit_Framework_TestCase
     public function testExceptionIfNotNamedDataGenerator()
     {
         $parser = $this->getMock('FastRoute\RouteParser');
+        $parser->expects($this->atLeastOnce())
+            ->method('parse')
+            ->will($this->returnValue(array()));
         $generator = $this->getMockForAbstractClass('FastRoute\DataGenerator');
 
         $collector = new ConcreteRouteCollector($parser, $generator);
