@@ -41,6 +41,17 @@ $app->run();
 ```
 
 
+##Vagrant
+If you wish to use the provided Vagrantfile as a quick and easy dev environment, simply run `vagrant up`. 
+Once it has finished provisioning the application is available at 192.168.33.13.
+Add the following line to your /etc/hosts file:
+
+`192.168.33.13 nice.dev`
+
+Use `vagrant ssh` to access the box's command line.
+
+MySQL user/pass are both root.
+
 Documentation
 -------------
 
