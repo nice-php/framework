@@ -1,8 +1,6 @@
 Nice PHP microframework
 =========================
 
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/nice-php/framework?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 [![Build Status](http://img.shields.io/travis/nice-php/framework.svg)](https://travis-ci.org/nice-php/framework)
 [![Coverage](http://img.shields.io/codeclimate/coverage/github/nice-php/framework.svg)](https://codeclimate.com/github/nice-php/framework)
 [![Code Climate](http://img.shields.io/codeclimate/github/nice-php/framework.svg)](https://codeclimate.com/github/nice-php/framework)
