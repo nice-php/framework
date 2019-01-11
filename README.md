@@ -6,7 +6,7 @@ Nice PHP microframework
 [![Code Climate](http://img.shields.io/codeclimate/coverage-letter/nice-php/framework.svg)](https://codeclimate.com/github/nice-php/framework)
 [![Latest Release](http://img.shields.io/packagist/v/nice/framework.svg)](https://packagist.org/packages/nice/framework)
 
-Nice is a simple microframework for PHP 5.4 and later. Nice integrates nikic's 
+Nice is a simple microframework for PHP 5.6 and later. Nice integrates nikic's 
 [FastRoute](https://github.com/nikic/FastRoute) router with 
 the [Symfony2 HttpKernel](https://github.com/symfony/HttpKernel) and 
 [Dependency Injection](https://github.com/symfony/DependencyInjection) components.
