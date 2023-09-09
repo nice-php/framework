@@ -9,9 +9,10 @@
 
 namespace Nice\Tests\Router\UrlGenerator;
 
+use PHPUnit\Framework\TestCase;
 use Nice\Router\UrlGenerator\CachedDataGenerator;
 
-class CachedDataGeneratorTest extends \PHPUnit_Framework_TestCase
+class CachedDataGeneratorTest extends TestCase
 {
     /**
      * Test basic caching

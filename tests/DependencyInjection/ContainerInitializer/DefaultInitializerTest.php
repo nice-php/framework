@@ -9,6 +9,7 @@
 
 namespace Nice\Tests\DependencyInjection\ContainerInitializer;
 
+use PHPUnit\Framework\TestCase;
 use Nice\Application;
 use Nice\DependencyInjection\CompilerAwareExtensionInterface;
 use Nice\DependencyInjection\ConfigurationProvider\NullConfigurationProvider;
@@ -18,7 +19,7 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 
-class DefaultInitializerTest extends \PHPUnit_Framework_TestCase
+class DefaultInitializerTest extends TestCase
 {
     /**
      * Test container initialization

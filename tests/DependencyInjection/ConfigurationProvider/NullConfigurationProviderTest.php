@@ -9,9 +9,10 @@
 
 namespace Nice\Tests\DependencyInjection\ConfigurationProvider;
 
+use PHPUnit\Framework\TestCase;
 use Nice\DependencyInjection\ConfigurationProvider\NullConfigurationProvider;
 
-class NullConfigurationProviderTest extends \PHPUnit_Framework_TestCase
+class NullConfigurationProviderTest extends TestCase
 {
     /**
      * Test no-operation functionality

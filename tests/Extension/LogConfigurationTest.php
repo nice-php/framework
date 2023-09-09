@@ -9,10 +9,11 @@
 
 namespace Nice\Tests\Extension;
 
+use PHPUnit\Framework\TestCase;
 use Nice\Extension\LogConfiguration;
 use Symfony\Component\Config\Definition\Processor;
 
-class LogConfigurationTest extends \PHPUnit_Framework_TestCase
+class LogConfigurationTest extends TestCase
 {
     public function testDefaultConfig()
     {

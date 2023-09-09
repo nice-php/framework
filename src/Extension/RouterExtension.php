@@ -46,8 +46,7 @@ class RouterExtension extends Extension
             ->addArgument(new Reference('router.collector'));
 
         $container->register('router.dispatcher', 'FastRoute\Dispatcher')
-            ->setFactoryService('router.dispatcher_factory')
-            ->setFactoryMethod('create');
+            ->setFactory(array(new Reference('router.dispatcher_factory'), 'create'));
 
         $container->register('router.dispatcher_subscriber', 'Nice\Router\RouterSubscriber')
             ->addArgument(new Reference('router.dispatcher'))
@@ -70,9 +69,9 @@ class RouterExtension extends Extension
                     false
                 )));
 
-        $container->register('http_kernel', 'Symfony\Component\HttpKernel\DependencyInjection\ContainerAwareHttpKernel')
+        $container->register('http_kernel', 'Symfony\Component\HttpKernel\HttpKernel')
             ->addArgument(new Reference('event_dispatcher'))
-            ->addArgument(new Reference('service_container'))
-            ->addArgument(new Reference('router.controller_resolver'));
+            ->addArgument(new Reference('router.controller_resolver'))
+            ->setPublic(true);
     }
 }

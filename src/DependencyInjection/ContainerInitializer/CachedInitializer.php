@@ -72,7 +72,7 @@ class CachedInitializer implements ContainerInitializerInterface
             $this->dumpContainer($cache, $container, $class, 'Container');
         }
 
-        require_once $cache;
+        require_once $cache->getPath();
 
         return new $class();
     }

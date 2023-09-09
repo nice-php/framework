@@ -9,13 +9,14 @@
 
 namespace Nice\Tests\Router;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Nice\Router\RouterSubscriber;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class RouterSubscriberTest extends \PHPUnit_Framework_TestCase
+class RouterSubscriberTest extends TestCase
 {
     /**
      * Test a Found route

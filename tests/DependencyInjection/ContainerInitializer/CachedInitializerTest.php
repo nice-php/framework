@@ -9,12 +9,13 @@
 
 namespace Nice\Tests\DependencyInjection\ContainerInitializer;
 
+use PHPUnit\Framework\TestCase;
 use Nice\Application;
 use Nice\DependencyInjection\ContainerInitializer\CachedInitializer;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class CachedInitializerTest extends \PHPUnit_Framework_TestCase
+class CachedInitializerTest extends TestCase
 {
     /**
      * Test container initialization

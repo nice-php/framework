@@ -19,8 +19,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Scope;
+use Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass;
 use Symfony\Component\HttpKernel\DependencyInjection\MergeExtensionConfigurationPass;
-use Symfony\Component\HttpKernel\DependencyInjection\RegisterListenersPass;
 
 /**
  * Creates and initializes a Service Container, ready for use by the Application
@@ -62,18 +62,13 @@ class DefaultInitializer implements ContainerInitializerInterface
         $container->setParameter('app.cache_dir', $application->getCacheDir());
         $container->setParameter('app.log_dir', $application->getLogDir());
 
-        $container->register('event_dispatcher', 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher')
-            ->setArguments(array(new Reference('service_container')));
+        $container->register('event_dispatcher', 'Symfony\Component\EventDispatcher\EventDispatcher');
 
         $container->register('app', 'Symfony\Component\HttpKernel\HttpKernelInterface')
             ->setSynthetic(true);
 
         $container->register('request', 'Symfony\Componenet\HttpKernel\Request')
-            ->setSynthetic(true)
-            ->setSynchronized(true)
-            ->setScope('request');
-
-        $container->addScope(new Scope('request'));
+            ->setSynthetic(true);
 
         $extensionAliases = array();
         foreach ($extensions as $extension) {

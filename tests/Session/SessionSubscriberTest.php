@@ -9,6 +9,7 @@
 
 namespace Nice\Tests\Session;
 
+use PHPUnit\Framework\TestCase;
 use Nice\Session\SessionSubscriber;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +19,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class SessionSubscriberTest extends \PHPUnit_Framework_TestCase
+class SessionSubscriberTest extends TestCase
 {
     /**
      * Test a Master request

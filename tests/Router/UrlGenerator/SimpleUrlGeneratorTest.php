@@ -9,10 +9,11 @@
 
 namespace Nice\Tests\Router\UrlGenerator;
 
+use PHPUnit\Framework\TestCase;
 use Nice\Router\UrlGenerator\SimpleUrlGenerator;
 use Symfony\Component\HttpFoundation\Request;
 
-class SimpleUrlGeneratorTest extends \PHPUnit_Framework_TestCase
+class SimpleUrlGeneratorTest extends TestCase
 {
     /**
      * Test basic functionality

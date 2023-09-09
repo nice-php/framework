@@ -9,13 +9,14 @@
 
 namespace Nice\Tests\Router;
 
+use PHPUnit\Framework\TestCase;
 use Nice\Router\WrappedHandlerSubscriber;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class WrappedHandlerSubscriberTest extends \PHPUnit_Framework_TestCase
+class WrappedHandlerSubscriberTest extends TestCase
 {
     /**
      * Tests basic functionality

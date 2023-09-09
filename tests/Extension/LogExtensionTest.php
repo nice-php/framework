@@ -9,10 +9,11 @@
 
 namespace Nice\Tests\Extension;
 
+use PHPUnit\Framework\TestCase;
 use Nice\Extension\LogExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class LogExtensionTest extends \PHPUnit_Framework_TestCase
+class LogExtensionTest extends TestCase
 {
     /**
      * Test the LogExtension

@@ -9,9 +9,10 @@
 
 namespace Nice\Tests\Router\RouteCollector;
 
+use PHPUnit\Framework\TestCase;
 use Nice\Router\RouteCollector\CachedCollector;
 
-class CachedCollectorTest extends \PHPUnit_Framework_TestCase
+class CachedCollectorTest extends TestCase
 {
     /**
      * Test basic caching

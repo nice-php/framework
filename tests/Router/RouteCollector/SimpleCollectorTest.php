@@ -9,9 +9,10 @@
 
 namespace Nice\Tests\Router\RouteCollector;
 
+use PHPUnit\Framework\TestCase;
 use Nice\Router\RouteCollector\SimpleCollector;
 
-class SimpleCollectorTest extends \PHPUnit_Framework_TestCase
+class SimpleCollectorTest extends TestCase
 {
     /**
      * Test basic functionality
