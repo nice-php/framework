@@ -51,7 +51,8 @@ class CachedDataGeneratorTest extends TestCase
     {
         $generator = $this->getGenerator('/some/unwriteable/path');
 
-        $this->setExpectedException('RuntimeException', 'Failed to create');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Failed to create');
 
         $generator->getData();
     }

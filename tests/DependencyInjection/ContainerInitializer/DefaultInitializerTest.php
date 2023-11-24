@@ -30,7 +30,7 @@ class DefaultInitializerTest extends TestCase
 
         /** @var \Nice\Application|\PHPUnit_Framework_MockObject_MockObject $app */
         $app = $this->getMockBuilder('Nice\Application')
-            ->setMethods(array(
+            ->onlyMethods(array(
                     'registerDefaultExtensions',
                     'getRootDir',
                     'getLogDir',
@@ -87,7 +87,7 @@ class TestCompilerPass implements CompilerPassInterface
 
     public function process(ContainerBuilder $container)
     {
-        $container->register($this->serviceName, '\stdClass');
+        $container->register($this->serviceName, '\stdClass')->setPublic(true);
     }
 }
 

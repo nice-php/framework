@@ -97,6 +97,11 @@ class CachedInitializer implements ContainerInitializerInterface
      */
     protected function dumpContainer(ConfigCache $cache, ContainerBuilder $container, $class, $baseClass)
     {
+        if (!$container->isCompiled()) {
+            // The container must be compiled before it can be dumped.
+            $container->compile();
+        }
+
         $dumper  = new PhpDumper($container);
         $content = $dumper->dump(array('class' => $class, 'base_class' => $baseClass));
 

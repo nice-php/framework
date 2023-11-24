@@ -51,7 +51,8 @@ class CachedCollectorTest extends TestCase
     {
         $collector = $this->getCollector('/some/unwriteable/path');
 
-        $this->setExpectedException('RuntimeException', 'Failed to create');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Failed to create');
 
         $collector->getData();
     }

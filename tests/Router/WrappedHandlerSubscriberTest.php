@@ -12,7 +12,7 @@ namespace Nice\Tests\Router;
 use PHPUnit\Framework\TestCase;
 use Nice\Router\WrappedHandlerSubscriber;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -58,11 +58,11 @@ class WrappedHandlerSubscriberTest extends TestCase
     /**
      * @param Request $request
      *
-     * @return GetResponseEvent
+     * @return RequestEvent
      */
     private function getEvent(Request $request)
     {
-        return new GetResponseEvent(
+        return new RequestEvent(
             $this->getMockForAbstractClass('Symfony\Component\HttpKernel\HttpKernelInterface'),
             $request,
             HttpKernelInterface::MASTER_REQUEST

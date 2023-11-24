@@ -19,8 +19,8 @@ class SimpleCollectorTest extends TestCase
      */
     public function testFunctionality()
     {
-        $parser = $this->getMock('FastRoute\RouteParser');
-        $generator = $this->getMock('FastRoute\DataGenerator');
+        $parser = $this->getMockForAbstractClass('FastRoute\RouteParser');
+        $generator = $this->getMockForAbstractClass('FastRoute\DataGenerator');
 
         $called = false;
 

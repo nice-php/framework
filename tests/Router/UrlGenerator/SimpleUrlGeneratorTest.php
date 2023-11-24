@@ -88,7 +88,8 @@ class SimpleUrlGeneratorTest extends TestCase
             ),
         ));
 
-        $this->setExpectedException('RuntimeException', 'Missing required parameter');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Missing required parameter');
 
         $this->assertEquals('/user/123/edit', $generator->generate('user_edit'));
     }

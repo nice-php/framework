@@ -26,7 +26,7 @@ class CachedInitializerTest extends TestCase
 
         /** @var \Nice\Application|\PHPUnit_Framework_MockObject_MockObject $app */
         $app = $this->getMockBuilder('Nice\Application')
-            ->setMethods(array('registerDefaultExtensions'))
+            ->onlyMethods(array('registerDefaultExtensions'))
             ->setConstructorArgs(array('cache_init'.sha1(uniqid('cache', true)), false))
             ->getMock();
 
@@ -54,7 +54,8 @@ class CachedInitializerTest extends TestCase
      */
     public function testFailureToCreateCacheDir()
     {
-        $this->setExpectedException('RuntimeException', 'Unable to create the cache directory');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Unable to create the cache directory');
 
         $this->getInitializer('/someunwriteable/path');
     }
@@ -68,7 +69,8 @@ class CachedInitializerTest extends TestCase
         mkdir($tmpdir, 0700, true);
         chmod($tmpdir, 0000);
 
-        $this->setExpectedException('RuntimeException', 'Unable to write in the cache directory');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Unable to write in the cache directory');
 
         $this->getInitializer($tmpdir);
     }

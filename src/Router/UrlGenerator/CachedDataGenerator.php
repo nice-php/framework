@@ -59,6 +59,6 @@ class CachedDataGenerator implements DataGeneratorInterface
             $cache->write('<?php return '.var_export($routes, true).';');
         }
 
-        return require $cache;
+        return require $cache->getPath();
     }
 }

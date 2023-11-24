@@ -19,7 +19,7 @@ class NullConfigurationProviderTest extends TestCase
      */
     public function testNoOp()
     {
-        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerBuilder');
+        $container = $this->getMockForAbstractClass('Symfony\Component\DependencyInjection\ContainerBuilder');
         $container->expects($this->never())
             ->method($this->anything());
 

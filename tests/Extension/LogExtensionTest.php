@@ -24,6 +24,8 @@ class LogExtensionTest extends TestCase
 
         $container = new ContainerBuilder();
         $extension->load(array(), $container);
+
+        $this->assertFalse($container->hasDefinition('logger.default'), 'No logger config given, logger should not exist.');
     }
 
     /**
@@ -111,7 +113,8 @@ class LogExtensionTest extends TestCase
             ),
         ));
 
-        $this->setExpectedException('RuntimeException', 'The option "file" must be specified for the stream handler.');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('The option "file" must be specified for the stream handler.');
 
         $container = new ContainerBuilder();
         $extension->load(array(), $container);

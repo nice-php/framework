@@ -62,7 +62,8 @@ class DefaultInitializer implements ContainerInitializerInterface
         $container->setParameter('app.cache_dir', $application->getCacheDir());
         $container->setParameter('app.log_dir', $application->getLogDir());
 
-        $container->register('event_dispatcher', 'Symfony\Component\EventDispatcher\EventDispatcher');
+        $container->register('event_dispatcher', 'Symfony\Component\EventDispatcher\EventDispatcher')
+            ->setPublic(true);
 
         $container->register('app', 'Symfony\Component\HttpKernel\HttpKernelInterface')
             ->setSynthetic(true);
