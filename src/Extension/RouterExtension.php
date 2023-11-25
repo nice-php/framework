@@ -67,7 +67,8 @@ class RouterExtension extends Extension
                     'request',
                     ContainerInterface::NULL_ON_INVALID_REFERENCE,
                     false
-                )));
+                )))
+            ->setPublic(true);
 
         $container->register('http_kernel', 'Symfony\Component\HttpKernel\HttpKernel')
             ->addArgument(new Reference('event_dispatcher'))
