@@ -97,7 +97,8 @@ class LogExtension extends Extension
         $container->register($loggerService)
             ->setClass('Monolog\Logger')
             ->addArgument($name)
-            ->addMethodCall('pushHandler', array(new Reference($handlerService)));
+            ->addMethodCall('pushHandler', array(new Reference($handlerService)))
+            ->setPublic(true);
     }
 
     private function configureErrorLogChannel(array $channelConfig, ContainerBuilder $container)

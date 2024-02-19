@@ -9,6 +9,7 @@
 
 namespace Nice\Tests\DependencyInjection\ContainerInitializer;
 
+use PHPUnit\Framework\TestCase;
 use Nice\Application;
 use Nice\DependencyInjection\CompilerAwareExtensionInterface;
 use Nice\DependencyInjection\ConfigurationProvider\NullConfigurationProvider;
@@ -18,7 +19,7 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 
-class DefaultInitializerTest extends \PHPUnit_Framework_TestCase
+class DefaultInitializerTest extends TestCase
 {
     /**
      * Test container initialization
@@ -29,7 +30,7 @@ class DefaultInitializerTest extends \PHPUnit_Framework_TestCase
 
         /** @var \Nice\Application|\PHPUnit_Framework_MockObject_MockObject $app */
         $app = $this->getMockBuilder('Nice\Application')
-            ->setMethods(array(
+            ->onlyMethods(array(
                     'registerDefaultExtensions',
                     'getRootDir',
                     'getLogDir',
@@ -86,7 +87,7 @@ class TestCompilerPass implements CompilerPassInterface
 
     public function process(ContainerBuilder $container)
     {
-        $container->register($this->serviceName, '\stdClass');
+        $container->register($this->serviceName, '\stdClass')->setPublic(true);
     }
 }
 

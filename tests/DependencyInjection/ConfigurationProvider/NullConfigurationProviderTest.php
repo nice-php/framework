@@ -9,16 +9,17 @@
 
 namespace Nice\Tests\DependencyInjection\ConfigurationProvider;
 
+use PHPUnit\Framework\TestCase;
 use Nice\DependencyInjection\ConfigurationProvider\NullConfigurationProvider;
 
-class NullConfigurationProviderTest extends \PHPUnit_Framework_TestCase
+class NullConfigurationProviderTest extends TestCase
 {
     /**
      * Test no-operation functionality
      */
     public function testNoOp()
     {
-        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerBuilder');
+        $container = $this->getMockForAbstractClass('Symfony\Component\DependencyInjection\ContainerBuilder');
         $container->expects($this->never())
             ->method($this->anything());
 

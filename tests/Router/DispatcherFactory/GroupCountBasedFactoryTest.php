@@ -9,9 +9,10 @@
 
 namespace Nice\Tests\Router\DispatcherFactory;
 
+use PHPUnit\Framework\TestCase;
 use Nice\Router\DispatcherFactory\GroupCountBasedFactory;
 
-class GroupCountBasedFactoryTest extends \PHPUnit_Framework_TestCase
+class GroupCountBasedFactoryTest extends TestCase
 {
     /**
      * Test Dispatcher creation

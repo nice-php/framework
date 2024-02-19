@@ -9,10 +9,11 @@
 
 namespace Nice\Tests\Extension;
 
+use PHPUnit\Framework\TestCase;
 use Nice\Extension\LogConfiguration;
 use Symfony\Component\Config\Definition\Processor;
 
-class LogConfigurationTest extends \PHPUnit_Framework_TestCase
+class LogConfigurationTest extends TestCase
 {
     public function testDefaultConfig()
     {
@@ -38,10 +39,10 @@ class LogConfigurationTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidHandler()
     {
-        $this->setExpectedException(
-            'Symfony\Component\Config\Definition\Exception\InvalidConfigurationException',
-            'Invalid logging handler "fake"'
+        $this->expectException(
+            'Symfony\Component\Config\Definition\Exception\InvalidConfigurationException'
         );
+        $this->expectExceptionMessage('Invalid logging handler "fake"');
 
         $processor = new Processor();
         $processor->processConfiguration(new LogConfiguration(), array(array('channels' => array('default' => array('handler' => 'fake')))));

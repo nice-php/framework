@@ -9,6 +9,7 @@
 
 namespace Nice\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Nice\Application;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
 
-class ApplicationTest extends \PHPUnit_Framework_TestCase
+class ApplicationTest extends TestCase
 {
     /**
      * Test the instantiation
@@ -190,7 +191,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     {
         /** @var \Nice\Application|\PHPUnit_Framework_MockObject_MockObject $app */
         $app = $this->getMockBuilder('Nice\Application')
-            ->setMethods(array('getRootDir'))
+            ->onlyMethods(array('getRootDir'))
             ->setConstructorArgs(array('init', true))
             ->getMock();
         $app->expects($this->any())
@@ -211,7 +212,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     {
         /** @var \Nice\Application|\PHPUnit_Framework_MockObject_MockObject $app */
         $app = $this->getMockBuilder('Nice\Application')
-            ->setMethods(array('getRootDir'))
+            ->onlyMethods(array('getRootDir'))
             ->setConstructorArgs(array('init', true))
             ->getMock();
         $app->expects($this->any())
@@ -234,14 +235,14 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     {
         /** @var \Nice\Application|\PHPUnit_Framework_MockObject_MockObject $app */
         $app = $this->getMockBuilder('Nice\Application')
-            ->setMethods(array('getRootDir', 'getCacheDir'))
+            ->onlyMethods(array('getRootDir', 'getCacheDir'))
             ->setConstructorArgs(array('create', true))
             ->getMock();
         $app->expects($this->any())
             ->method('getCacheDir')
             ->will($this->returnValue('/someunwriteable/path'));
 
-        $this->setExpectedException('RuntimeException', 'Unable to create the cache directory');
+        $this->expectException('RuntimeException', 'Unable to create the cache directory');
 
         $app->boot();
     }
@@ -257,14 +258,14 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
 
         /** @var \Nice\Application|\PHPUnit_Framework_MockObject_MockObject $app */
         $app = $this->getMockBuilder('Nice\Application')
-            ->setMethods(array('getRootDir', 'getCacheDir'))
+            ->onlyMethods(array('getRootDir', 'getCacheDir'))
             ->setConstructorArgs(array('write', true))
             ->getMock();
         $app->expects($this->any())
             ->method('getCacheDir')
             ->will($this->returnValue($tmpdir));
 
-        $this->setExpectedException('RuntimeException', 'Unable to write in the cache directory');
+        $this->expectException('RuntimeException', 'Unable to write in the cache directory');
 
         $app->boot();
     }
@@ -280,7 +281,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
 
         /** @var \Nice\Application|\PHPUnit_Framework_MockObject_MockObject $app */
         $app = $this->getMockBuilder('Nice\Application')
-            ->setMethods(array('getRootDir', 'registerDefaultExtensions', 'initializeContainer'))
+            ->onlyMethods(array('getRootDir', 'registerDefaultExtensions', 'initializeContainer'))
             ->setConstructorArgs(array('test', true, $cache))
             ->getMock();
         $app->expects($this->any())

@@ -9,10 +9,11 @@
 
 namespace Nice\Tests\DependencyInjection\ConfigurationProvider;
 
+use PHPUnit\Framework\TestCase;
 use Nice\DependencyInjection\ConfigurationProvider\FileConfigurationProvider;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class FileConfigurationProviderTest extends \PHPUnit_Framework_TestCase
+class FileConfigurationProviderTest extends TestCase
 {
     /**
      * Test no-operation functionality

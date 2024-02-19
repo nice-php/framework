@@ -21,8 +21,8 @@ class LogConfiguration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('logging');
+        $treeBuilder = new TreeBuilder('logging');
+        $rootNode = $treeBuilder->getRootNode();
 
         $rootNode
             ->children()

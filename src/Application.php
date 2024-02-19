@@ -244,12 +244,12 @@ class Application implements HttpKernelInterface, ExtendableInterface
      *
      * @param Request $request A Request instance
      * @param int     $type    The type of the request
-     *                         (one of HttpKernelInterface::MASTER_REQUEST or HttpKernelInterface::SUB_REQUEST)
+     *                         (one of HttpKernelInterface::MAIN_REQUEST or HttpKernelInterface::SUB_REQUEST)
      * @param bool    $catch   Whether to catch exceptions or not
      *
      * @return Response A Response instance
      */
-    public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
+    public function handle(Request $request, int $type = self::MAIN_REQUEST, bool $catch = true): Response
     {
         if (!$this->booted) {
             $this->boot();
@@ -361,13 +361,13 @@ class Application implements HttpKernelInterface, ExtendableInterface
      * @param object|callable $service The service instance
      * @param string          $scope   The scope of the service
      */
-    public function set($id, $service, $scope = ContainerInterface::SCOPE_CONTAINER)
+    public function set(string $id, ?object $service)
     {
         if (!$this->booted) {
             $this->boot();
         }
 
-        $this->container->set($id, $service, $scope);
+        $this->container->set($id, $service);
     }
 
     /**

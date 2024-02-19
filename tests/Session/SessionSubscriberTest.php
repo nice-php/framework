@@ -9,16 +9,17 @@
 
 namespace Nice\Tests\Session;
 
+use PHPUnit\Framework\TestCase;
 use Nice\Session\SessionSubscriber;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class SessionSubscriberTest extends \PHPUnit_Framework_TestCase
+class SessionSubscriberTest extends TestCase
 {
     /**
      * Test a Master request
@@ -53,7 +54,10 @@ class SessionSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $subscriber->onKernelRequest($event);
 
-        $this->assertEmpty($request->getSession());
+        $this->expectException('Symfony\Component\HttpFoundation\Exception\SessionNotFoundException');
+        $this->expectExceptionMessage('Session has not been set.');
+
+        $request->getSession();
     }
 
     /**
@@ -69,7 +73,10 @@ class SessionSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $subscriber->onKernelRequest($event);
 
-        $this->assertEmpty($request->getSession());
+        $this->expectException('Symfony\Component\HttpFoundation\Exception\SessionNotFoundException');
+        $this->expectExceptionMessage('Session has not been set.');
+
+        $request->getSession();
     }
 
     /**
@@ -105,11 +112,11 @@ class SessionSubscriberTest extends \PHPUnit_Framework_TestCase
     /**
      * @param Request $request
      *
-     * @return GetResponseEvent
+     * @return RequestEvent
      */
     private function getEvent(Request $request, $type = HttpKernelInterface::MASTER_REQUEST)
     {
-        return new GetResponseEvent(
+        return new RequestEvent(
             $this->getMockForAbstractClass('Symfony\Component\HttpKernel\HttpKernelInterface'),
             $request,
             $type

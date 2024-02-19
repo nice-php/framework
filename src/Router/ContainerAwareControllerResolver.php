@@ -40,7 +40,7 @@ class ContainerAwareControllerResolver extends ControllerResolver implements Con
      *
      * @return callable
      */
-    protected function createController($controller)
+    protected function createController(string $controller): callable
     {
         $parts = explode(':', $controller);
         if (count($parts) === 2) {

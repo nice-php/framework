@@ -9,13 +9,14 @@
 
 namespace Nice\Tests\Router;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Nice\Router\RouterSubscriber;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class RouterSubscriberTest extends \PHPUnit_Framework_TestCase
+class RouterSubscriberTest extends TestCase
 {
     /**
      * Test a Found route
@@ -58,7 +59,7 @@ class RouterSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $event = $this->getEvent($request);
 
-        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException');
+        $this->expectException('Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException');
 
         $subscriber->onKernelRequest($event);
     }
@@ -89,7 +90,7 @@ class RouterSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $event = $this->getEvent($request);
 
-        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
+        $this->expectException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
 
         $subscriber->onKernelRequest($event);
     }
@@ -122,11 +123,11 @@ class RouterSubscriberTest extends \PHPUnit_Framework_TestCase
     /**
      * @param Request $request
      *
-     * @return GetResponseEvent
+     * @return RequestEvent
      */
     private function getEvent(Request $request)
     {
-        return new GetResponseEvent(
+        return new RequestEvent(
             $this->getMockForAbstractClass('Symfony\Component\HttpKernel\HttpKernelInterface'),
             $request,
             HttpKernelInterface::MASTER_REQUEST

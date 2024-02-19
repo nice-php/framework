@@ -9,9 +9,10 @@
 
 namespace Nice\Tests\Router\RouteCollector;
 
+use PHPUnit\Framework\TestCase;
 use Nice\Router\RouteCollector\CachedCollector;
 
-class CachedCollectorTest extends \PHPUnit_Framework_TestCase
+class CachedCollectorTest extends TestCase
 {
     /**
      * Test basic caching
@@ -50,7 +51,8 @@ class CachedCollectorTest extends \PHPUnit_Framework_TestCase
     {
         $collector = $this->getCollector('/some/unwriteable/path');
 
-        $this->setExpectedException('RuntimeException', 'Failed to create');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Failed to create');
 
         $collector->getData();
     }

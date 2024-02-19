@@ -9,10 +9,11 @@
 
 namespace Nice\Tests\Extension;
 
+use PHPUnit\Framework\TestCase;
 use Nice\Extension\LogExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class LogExtensionTest extends \PHPUnit_Framework_TestCase
+class LogExtensionTest extends TestCase
 {
     /**
      * Test the LogExtension
@@ -23,6 +24,8 @@ class LogExtensionTest extends \PHPUnit_Framework_TestCase
 
         $container = new ContainerBuilder();
         $extension->load(array(), $container);
+
+        $this->assertFalse($container->hasDefinition('logger.default'), 'No logger config given, logger should not exist.');
     }
 
     /**
@@ -110,7 +113,8 @@ class LogExtensionTest extends \PHPUnit_Framework_TestCase
             ),
         ));
 
-        $this->setExpectedException('RuntimeException', 'The option "file" must be specified for the stream handler.');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('The option "file" must be specified for the stream handler.');
 
         $container = new ContainerBuilder();
         $extension->load(array(), $container);

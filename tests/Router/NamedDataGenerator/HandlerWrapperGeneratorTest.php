@@ -10,9 +10,10 @@
 namespace Nice\Tests\Router\NamedDataGenerator;
 
 use FastRoute\DataGenerator;
+use PHPUnit\Framework\TestCase;
 use Nice\Router\NamedDataGenerator\HandlerWrapperGenerator;
 
-class HandlerWrapperGeneratorTest extends \PHPUnit_Framework_TestCase
+class HandlerWrapperGeneratorTest extends TestCase
 {
     /**
      * Tests addRoute functionality

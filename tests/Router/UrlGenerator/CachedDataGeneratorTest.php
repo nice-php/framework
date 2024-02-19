@@ -9,9 +9,10 @@
 
 namespace Nice\Tests\Router\UrlGenerator;
 
+use PHPUnit\Framework\TestCase;
 use Nice\Router\UrlGenerator\CachedDataGenerator;
 
-class CachedDataGeneratorTest extends \PHPUnit_Framework_TestCase
+class CachedDataGeneratorTest extends TestCase
 {
     /**
      * Test basic caching
@@ -50,7 +51,8 @@ class CachedDataGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $generator = $this->getGenerator('/some/unwriteable/path');
 
-        $this->setExpectedException('RuntimeException', 'Failed to create');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Failed to create');
 
         $generator->getData();
     }

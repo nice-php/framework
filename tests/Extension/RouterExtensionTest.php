@@ -9,10 +9,11 @@
 
 namespace Nice\Tests\Extension;
 
+use PHPUnit\Framework\TestCase;
 use Nice\Extension\RouterExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class RouterExtensionTest extends \PHPUnit_Framework_TestCase
+class RouterExtensionTest extends TestCase
 {
     /**
      * Test the RouterExtension

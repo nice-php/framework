@@ -9,17 +9,18 @@
 
 namespace Nice\Tests\Router\RouteCollector;
 
+use PHPUnit\Framework\TestCase;
 use Nice\Router\RouteCollector\SimpleCollector;
 
-class SimpleCollectorTest extends \PHPUnit_Framework_TestCase
+class SimpleCollectorTest extends TestCase
 {
     /**
      * Test basic functionality
      */
     public function testFunctionality()
     {
-        $parser = $this->getMock('FastRoute\RouteParser');
-        $generator = $this->getMock('FastRoute\DataGenerator');
+        $parser = $this->getMockForAbstractClass('FastRoute\RouteParser');
+        $generator = $this->getMockForAbstractClass('FastRoute\DataGenerator');
 
         $called = false;
 

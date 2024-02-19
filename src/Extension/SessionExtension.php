@@ -26,7 +26,8 @@ class SessionExtension extends Extension
      */
     public function load(array $config, ContainerBuilder $container)
     {
-        $container->register('session', 'Symfony\Component\HttpFoundation\Session\Session');
+        $container->register('session', 'Symfony\Component\HttpFoundation\Session\Session')
+            ->setPublic(true);
 
         $container->register('session.session_subscriber', 'Nice\Session\SessionSubscriber')
             ->addArgument(new Reference('service_container'))

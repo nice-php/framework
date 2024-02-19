@@ -9,13 +9,14 @@
 
 namespace Nice\Tests\Router;
 
+use PHPUnit\Framework\TestCase;
 use Nice\Router\ContainerAwareControllerResolver;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class ContainerAwareControllerResolverTest extends \PHPUnit_Framework_TestCase
+class ContainerAwareControllerResolverTest extends TestCase
 {
     /**
      * Test that the ContainerAwareControllerResolver properly injects the container

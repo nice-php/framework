@@ -9,9 +9,10 @@
 
 namespace Nice\Tests\Router\UrlGenerator;
 
+use PHPUnit\Framework\TestCase;
 use Nice\Router\UrlGenerator\GroupCountBasedDataGenerator;
 
-class GroupCountBasedDataGeneratorTest extends \PHPUnit_Framework_TestCase
+class GroupCountBasedDataGeneratorTest extends TestCase
 {
     /**
      * Test basic functionality

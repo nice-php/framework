@@ -9,16 +9,17 @@
 
 namespace Nice\Tests\Router\RouteCollector;
 
+use PHPUnit\Framework\TestCase;
 use Nice\Router\RouteCollector;
 
-class RouteCollectorTest extends \PHPUnit_Framework_TestCase
+class RouteCollectorTest extends TestCase
 {
     /**
      * Test basic functionality
      */
     public function testFunctionality()
     {
-        $parser = $this->getMock('FastRoute\RouteParser');
+        $parser = $this->getMockForAbstractClass('FastRoute\RouteParser');
         $parser->expects($this->exactly(7))->method('parse')
             ->will($this->returnCallback(function($route) {
                 return array($route);
@@ -38,7 +39,7 @@ class RouteCollectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionIfNotNamedDataGenerator()
     {
-        $parser = $this->getMock('FastRoute\RouteParser');
+        $parser = $this->getMockForAbstractClass('FastRoute\RouteParser');
         $parser->expects($this->atLeastOnce())
             ->method('parse')
             ->will($this->returnValue(array()));
@@ -46,7 +47,8 @@ class RouteCollectorTest extends \PHPUnit_Framework_TestCase
 
         $collector = new ConcreteRouteCollector($parser, $generator);
 
-        $this->setExpectedException('RuntimeException', 'The injected generator does not support named routes');
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('The injected generator does not support named routes');
 
         $collector->getData();
     }
